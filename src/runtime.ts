@@ -10,7 +10,7 @@ import {
 } from "./types.js";
 import { listProviders } from "./providerRegistry.js";
 import { setupProvider } from "./defaultProvider.js";
-import { getModelCatalog, loadModelRegistryCache } from "./modelRegistry.js";
+import { ensureModelRegistryCurrent, getModelCatalog } from "./modelRegistry.js";
 
 function normalizeInput<TStructured>(
   input: LLMInput<TStructured>,
@@ -32,7 +32,7 @@ async function pickProvider(request: LLMRequest): Promise<{
   provider: LLMProvider;
   routing: LLMRoutingDecision;
 }> {
-  await loadModelRegistryCache();
+  await ensureModelRegistryCurrent();
   const catalog = getModelCatalog();
   const preferredProviders = listProviders();
   const providers = preferredProviders.length > 0 ? preferredProviders : [setupProvider];

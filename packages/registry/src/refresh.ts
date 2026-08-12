@@ -1,6 +1,7 @@
 import { RegistryRefreshError } from "./errors.js";
 import { normalizeModel } from "./normalize.js";
 import {
+  ModelDefinition,
   RefreshOptions,
   RegistryProviderAdapter,
   RegistryProviderSnapshot,
@@ -15,7 +16,7 @@ export async function refreshRegistrySnapshot(
 ): Promise<RegistrySnapshot> {
   const now = options.now ?? new Date();
   const providers: RegistryProviderSnapshot[] = [];
-  const nextModels = new Map<string, (typeof existingSnapshot extends RegistrySnapshot ? never : never) | any>();
+  const nextModels = new Map<string, ModelDefinition>();
 
   let hadSuccess = false;
 

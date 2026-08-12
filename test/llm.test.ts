@@ -129,7 +129,6 @@ describe("llm core runtime", () => {
     ];
 
     llm.setRegistryProviders(adapters);
-    await llm.refreshModelRegistry();
 
     llm.registerProvider({
       id: "openai",

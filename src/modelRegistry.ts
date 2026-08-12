@@ -14,6 +14,11 @@ const modelRegistry = new ModelRegistry({
 });
 
 let loaded = false;
+let providersConfigured = false;
+let lastRefreshAttemptMs = 0;
+let providersRevision = 0;
+let lastRefreshedProvidersRevision = -1;
+const REFRESH_INTERVAL_MS = 5 * 60 * 1000;
 
 export async function loadModelRegistryCache(): Promise<RegistrySnapshot | undefined> {
   if (loaded) {
@@ -26,11 +31,43 @@ export async function loadModelRegistryCache(): Promise<RegistrySnapshot | undef
 
 export async function refreshModelRegistry(): Promise<RegistrySnapshot> {
   loaded = true;
-  return modelRegistry.refresh();
+  lastRefreshAttemptMs = Date.now();
+  const snapshot = await modelRegistry.refresh();
+  lastRefreshedProvidersRevision = providersRevision;
+  return snapshot;
 }
 
 export function setRegistryProviders(providers: RegistryProviderAdapter[]): void {
+  providersConfigured = providers.length > 0;
+  providersRevision += 1;
   modelRegistry.setProviders(providers);
+}
+
+export async function ensureModelRegistryCurrent(): Promise<void> {
+  await loadModelRegistryCache();
+  if (!providersConfigured) {
+    return;
+  }
+
+  const nowMs = Date.now();
+  const snapshot = modelRegistry.getSnapshot();
+  const snapshotTimeMs = snapshot?.lastSuccessfulRefreshAt
+    ? Date.parse(snapshot.lastSuccessfulRefreshAt)
+    : 0;
+  const isStale = !snapshot || nowMs - snapshotTimeMs > REFRESH_INTERVAL_MS;
+  const providersChangedSinceRefresh =
+    providersRevision !== lastRefreshedProvidersRevision;
+  const attemptedRecently = nowMs - lastRefreshAttemptMs <= REFRESH_INTERVAL_MS;
+
+  if (!providersChangedSinceRefresh && (!isStale || attemptedRecently)) {
+    return;
+  }
+
+  try {
+    await refreshModelRegistry();
+  } catch {
+    // Fallback to cached snapshot for offline operation.
+  }
 }
 
 export function inspectModelRegistry() {
