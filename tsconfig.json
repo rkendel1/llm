@@ -8,5 +8,5 @@
     "skipLibCheck": true,
     "types": ["node", "vitest/globals"]
   },
-  "include": ["src", "test"]
+  "include": ["src", "packages/registry/src", "test"]
 }

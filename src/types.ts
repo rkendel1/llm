@@ -32,6 +32,7 @@ export type LLMRoutingDecision = {
   requestedModel: LLMModelPreference;
   selectedProvider: string;
   selectedModel: string;
+  selectedModelDefinition?: ModelDefinition;
   reason: string[];
   alternatives: Array<{
     provider: string;
@@ -102,3 +103,4 @@ export type LLMProvider = {
     request: LLMRequest,
   ) => AsyncIterable<LLMStreamChunk>;
 };
+import type { ModelDefinition } from "../packages/registry/src/types.js";

@@ -17,9 +17,9 @@ No local models or provider credentials are configured yet.
 Run `npx llm setup` to get started.
 ```
 
-## Phase 1 MVP (implemented)
+## MVP status
 
-This repository currently ships the **core runtime** milestone:
+### Phase 1 (implemented)
 
 - TypeScript runtime
 - `llm()` API
@@ -28,6 +28,16 @@ This repository currently ships the **core runtime** milestone:
 - Tool-calling abstraction (`tools`)
 - Normalized response shape with routing metadata
 - Provider plugin interface with deterministic priority routing
+
+### Phase 2 (implemented) — Living Model Registry
+
+- Provider-neutral canonical `ModelDefinition`
+- Registry package at `/home/runner/work/llm/llm/packages/registry`
+- Local cache for offline use
+- Refresh flow for provider metadata ingestion
+- Capability-aware and pricing-aware querying
+- Versioned and inspectable snapshots
+- Core runtime integration so routing can expose selected model metadata and verification time
 
 ## Core API
 
@@ -95,6 +105,28 @@ const provider: LLMProvider = {
 };
 
 llm.registerProvider(provider);
+```
+
+## Registry API
+
+```ts
+import { llm, type RegistryProviderAdapter } from "llm";
+
+const adapter: RegistryProviderAdapter = {
+  id: "openai",
+  discover: async () => [
+    {
+      id: "gpt-4.1-mini",
+      context: { input: 1_000_000 },
+      capabilities: { tools: true, structuredOutput: true },
+      pricing: { inputPerMillion: 0.15, outputPerMillion: 0.6 },
+    },
+  ],
+};
+
+llm.setRegistryProviders([adapter]);
+await llm.refreshModelRegistry();
+console.log(llm.inspectModelRegistry());
 ```
 
 Routing is deterministic:

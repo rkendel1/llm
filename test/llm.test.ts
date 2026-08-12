@@ -1,5 +1,5 @@
 import { describe, expect, it, beforeEach } from "vitest";
-import { llm, type LLMProvider } from "../src/index.js";
+import { llm, type LLMProvider, type RegistryProviderAdapter } from "../src/index.js";
 
 describe("llm core runtime", () => {
   beforeEach(() => {
@@ -111,5 +111,34 @@ describe("llm core runtime", () => {
     }
 
     expect(chunks.join("")).toBe("hello world");
+  });
+
+  it("includes registry model metadata in routing after refresh", async () => {
+    const adapters: RegistryProviderAdapter[] = [
+      {
+        id: "openai",
+        discover: async () => [
+          {
+            id: "gpt-4.1-mini",
+            context: { input: 1_000_000 },
+            capabilities: { tools: true, structuredOutput: true },
+            pricing: { inputPerMillion: 0.15, outputPerMillion: 0.6 },
+          },
+        ],
+      },
+    ];
+
+    llm.setRegistryProviders(adapters);
+    await llm.refreshModelRegistry();
+
+    llm.registerProvider({
+      id: "openai",
+      supports: () => true,
+      generate: async () => ({ text: "ok", model: "gpt-4.1-mini" }),
+    });
+
+    const result = await llm("hello");
+    expect(result.routing.selectedModelDefinition?.id).toBe("gpt-4.1-mini");
+    expect(result.routing.selectedModelDefinition?.lifecycle.lastVerifiedAt).toBeTruthy();
   });
 });

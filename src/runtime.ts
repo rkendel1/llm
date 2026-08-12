@@ -10,6 +10,7 @@ import {
 } from "./types.js";
 import { listProviders } from "./providerRegistry.js";
 import { setupProvider } from "./defaultProvider.js";
+import { getModelCatalog, loadModelRegistryCache } from "./modelRegistry.js";
 
 function normalizeInput<TStructured>(
   input: LLMInput<TStructured>,
@@ -31,6 +32,8 @@ async function pickProvider(request: LLMRequest): Promise<{
   provider: LLMProvider;
   routing: LLMRoutingDecision;
 }> {
+  await loadModelRegistryCache();
+  const catalog = getModelCatalog();
   const preferredProviders = listProviders();
   const providers = preferredProviders.length > 0 ? preferredProviders : [setupProvider];
 
@@ -58,6 +61,10 @@ async function pickProvider(request: LLMRequest): Promise<{
       requestedModel: request.model ?? "auto",
       selectedProvider: selected.id,
       selectedModel: request.model ?? "auto",
+      selectedModelDefinition:
+        typeof request.model === "string"
+          ? catalog.resolve(request.model, selected.id) ?? catalog.resolve(request.model)
+          : undefined,
       reason: ["Selected highest-priority provider that supports this request."],
       alternatives: supportedProviders.slice(1).map(({ provider }) => ({
         provider: provider.id,
@@ -108,6 +115,7 @@ export async function invokeLLM<TStructured = unknown>(
 ): Promise<LLMResponse<TStructured>> {
   const request = normalizeInput(input);
   const { provider, routing } = await pickProvider(request);
+  const catalog = getModelCatalog();
 
   const toolCalls: LLMToolCall[] = [];
   const allMessages = [...request.messages];
@@ -142,6 +150,10 @@ export async function invokeLLM<TStructured = unknown>(
 
   const text = response.text;
   const structured = request.output?.parse(text);
+  const resolvedModel = catalog.resolve(response.model, provider.id) ?? catalog.resolve(response.model);
+  if (resolvedModel) {
+    routing.selectedModelDefinition = resolvedModel;
+  }
 
   return {
     text,
