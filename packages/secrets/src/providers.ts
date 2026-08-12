@@ -30,6 +30,14 @@ export function setCredential(
   key: string,
   value: string
 ): ProviderCredentials {
+  // Prevent prototype pollution
+  if (provider === "__proto__" || provider === "constructor" || provider === "prototype") {
+    throw new Error("Invalid provider name");
+  }
+  if (key === "__proto__" || key === "constructor" || key === "prototype") {
+    throw new Error("Invalid credential key");
+  }
+
   if (!credentials[provider]) {
     credentials[provider] = {};
   }
@@ -42,6 +50,14 @@ export function deleteCredential(
   provider: string,
   key: string
 ): ProviderCredentials {
+  // Prevent prototype pollution
+  if (provider === "__proto__" || provider === "constructor" || provider === "prototype") {
+    return credentials;
+  }
+  if (key === "__proto__" || key === "constructor" || key === "prototype") {
+    return credentials;
+  }
+
   if (credentials[provider]) {
     delete credentials[provider]![key];
     if (Object.keys(credentials[provider]!).length === 0) {
