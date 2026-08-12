@@ -125,7 +125,7 @@ export function buildRegistryQuery(
   // Note: The registry supports querying one capability at a time
   // For multiple capabilities, we filter after retrieval
   if (requirements.capabilities.length === 1) {
-    query.capability = requirements.capabilities[0] as keyof any;
+    query.capability = requirements.capabilities[0] as keyof import("../../registry/src/types.js").ModelCapabilities;
   }
 
   return query;

@@ -1,4 +1,5 @@
-import type { ModelCatalog, ModelDefinition } from "../../registry/src/types.js";
+import type { ModelDefinition } from "../../registry/src/types.js";
+import type { ModelCatalog } from "../../registry/src/catalog.js";
 import type { LLMRequest } from "../../../src/types.js";
 import type {
   RoutingPolicy,
@@ -86,11 +87,11 @@ export class DeterministicRouter {
     });
 
     // 8. Sort with deterministic tie-breaking
-    scored.sort((a, b) => compareCandidates(a, b));
+    const scoredCandidates = scored.sort((a, b) => compareCandidates(a, b));
 
-    const selected = scored[0].model;
-    const selectedScore = scored[0].score;
-    const selectedBreakdown = scored[0].breakdown;
+    const selected = scoredCandidates[0].model;
+    const selectedScore = scoredCandidates[0].score;
+    const selectedBreakdown = scoredCandidates[0].breakdown;
 
     // 9. Build the routing decision
     const fallbackConfig = getFallbackConfig(policy);
@@ -101,11 +102,11 @@ export class DeterministicRouter {
       score: selectedScore,
       scoreBreakdown: selectedBreakdown,
       candidates: candidateResults.map((candidate) => {
-        const scored = scored.find((s) => s.model.id === candidate.model.id);
+        const scoredEntry = scoredCandidates.find((s) => s.model.id === candidate.model.id);
         return {
           ...candidate,
-          score: scored?.score,
-          scoreBreakdown: scored?.breakdown,
+          score: scoredEntry?.score,
+          scoreBreakdown: scoredEntry?.breakdown,
         };
       }),
       requirements,
