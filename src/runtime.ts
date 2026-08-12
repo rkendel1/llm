@@ -7,10 +7,12 @@ import {
   LLMRoutingDecision,
   LLMStreamChunk,
   LLMToolCall,
+  LLMModelPreference,
 } from "./types.js";
 import { listProviders } from "./providerRegistry.js";
 import { setupProvider } from "./defaultProvider.js";
 import { ensureModelRegistryCurrent, getModelCatalog } from "./modelRegistry.js";
+import { DeterministicRouter, type RoutingPolicy } from "../packages/router/src/index.js";
 
 function normalizeInput<TStructured>(
   input: LLMInput<TStructured>,
@@ -28,15 +30,84 @@ function normalizeInput<TStructured>(
   };
 }
 
+function convertModelPreferenceToPolicy(model?: LLMModelPreference): RoutingPolicy | undefined {
+  if (!model || model === "auto") {
+    return { mode: "auto" };
+  }
+
+  // If it's a mode string, use it
+  const modes = ["auto", "cheap", "fast", "reasoning", "vision", "local"];
+  if (modes.includes(model)) {
+    return { mode: model as any };
+  }
+
+  // Otherwise it's an explicit model ID - don't use router for that
+  return undefined;
+}
+
 async function pickProvider(request: LLMRequest): Promise<{
   provider: LLMProvider;
   routing: LLMRoutingDecision;
+  selectedModelId?: string;
 }> {
   await ensureModelRegistryCurrent();
   const catalog = getModelCatalog();
   const preferredProviders = listProviders();
   const providers = preferredProviders.length > 0 ? preferredProviders : [setupProvider];
 
+  // If an explicit model ID is provided, find it in the registry
+  if (request.model && typeof request.model === "string" && 
+      !["auto", "cheap", "fast", "reasoning", "vision", "local"].includes(request.model)) {
+    const model = catalog.resolve(request.model);
+    if (model) {
+      return {
+        provider: providers[0],
+        routing: {
+          requestedModel: request.model,
+          selectedProvider: model.provider,
+          selectedModel: model.id,
+          selectedModelDefinition: model,
+          reason: ["Explicit model selection"],
+          alternatives: [],
+        },
+        selectedModelId: model.id,
+      };
+    }
+  }
+
+  // Use the router for routing modes
+  try {
+    const policy = convertModelPreferenceToPolicy(request.model);
+    if (policy) {
+      const router = new DeterministicRouter(catalog);
+      const decision = await router.route(request, policy);
+      
+      return {
+        provider: providers[0],
+        routing: {
+          requestedModel: request.model ?? "auto",
+          selectedProvider: decision.selected.provider,
+          selectedModel: decision.selected.id,
+          selectedModelDefinition: decision.selected,
+          reason: decision.reasons,
+          alternatives: decision.candidates
+            .filter((c) => c.eligible && c.model.id !== decision.selected.id)
+            .slice(0, 2)
+            .map((c) => ({
+              provider: c.model.provider,
+              model: c.model.id,
+              reason: c.reasons[0] || "Alternative model",
+            })),
+        },
+        selectedModelId: decision.selected.id,
+      };
+    }
+  } catch (error) {
+    // Fall back to provider-based selection if router fails
+    console.warn("Router failed, falling back to provider selection:", error);
+  }
+
+  // Fallback to provider selection
   const supportedResults = await Promise.all(
     providers.map(async (provider) => ({
       provider,
