@@ -6,5 +6,5 @@
     "rootDir": ".",
     "types": ["node"]
   },
-  "include": ["src", "packages/registry/src"]
+  "include": ["src", "packages/*/src"]
 }
