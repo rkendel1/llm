@@ -1,0 +1,10 @@
+{
+  "name": "@llm/certification",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Certification suite for LLM runtime",
+  "scripts": {
+    "test": "node src/runner.ts"
+  }
+}
