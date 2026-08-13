@@ -6,3 +6,5 @@ export * from "./eligibility.js";
 export * from "./scoring.js";
 export * from "./fallback.js";
 export * from "./router.js";
+export * from "./tracing.js";
+export * from "./resilience.js";

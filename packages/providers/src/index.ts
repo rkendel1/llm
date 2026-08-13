@@ -35,6 +35,17 @@ export {
   type ProviderExecutionEvent,
   type ProviderTelemetry,
 } from "./telemetry.js";
+export {
+  normalizeUsage,
+  calculateCost,
+  getPricing,
+  formatCost,
+  getCostWarning,
+  PROVIDER_PRICING,
+  type UsageMetrics,
+  type PricingInfo,
+  type CostCalculation,
+} from "./usage.js";
 
 // Provider adapters
 export { OllamaAdapter, createOllamaAdapter } from "./ollama/index.js";
