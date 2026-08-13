@@ -171,8 +171,9 @@ describe("Provider Integration", () => {
       const result = await llm({
         messages: [{ role: "user", content: "Add 2 and 3" }],
         tools: {
-          add: ({ a, b }: unknown) => {
-            return (a as number) + (b as number);
+          add: (args: any) => {
+            const { a, b } = args as { a: number; b: number };
+            return a + b;
           },
         },
       });

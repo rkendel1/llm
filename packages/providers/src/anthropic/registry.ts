@@ -1,4 +1,4 @@
-import type { ModelDefinition } from "../../../../registry/src/types.js";
+import type { ModelDefinition, RegistryProviderAdapter, ProviderDiscoveryContext } from "../../../registry/src/types.js";
 
 export const DEFAULT_ANTHROPIC_MODELS: ModelDefinition[] = [
   {
@@ -9,6 +9,10 @@ export const DEFAULT_ANTHROPIC_MODELS: ModelDefinition[] = [
     description: "Anthropic Claude 3 Opus model - most capable",
     capabilities: {
       streaming: true,
+      tools: false,
+      audio: false,
+      reasoning: false,
+      embeddings: false,
       toolCalling: true,
       vision: true,
       structuredOutput: false,
@@ -25,6 +29,10 @@ export const DEFAULT_ANTHROPIC_MODELS: ModelDefinition[] = [
     description: "Anthropic Claude 3 Sonnet model - balanced",
     capabilities: {
       streaming: true,
+      tools: false,
+      audio: false,
+      reasoning: false,
+      embeddings: false,
       toolCalling: true,
       vision: true,
       structuredOutput: false,
@@ -41,6 +49,10 @@ export const DEFAULT_ANTHROPIC_MODELS: ModelDefinition[] = [
     description: "Anthropic Claude 3 Haiku model - fastest",
     capabilities: {
       streaming: true,
+      tools: false,
+      audio: false,
+      reasoning: false,
+      embeddings: false,
       toolCalling: true,
       vision: true,
       structuredOutput: false,
@@ -54,3 +66,16 @@ export const DEFAULT_ANTHROPIC_MODELS: ModelDefinition[] = [
 export async function getAnthropicModels(apiKey: string): Promise<ModelDefinition[]> {
   return DEFAULT_ANTHROPIC_MODELS;
 }
+
+export const anthropicRegistryAdapter: RegistryProviderAdapter = {
+  id: "anthropic",
+  discover: async (context: ProviderDiscoveryContext) => {
+    return DEFAULT_ANTHROPIC_MODELS.map((model) => ({
+      ...model,
+      lifecycle: {
+        status: "stable" as const,
+        lastVerifiedAt: context.now.toISOString(),
+      },
+    }));
+  },
+};

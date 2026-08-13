@@ -1,4 +1,4 @@
-import type { LLMProvider, LLMRequest, ProviderResponse, LLMStreamChunk } from "../../../src/types.js";
+import type { LLMProvider, LLMRequest, ProviderResponse, LLMStreamChunk } from "../../../../src/types.js";
 import { OpenRouterClient, type OpenRouterMessage, type OpenRouterTool } from "./client.js";
 import { createCapabilities } from "../capabilities.js";
 import { ProviderError } from "../types.js";

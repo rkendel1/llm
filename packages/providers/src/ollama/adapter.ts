@@ -1,4 +1,4 @@
-import type { LLMProvider, LLMRequest, ProviderResponse, LLMStreamChunk } from "../../../src/types.js";
+import type { LLMProvider, LLMRequest, ProviderResponse, LLMStreamChunk } from "../../../../src/types.js";
 import { OllamaClient } from "./client.js";
 import { formatMessagesForProvider } from "../normalization.js";
 import { createCapabilities } from "../capabilities.js";

@@ -1,4 +1,4 @@
-import type { ModelDefinition } from "../../../../registry/src/types.js";
+import type { ModelDefinition, RegistryProviderAdapter, ProviderDiscoveryContext } from "../../../registry/src/types.js";
 
 export async function getOpenAIModels(apiKey: string): Promise<ModelDefinition[]> {
   try {
@@ -23,6 +23,10 @@ export async function getOpenAIModels(apiKey: string): Promise<ModelDefinition[]
         description: `OpenAI model: ${model.id}`,
         capabilities: {
           streaming: true,
+      tools: false,
+      audio: false,
+      reasoning: false,
+      embeddings: false,
           toolCalling: true,
           vision: model.id.includes("vision"),
           structuredOutput: true,
@@ -46,6 +50,10 @@ export const DEFAULT_OPENAI_MODELS: ModelDefinition[] = [
     description: "OpenAI GPT-4 Turbo model",
     capabilities: {
       streaming: true,
+      tools: false,
+      audio: false,
+      reasoning: false,
+      embeddings: false,
       toolCalling: true,
       vision: true,
       structuredOutput: true,
@@ -62,6 +70,10 @@ export const DEFAULT_OPENAI_MODELS: ModelDefinition[] = [
     description: "OpenAI GPT-4 model",
     capabilities: {
       streaming: true,
+      tools: false,
+      audio: false,
+      reasoning: false,
+      embeddings: false,
       toolCalling: true,
       vision: true,
       structuredOutput: true,
@@ -78,6 +90,10 @@ export const DEFAULT_OPENAI_MODELS: ModelDefinition[] = [
     description: "OpenAI GPT-3.5 Turbo model",
     capabilities: {
       streaming: true,
+      tools: false,
+      audio: false,
+      reasoning: false,
+      embeddings: false,
       toolCalling: true,
       vision: false,
       structuredOutput: false,
@@ -87,3 +103,16 @@ export const DEFAULT_OPENAI_MODELS: ModelDefinition[] = [
     inputTokenLimit: 4096,
   },
 ];
+
+export const openaiRegistryAdapter: RegistryProviderAdapter = {
+  id: "openai",
+  discover: async (context: ProviderDiscoveryContext) => {
+    return DEFAULT_OPENAI_MODELS.map((model) => ({
+      ...model,
+      lifecycle: {
+        status: "stable" as const,
+        lastVerifiedAt: context.now.toISOString(),
+      },
+    }));
+  },
+};

@@ -1,4 +1,4 @@
-import type { LLMProvider } from "../../src/types.js";
+import type { LLMProvider } from "../../../src/types.js";
 
 export interface ProviderHealthStatus {
   provider: string;

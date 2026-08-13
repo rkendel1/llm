@@ -1,4 +1,4 @@
-import type { LLMProvider, LLMRequest, ProviderResponse, LLMStreamChunk } from "../../../src/types.js";
+import type { LLMProvider, LLMRequest, ProviderResponse, LLMStreamChunk } from "../../../../src/types.js";
 import { OpenAIClient, type OpenAIMessage, type OpenAITool } from "./client.js";
 import { createCapabilities } from "../capabilities.js";
 import { ProviderError } from "../types.js";

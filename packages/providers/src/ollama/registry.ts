@@ -1,4 +1,4 @@
-import type { ModelDefinition } from "../../../../registry/src/types.js";
+import type { ModelDefinition, RegistryProviderAdapter, ProviderDiscoveryContext } from "../../../registry/src/types.js";
 
 export async function getOllamaModels(apiBase: string = "http://localhost:11434"): Promise<ModelDefinition[]> {
   try {
@@ -15,6 +15,10 @@ export async function getOllamaModels(apiBase: string = "http://localhost:11434"
         description: "Local Ollama model",
         capabilities: {
           streaming: true,
+      tools: false,
+      audio: false,
+      reasoning: false,
+      embeddings: false,
           toolCalling: false,
           vision: false,
           structuredOutput: false,
@@ -39,3 +43,17 @@ export async function discoverOllamaModels(): Promise<ModelDefinition[]> {
 
   return [];
 }
+
+export const ollamaRegistryAdapter: RegistryProviderAdapter = {
+  id: "ollama",
+  discover: async (context: ProviderDiscoveryContext) => {
+    const models = await discoverOllamaModels();
+    return models.map((model) => ({
+      ...model,
+      lifecycle: {
+        status: "stable" as const,
+        lastVerifiedAt: context.now.toISOString(),
+      },
+    }));
+  },
+};

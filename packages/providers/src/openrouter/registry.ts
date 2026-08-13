@@ -1,4 +1,4 @@
-import type { ModelDefinition } from "../../../../registry/src/types.js";
+import type { ModelDefinition, RegistryProviderAdapter, ProviderDiscoveryContext } from "../../../registry/src/types.js";
 
 export const DEFAULT_OPENROUTER_MODELS: ModelDefinition[] = [
   {
@@ -9,6 +9,10 @@ export const DEFAULT_OPENROUTER_MODELS: ModelDefinition[] = [
     description: "OpenAI GPT-4 Turbo routed through OpenRouter",
     capabilities: {
       streaming: true,
+      tools: false,
+      audio: false,
+      reasoning: false,
+      embeddings: false,
       toolCalling: true,
       vision: true,
       structuredOutput: true,
@@ -25,6 +29,10 @@ export const DEFAULT_OPENROUTER_MODELS: ModelDefinition[] = [
     description: "OpenAI GPT-4 routed through OpenRouter",
     capabilities: {
       streaming: true,
+      tools: false,
+      audio: false,
+      reasoning: false,
+      embeddings: false,
       toolCalling: true,
       vision: true,
       structuredOutput: true,
@@ -41,6 +49,10 @@ export const DEFAULT_OPENROUTER_MODELS: ModelDefinition[] = [
     description: "Anthropic Claude 3 Opus routed through OpenRouter",
     capabilities: {
       streaming: true,
+      tools: false,
+      audio: false,
+      reasoning: false,
+      embeddings: false,
       toolCalling: true,
       vision: true,
       structuredOutput: false,
@@ -57,6 +69,10 @@ export const DEFAULT_OPENROUTER_MODELS: ModelDefinition[] = [
     description: "Google Gemini Pro routed through OpenRouter",
     capabilities: {
       streaming: true,
+      tools: false,
+      audio: false,
+      reasoning: false,
+      embeddings: false,
       toolCalling: true,
       vision: false,
       structuredOutput: false,
@@ -90,6 +106,10 @@ export async function getOpenRouterModels(apiKey: string): Promise<ModelDefiniti
         description: `Model routed through OpenRouter: ${model.id}`,
         capabilities: {
           streaming: true,
+      tools: false,
+      audio: false,
+      reasoning: false,
+      embeddings: false,
           toolCalling: true,
           vision: model.id.includes("vision") || model.id.includes("pro"),
           structuredOutput: false,
@@ -103,3 +123,16 @@ export async function getOpenRouterModels(apiKey: string): Promise<ModelDefiniti
     return DEFAULT_OPENROUTER_MODELS;
   }
 }
+
+export const openrouterRegistryAdapter: RegistryProviderAdapter = {
+  id: "openrouter",
+  discover: async (context: ProviderDiscoveryContext) => {
+    return DEFAULT_OPENROUTER_MODELS.map((model) => ({
+      ...model,
+      lifecycle: {
+        status: "stable" as const,
+        lastVerifiedAt: context.now.toISOString(),
+      },
+    }));
+  },
+};

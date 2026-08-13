@@ -47,20 +47,25 @@ export { OpenRouterAdapter, createOpenRouterAdapter } from "./openrouter/index.j
 export {
   getOllamaModels,
   discoverOllamaModels,
+  ollamaRegistryAdapter,
 } from "./ollama/registry.js";
 export {
   getOpenAIModels,
   DEFAULT_OPENAI_MODELS,
+  openaiRegistryAdapter,
 } from "./openai/registry.js";
 export {
   getAnthropicModels,
   DEFAULT_ANTHROPIC_MODELS,
+  anthropicRegistryAdapter,
 } from "./anthropic/registry.js";
 export {
   getGoogleModels,
   DEFAULT_GOOGLE_MODELS,
+  googleRegistryAdapter,
 } from "./google/registry.js";
 export {
   getOpenRouterModels,
   DEFAULT_OPENROUTER_MODELS,
+  openrouterRegistryAdapter,
 } from "./openrouter/registry.js";

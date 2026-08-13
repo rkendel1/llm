@@ -1,5 +1,5 @@
 import type { ProviderResponse } from "../types.js";
-import type { LLMRequest } from "../../../src/types.js";
+import type { LLMRequest } from "../../../../src/types.js";
 
 export class OllamaClient {
   private apiBase: string;

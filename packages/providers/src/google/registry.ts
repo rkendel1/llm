@@ -1,5 +1,4 @@
-import type { ModelDefinition } from "../../../../registry/src/types.js";
-
+import type { ModelDefinition, RegistryProviderAdapter, ProviderDiscoveryContext } from "../../../registry/src/types.js";
 export const DEFAULT_GOOGLE_MODELS: ModelDefinition[] = [
   {
     id: "gemini-1.5-pro",
@@ -9,6 +8,10 @@ export const DEFAULT_GOOGLE_MODELS: ModelDefinition[] = [
     description: "Google Gemini 1.5 Pro model",
     capabilities: {
       streaming: true,
+      tools: false,
+      audio: false,
+      reasoning: false,
+      embeddings: false,
       toolCalling: true,
       vision: true,
       structuredOutput: false,
@@ -25,6 +28,10 @@ export const DEFAULT_GOOGLE_MODELS: ModelDefinition[] = [
     description: "Google Gemini 1.5 Flash model - faster",
     capabilities: {
       streaming: true,
+      tools: false,
+      audio: false,
+      reasoning: false,
+      embeddings: false,
       toolCalling: true,
       vision: true,
       structuredOutput: false,
@@ -41,6 +48,10 @@ export const DEFAULT_GOOGLE_MODELS: ModelDefinition[] = [
     description: "Google Gemini Pro model",
     capabilities: {
       streaming: true,
+      tools: false,
+      audio: false,
+      reasoning: false,
+      embeddings: false,
       toolCalling: true,
       vision: false,
       structuredOutput: false,
@@ -57,6 +68,10 @@ export const DEFAULT_GOOGLE_MODELS: ModelDefinition[] = [
     description: "Google Gemini Pro with vision capabilities",
     capabilities: {
       streaming: true,
+      tools: false,
+      audio: false,
+      reasoning: false,
+      embeddings: false,
       toolCalling: true,
       vision: true,
       structuredOutput: false,
@@ -70,3 +85,16 @@ export const DEFAULT_GOOGLE_MODELS: ModelDefinition[] = [
 export async function getGoogleModels(apiKey: string): Promise<ModelDefinition[]> {
   return DEFAULT_GOOGLE_MODELS;
 }
+
+export const googleRegistryAdapter: RegistryProviderAdapter = {
+  id: "google",
+  discover: async (context: ProviderDiscoveryContext) => {
+    return DEFAULT_GOOGLE_MODELS.map((model) => ({
+      ...model,
+      lifecycle: {
+        status: "stable" as const,
+        lastVerifiedAt: context.now.toISOString(),
+      },
+    }));
+  },
+};
