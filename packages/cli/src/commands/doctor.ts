@@ -1,8 +1,7 @@
 import { Command, type CommandContext, type CommandResult } from "./base.js";
 import { CredentialStore } from "../../../secrets/src/index.js";
-import { ModelRegistry } from "../../../registry/src/index.js";
 import { bold, info, section, success, warning, error } from "../ui/formatting.js";
-import { getCacheFilePath } from "./utils.js";
+import { loadAvailableCatalog } from "./utils.js";
 
 export class DoctorCommand extends Command {
   name = "doctor";
@@ -26,11 +25,7 @@ export class DoctorCommand extends Command {
 
       // Check 2: Registry available
       try {
-        const registry = new ModelRegistry({
-          cacheFile: getCacheFilePath(),
-          providers: [],
-        });
-        const catalog = registry.getCatalog();
+        const catalog = await loadAvailableCatalog();
         const modelCount = catalog.all().length;
         checks.push({
           name: "Model Registry",

@@ -93,7 +93,7 @@ export class SetupCommand extends Command {
       console.log(section("Setup Complete!"));
       console.log(success(`✓ Vault ${initialized ? "initialized" : "updated"} at ~/.llm/credentials.enc`));
       console.log(info("Your credentials are encrypted and ready to use."));
-      console.log(`\nNext steps:\n  ${bold("npx --no-install llm providers")} - View available providers\n  ${bold("npx --no-install llm status")} - Check your setup\n  ${bold("npx --no-install llm models")} - List available models\n\nSupported providers: Ollama (local), OpenAI, Anthropic, Google, OpenRouter\n`);
+      console.log(`\nNext steps:\n  ${bold("npx --no-install llm providers")}\n  ${bold("npx --no-install llm status")}\n  ${bold("npx --no-install llm models")}\n\nSupported providers: Ollama (local), OpenAI, Anthropic, Google, OpenRouter\n`);
 
       return { success: true, message: "Setup complete" };
     } catch (error) {

@@ -1,6 +1,7 @@
 import { Command, type CommandContext, type CommandResult } from "./base.js";
 import { CredentialStore } from "../../../secrets/src/index.js";
 import { bold, success, warning, info, section, table } from "../ui/formatting.js";
+import { promptPassword } from "../ui/prompts.js";
 
 export class StatusCommand extends Command {
   name = "status";
@@ -31,7 +32,8 @@ export class StatusCommand extends Command {
       console.log(section("📝 Vault Contents"));
       
       try {
-        // Try to unlock with empty password check (will fail but shows vault exists)
+        const password = await promptPassword("Master password (hidden): ");
+        await store.unlockVault(password);
         const providers = await store.listProviders();
         if (providers.length === 0) {
           console.log(warning("Vault is empty - no credentials stored yet.\n"));
@@ -47,10 +49,8 @@ export class StatusCommand extends Command {
         const output = table(["Provider", "Keys", "Status"], rows);
         console.log(output);
         console.log("");
-      } catch {
-        console.log(
-          warning("Vault exists but is locked. Use your master password to unlock it.\n")
-        );
+      } catch (error) {
+        console.log(warning(`${error instanceof Error ? error.message : "Unable to unlock vault"}\n`));
       }
 
       return { success: true };

@@ -1,8 +1,8 @@
 import { Command, type CommandContext, type CommandResult } from "./base.js";
 import { CredentialStore } from "../../../secrets/src/index.js";
-import { ModelRegistry } from "../../../registry/src/index.js";
 import { bold, info, section, table, warning, success } from "../ui/formatting.js";
-import { getCacheFilePath } from "./utils.js";
+import { promptPassword } from "../ui/prompts.js";
+import { loadAvailableCatalog } from "./utils.js";
 
 export class ProvidersCommand extends Command {
   name = "providers";
@@ -12,36 +12,21 @@ export class ProvidersCommand extends Command {
     try {
       console.log(section("🔌 Configured Providers"));
 
-      // Get providers from registry cache
-      const registry = new ModelRegistry({
-        cacheFile: getCacheFilePath(),
-        providers: [],
-      });
-
-      const catalog = registry.getCatalog();
-      const registryProviders = Array.from(
-        new Set(catalog.all().map((m) => m.provider))
-      ).filter(Boolean) as string[];
+      const catalog = await loadAvailableCatalog();
+      const supportedProviders = ["openai", "anthropic", "google", "openrouter", "ollama"];
 
       // Get configured providers from vault
       const store = new CredentialStore();
       const vaultExists = store.vaultExists();
 
-      if (registryProviders.length === 0) {
-        console.log(info("No providers available in registry.\n"));
-        return { success: true };
-      }
-
       let configuredProviders: string[] = [];
       if (vaultExists) {
-        try {
-          configuredProviders = await store.listProviders();
-        } catch {
-          // Vault exists but is locked
-        }
+        const password = await promptPassword("Master password (hidden): ");
+        await store.unlockVault(password);
+        configuredProviders = await store.listProviders();
       }
 
-      const rows: string[][] = registryProviders.map((provider) => {
+      const rows: string[][] = supportedProviders.map((provider) => {
         const configured = configuredProviders.includes(provider);
         const status = configured ? success("✓ Configured") : warning("✗ Not configured");
         const models = catalog.all().filter((m) => m.provider === provider).length;
@@ -53,12 +38,12 @@ export class ProvidersCommand extends Command {
 
       const configuredCount = configuredProviders.length;
       console.log(
-        `\n${info(`${configuredCount} of ${registryProviders.length} providers configured`)}\n`
+        `\n${info(`${configuredCount} of ${supportedProviders.length} providers configured`)}\n`
       );
 
       return {
         success: true,
-        data: { total: registryProviders.length, configured: configuredCount },
+        data: { total: supportedProviders.length, configured: configuredCount },
       };
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unknown error";

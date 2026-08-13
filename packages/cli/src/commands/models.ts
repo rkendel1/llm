@@ -1,7 +1,6 @@
 import { Command, type CommandContext, type CommandResult } from "./base.js";
-import { ModelRegistry } from "../../../registry/src/index.js";
 import { bold, info, section, table } from "../ui/formatting.js";
-import { getCacheFilePath } from "./utils.js";
+import { loadAvailableCatalog } from "./utils.js";
 
 export class ModelsCommand extends Command {
   name = "models";
@@ -11,18 +10,11 @@ export class ModelsCommand extends Command {
     try {
       console.log(section("🤖 Available Models"));
 
-      // Create a registry with an offline cache
-      const registry = new ModelRegistry({
-        cacheFile: getCacheFilePath(),
-        providers: [], // No providers - load from cache only
-      });
-
-      // Try to load from cache
-      const catalog = registry.getCatalog();
+      const catalog = await loadAvailableCatalog();
       const models = catalog.all();
 
       if (models.length === 0) {
-        console.log(info("No models available. Run 'llm setup' to configure providers.\n"));
+        console.log(info("No bundled or cached models are available.\n"));
         return { success: true };
       }
 
