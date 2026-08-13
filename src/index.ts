@@ -12,6 +12,8 @@ import { initializeDefaultProviders } from "./providerInit.js";
 import type { LLMInput, LLMCallOptions, LLMResponse, LLMStreamChunk, LLMProvider } from "./types.js";
 import type { RegistryProviderAdapter, RegistrySnapshot } from "../packages/registry/src/index.js";
 import { lockCredentialSession, unlockCredentialSession } from "./credentials.js";
+import { readiness } from "./readiness.js";
+export { readiness, type LLMReadiness, type ProviderReadiness, type ReadinessOptions } from "./readiness.js";
 
 // Re-export provider infrastructure
 export * from "../packages/providers/src/index.js";
@@ -38,6 +40,7 @@ export type LLMFunction = {
   unlock: typeof unlockCredentialSession;
   lock: typeof lockCredentialSession;
   explain: typeof explainLLMRoute;
+  readiness: typeof readiness;
 };
 
 const fn = (async <TStructured = unknown>(input: LLMInput<TStructured>, options?: LLMCallOptions<TStructured>) =>
@@ -57,5 +60,6 @@ fn.initializeDefaultProviders = initializeDefaultProviders;
 fn.unlock = unlockCredentialSession;
 fn.lock = lockCredentialSession;
 fn.explain = explainLLMRoute;
+fn.readiness = readiness;
 
 export const llm = fn;

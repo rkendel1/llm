@@ -74,7 +74,11 @@ export class SetupCommand extends Command {
       }
 
       console.log(bold(`\nStep ${initialized ? "2" : "1"}: Add API Keys (Optional)`));
-      console.log(info("Ollama does not need an API key and is detected automatically when running."));
+      const providerReadiness = await llm.readiness();
+      const ollama = providerReadiness.providers.find((item) => item.provider === "ollama")!;
+      console.log(ollama.executable
+        ? success(`✓ Ollama detected${ollama.models.length ? ` (${ollama.models.join(", ")})` : " (no models installed)"}`)
+        : info("Ollama does not need an API key and was not detected."));
       let addMore = true;
 
       while (addMore) {
