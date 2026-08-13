@@ -13,10 +13,16 @@ export function prompt(question: string, rl: readline.Interface): Promise<string
   });
 }
 
-export async function promptPassword(
-  question: string,
-  rl: readline.Interface
-): Promise<string> {
+export async function promptOnce(question: string): Promise<string> {
+  const rl = createInterface();
+  try {
+    return await prompt(question, rl);
+  } finally {
+    rl.close();
+  }
+}
+
+export async function promptPassword(question: string): Promise<string> {
   return new Promise((resolve, reject) => {
     const stdin = process.stdin;
     if (!stdin.isTTY || typeof stdin.setRawMode !== "function") {
@@ -24,7 +30,6 @@ export async function promptPassword(
       return;
     }
 
-    rl.pause();
     process.stdout.write(question);
 
     let password = "";
@@ -35,7 +40,6 @@ export async function promptPassword(
     const cleanup = () => {
       stdin.removeListener("data", onData);
       if (!wasRaw) stdin.setRawMode(false);
-      rl.resume();
     };
 
     const onData = (chunk: string | Buffer) => {
@@ -55,13 +59,11 @@ export async function promptPassword(
         if (char === "\u007f" || char === "\b") {
           if (password.length > 0) {
             password = password.slice(0, -1);
-            process.stdout.write("\b \b");
           }
           continue;
         }
         if (char >= " ") {
           password += char;
-          process.stdout.write("*");
         }
       }
     };

@@ -59,6 +59,15 @@ export class CredentialStore {
   }
 
   /**
+   * Replace an existing vault after the caller has explicitly confirmed reset.
+   */
+  async resetVault(masterPassword: string): Promise<void> {
+    this.masterPassword = masterPassword;
+    this.cachedCredentials = {};
+    await this.saveVault();
+  }
+
+  /**
    * Unlock the vault with master password
    */
   async unlockVault(masterPassword: string): Promise<void> {
