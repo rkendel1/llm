@@ -26,6 +26,8 @@ export type LLMUsage = {
   inputTokens?: number;
   outputTokens?: number;
   totalTokens?: number;
+  cachedInputTokens?: number;
+  reasoningTokens?: number;
 };
 
 export type LLMRoutingDecision = {
@@ -79,6 +81,8 @@ export type LLMRequest<TStructured = unknown> = {
   tools?: LLMTools;
   output?: StructuredOutputOptions<TStructured>;
   maxToolRounds?: number;
+  timeoutMs?: number;
+  signal?: AbortSignal;
 };
 
 export type LLMInput<TStructured = unknown> =
