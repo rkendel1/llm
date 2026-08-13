@@ -12,7 +12,9 @@
       "@llm/registry": ["./packages/registry/src/index.ts"],
       "@llm/router": ["./packages/router/src/index.ts"],
       "@llm/core": ["./packages/core/src/index.ts"],
-      "@llm/cli": ["./packages/cli/src/index.ts"]
+      "@llm/cli": ["./packages/cli/src/index.ts"],
+      "@llm/providers": ["./packages/providers/src/index.ts"],
+      "@llm/proxy": ["./packages/proxy/src/index.ts"]
     }
   },
   "include": ["src", "packages/*/src", "test"]

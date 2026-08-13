@@ -4,6 +4,7 @@ import { StatusCommand } from "./commands/status.js";
 import { ModelsCommand } from "./commands/models.js";
 import { ProvidersCommand } from "./commands/providers.js";
 import { DoctorCommand } from "./commands/doctor.js";
+import { ProxyCommand } from "./commands/proxy.js";
 import { CommandNotFoundError } from "./errors.js";
 import { bold, info, section } from "./ui/formatting.js";
 
@@ -21,6 +22,7 @@ export class CLI {
       new ModelsCommand(),
       new ProvidersCommand(),
       new DoctorCommand(),
+      new ProxyCommand(),
     ];
 
     for (const command of commands) {
