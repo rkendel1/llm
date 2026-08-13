@@ -30,6 +30,10 @@
     "@llm/providers": {
       "import": "./dist/packages/providers/src/index.js",
       "types": "./dist/packages/providers/src/index.d.ts"
+    },
+    "@llm/proxy": {
+      "import": "./dist/packages/proxy/src/index.js",
+      "types": "./dist/packages/proxy/src/index.d.ts"
     }
   },
   "scripts": {
