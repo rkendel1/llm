@@ -24,6 +24,34 @@ Package binaries installed locally are run through `npx`. To use `llm`
 directly from any directory, install it globally with
 `npm install --global @easy-llm/llm`.
 
+### Local Ollama
+
+Ollama needs no API key. Start Ollama, pull a model, and initialize the local
+provider before making a request:
+
+```bash
+ollama serve
+ollama pull llama3.2
+```
+
+```ts
+import { llm } from "@easy-llm/llm";
+
+await llm.initializeDefaultProviders();
+await llm.refreshModelRegistry();
+
+const response = await llm({
+  model: "llama3.2:latest",
+  messages: [{ role: "user", content: "Explain closures simply." }],
+});
+
+console.log(response.text);
+```
+
+The default local endpoint is `http://localhost:11434`. Pass
+`{ ollamaApiBase: "http://your-host:11434" }` to
+`initializeDefaultProviders` when Ollama runs elsewhere.
+
 ```ts
 import { llm } from "@easy-llm/llm";
 const answer = await llm("Explain this code");

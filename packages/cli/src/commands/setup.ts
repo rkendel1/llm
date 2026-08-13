@@ -69,6 +69,7 @@ export class SetupCommand extends Command {
       }
 
       console.log(bold(`\nStep ${initialized ? "2" : "1"}: Add API Keys (Optional)`));
+      console.log(info("Ollama does not need an API key and is detected automatically when running."));
       let addMore = true;
 
       while (addMore) {

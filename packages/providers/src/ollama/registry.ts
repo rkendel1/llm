@@ -11,25 +11,30 @@ export async function getOllamaModels(apiBase: string = "http://localhost:11434"
         id: model.name,
         provider: "ollama",
         name: model.name,
-        displayName: model.name,
         description: "Local Ollama model",
         capabilities: {
-          streaming: true,
-         tools: false,
-         audio: false,
-         reasoning: false,
-         embeddings: false,
-          toolCalling: false,
+          tools: false,
           vision: false,
+          audio: false,
+          reasoning: false,
           structuredOutput: false,
+          embeddings: false,
         },
-        costPer1kInputTokens: 0,
-        costPer1kOutputTokens: 0,
-        inputTokenLimit: 4096,
+        context: { input: 4096 },
+        pricing: {
+          inputPerMillion: 0,
+          outputPerMillion: 0,
+          currency: "USD" as const,
+        },
+        availability: { local: true, online: false, status: "available" as const },
+        lifecycle: {
+          status: "stable" as const,
+          lastVerifiedAt: new Date().toISOString(),
+        },
       })) || []
-    ) as any;
+    );
   } catch {
-    return [] as any;
+    return [];
   }
 }
 
@@ -50,10 +55,7 @@ export const ollamaRegistryAdapter: RegistryProviderAdapter = {
     const models = await discoverOllamaModels();
     return models.map((model) => ({
       ...model,
-      lifecycle: {
-        status: "stable" as const,
-        lastVerifiedAt: context.now.toISOString(),
-      },
+      lifecycle: { status: "stable" as const },
     }));
   },
 };

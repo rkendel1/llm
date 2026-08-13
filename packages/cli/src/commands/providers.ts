@@ -27,16 +27,26 @@ export class ProvidersCommand extends Command {
       }
 
       const rows: string[][] = supportedProviders.map((provider) => {
-        const configured = configuredProviders.includes(provider);
-        const status = configured ? success("✓ Configured") : warning("✗ Not configured");
         const models = catalog.all().filter((m) => m.provider === provider).length;
+        const configured = provider === "ollama" ? models > 0 : configuredProviders.includes(provider);
+        const status = provider === "ollama"
+          ? configured
+            ? success("✓ Running locally")
+            : warning("✗ Not running")
+          : configured
+            ? success("✓ Configured")
+            : warning("✗ Not configured");
         return [provider, models.toString(), status];
       });
 
       const output = table(["Provider", "Models", "Status"], rows);
       console.log(output);
 
-      const configuredCount = configuredProviders.length;
+      const configuredCount = supportedProviders.filter((provider) =>
+        provider === "ollama"
+          ? catalog.all().some((model) => model.provider === "ollama")
+          : configuredProviders.includes(provider)
+      ).length;
       console.log(
         `\n${info(`${configuredCount} of ${supportedProviders.length} providers configured`)}\n`
       );
