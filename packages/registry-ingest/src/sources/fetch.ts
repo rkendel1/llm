@@ -72,12 +72,17 @@ export function aggregateFetchResults(results: SourceFetchResult[]): {
       });
     } else {
       if (!models[result.provider]) {
-        models[result.provider] = {};
+        models[result.provider] = Object.create(null);
       }
 
       for (const model of result.models) {
         const key = `${result.sourceId}:${model.externalId}`;
-        models[result.provider][key] = model;
+        Object.defineProperty(models[result.provider], key, {
+          value: model,
+          writable: true,
+          enumerable: true,
+          configurable: true,
+        });
       }
     }
 
