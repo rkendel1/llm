@@ -187,6 +187,25 @@ export function formatCost(cost: CostCalculation): string {
 }
 
 /**
+ * Convert CostCalculation to CostEstimate format for tracing.
+ */
+export function toCostEstimate(calculation: CostCalculation): {
+  currency: "USD";
+  input: number;
+  output: number;
+  total: number;
+  estimated: true;
+} {
+  return {
+    currency: "USD",
+    input: calculation.inputCost,
+    output: calculation.outputCost,
+    total: calculation.totalCost,
+    estimated: true,
+  };
+}
+
+/**
  * Estimate cost warning when registry is stale.
  */
 export function getCostWarning(registryStaleMinutes?: number): string | undefined {

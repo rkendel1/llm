@@ -40,6 +40,7 @@ export {
   calculateCost,
   getPricing,
   formatCost,
+  toCostEstimate,
   getCostWarning,
   PROVIDER_PRICING,
   type UsageMetrics,

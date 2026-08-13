@@ -12,7 +12,9 @@ import {
 import { listProviders } from "./providerRegistry.js";
 import { setupProvider } from "./defaultProvider.js";
 import { ensureModelRegistryCurrent, getModelCatalog } from "./modelRegistry.js";
-import { DeterministicRouter, type RoutingPolicy } from "../packages/router/src/index.js";
+import { DeterministicRouter, type RoutingPolicy, withRequestTrace, recordAttempt, updateTraceRoute, setTraceUsage, setTraceCost, getCurrentRequestTrace } from "../packages/router/src/index.js";
+import { withTimeoutAndAbort } from "./timeout.js";
+import { normalizeUsage, calculateCost, getPricing, toCostEstimate } from "../packages/providers/src/index.js";
 
 function normalizeInput<TStructured>(
   input: LLMInput<TStructured>,
@@ -191,71 +193,147 @@ export async function invokeLLM<TStructured = unknown>(
   input: LLMInput<TStructured>,
 ): Promise<LLMResponse<TStructured>> {
   const request = normalizeInput(input);
-  const { provider, routing } = await pickProvider(request);
-  const catalog = getModelCatalog();
+  const requestedModel = typeof request.model === "string" ? request.model : "auto";
+  
+  return withRequestTrace(requestedModel, "auto", async (trace) => {
+    try {
+      const { provider, routing } = await withTimeoutAndAbort(
+        pickProvider(request),
+        request.timeoutMs,
+        request.signal,
+        "Provider selection timeout"
+      );
+      
+      const catalog = getModelCatalog();
+      updateTraceRoute(provider.id, routing.selectedModel, routing.selectedModel);
 
-  const toolCalls: LLMToolCall[] = [];
-  const allMessages = [...request.messages];
-  const maxRounds = request.maxToolRounds ?? 2;
+      const toolCalls: LLMToolCall[] = [];
+      const allMessages = [...request.messages];
+      const maxRounds = request.maxToolRounds ?? 2;
+      
+      const startTime = Date.now();
 
-  let response = await provider.generate({ ...request, messages: allMessages });
-  toolCalls.push(...(response.toolCalls ?? []));
+      let response = await withTimeoutAndAbort(
+        provider.generate({ ...request, messages: allMessages }),
+        request.timeoutMs,
+        request.signal,
+        "Provider generation timeout"
+      );
+      toolCalls.push(...(response.toolCalls ?? []));
+      
+      const attempt = {
+        provider: provider.id,
+        model: response.model,
+        startedAt: new Date().toISOString(),
+        completedAt: new Date().toISOString(),
+        status: "success" as const,
+        latencyMs: Date.now() - startTime,
+      };
+      recordAttempt(attempt);
 
-  let rounds = 0;
-  while ((response.toolCalls?.length ?? 0) > 0 && rounds < maxRounds) {
-    const toolResults = await executeToolCalls(
-      { ...request, messages: allMessages },
-      response.toolCalls ?? [],
-    );
+      let rounds = 0;
+      while ((response.toolCalls?.length ?? 0) > 0 && rounds < maxRounds) {
+        const toolResults = await executeToolCalls(
+          { ...request, messages: allMessages },
+          response.toolCalls ?? [],
+        );
 
-    if (toolResults.length === 0) {
-      break;
+        if (toolResults.length === 0) {
+          break;
+        }
+
+        allMessages.push(
+          {
+            role: "assistant",
+            content: response.text,
+          },
+          ...toolResults,
+        );
+
+        response = await withTimeoutAndAbort(
+          provider.generate({ ...request, messages: allMessages }),
+          request.timeoutMs,
+          request.signal,
+          "Provider generation timeout"
+        );
+        toolCalls.push(...(response.toolCalls ?? []));
+        rounds += 1;
+      }
+
+      const text = response.text;
+      const structured = request.output?.parse(text);
+      const resolvedModel = catalog.resolve(response.model, provider.id) ?? catalog.resolve(response.model);
+      if (resolvedModel) {
+        routing.selectedModelDefinition = resolvedModel;
+      }
+      // Always update selectedModel when we get it from the provider response
+      if (response.model) {
+        routing.selectedModel = response.model;
+      }
+
+      // Track usage and cost
+      if (response.usage) {
+        const normalizedUsage = normalizeUsage(response.usage);
+        setTraceUsage(normalizedUsage);
+        
+        const pricing = getPricing(`${provider.id}:${response.model}`);
+        const cost = calculateCost(normalizedUsage, pricing);
+        setTraceCost(toCostEstimate(cost));
+      }
+
+      trace.outcome = "success";
+      trace.completedAt = new Date().toISOString();
+
+      return {
+        text,
+        model: response.model,
+        provider: provider.id,
+        usage: response.usage,
+        toolCalls,
+        messages: allMessages,
+        structured,
+        routing,
+      };
+    } catch (error) {
+      trace.outcome = "failure";
+      trace.completedAt = new Date().toISOString();
+      throw error;
     }
-
-    allMessages.push(
-      {
-        role: "assistant",
-        content: response.text,
-      },
-      ...toolResults,
-    );
-
-    response = await provider.generate({ ...request, messages: allMessages });
-    toolCalls.push(...(response.toolCalls ?? []));
-    rounds += 1;
-  }
-
-  const text = response.text;
-  const structured = request.output?.parse(text);
-  const resolvedModel = catalog.resolve(response.model, provider.id) ?? catalog.resolve(response.model);
-  if (resolvedModel) {
-    routing.selectedModelDefinition = resolvedModel;
-  }
-  // Always update selectedModel when we get it from the provider response
-  if (response.model) {
-    routing.selectedModel = response.model;
-  }
-
-  return {
-    text,
-    model: response.model,
-    provider: provider.id,
-    usage: response.usage,
-    toolCalls,
-    messages: allMessages,
-    structured,
-    routing,
-  };
+  });
 }
 
 export async function* streamLLM(
   input: LLMInput,
 ): AsyncIterable<LLMStreamChunk> {
   const request = normalizeInput(input);
-  const { provider } = await pickProvider(request);
+  const requestedModel = typeof request.model === "string" ? request.model : "auto";
+  const trace = getCurrentRequestTrace();
+
+  const { provider } = await withTimeoutAndAbort(
+    pickProvider(request),
+    request.timeoutMs,
+    request.signal,
+    "Provider selection timeout"
+  );
 
   if (!provider.stream) {
-    const response = await provider.generate(request);
+    const response = await withTimeoutAndAbort(
+      provider.generate(request),
+      request.timeoutMs,
+      request.signal,
+      "Provider generation timeout"
+    );
+    
+    // Track usage if in a trace context
+    if (response.usage && trace) {
+      const normalizedUsage = normalizeUsage(response.usage);
+      setTraceUsage(normalizedUsage);
+      
+      const pricing = getPricing(`${provider.id}:${response.model}`);
+      const cost = calculateCost(normalizedUsage, pricing);
+      setTraceCost(toCostEstimate(cost));
+    }
+    
     yield { type: "text", text: response.text };
     for (const toolCall of response.toolCalls ?? []) {
       yield { type: "tool_call", toolCall };
