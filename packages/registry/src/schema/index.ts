@@ -78,7 +78,45 @@ export interface AIModelProvenance {
 export interface AIModelQuality {
   completeness: number;
   confidence: number;
+  freshness?: number;
+  assessedAt?: string;
   warnings: string[];
+}
+
+export type EvidenceMethod = "provider_declared" | "provider_inferred" | "adapter_inferred" | "repository_declared" | "aggregator_declared" | "runtime_verified" | "unknown";
+export type EvidenceAuthority = "official_provider" | "model_creator" | "trusted_aggregator" | "runtime" | "inference" | "unknown";
+export interface ModelEvidence {
+  readonly id: string;
+  readonly source: string;
+  readonly sourceModelId?: string;
+  readonly sourceField?: string;
+  readonly fact: string;
+  readonly value: unknown;
+  readonly method: EvidenceMethod;
+  readonly authority: EvidenceAuthority;
+  readonly confidence: number;
+  readonly observedAt?: string;
+  readonly verifiedAt?: string;
+  readonly adapterVersion?: string;
+  readonly normalizationVersion?: string;
+  readonly metadata?: Readonly<Record<string, unknown>>;
+}
+
+export interface EvidenceConflict {
+  fact: string;
+  values: Array<{ value: unknown; evidenceIds: string[] }>;
+  resolution?: { selectedValue: unknown; reason: string };
+  detectedAt: string;
+}
+
+export interface CapabilityAssessment { status: CapabilityStatus; confidence: number; evidenceIds: string[] }
+export interface RuntimeEvidence { modelId: string; capability: string; result: "supported" | "unsupported" | "inconclusive"; observedAt: string; metadata?: Record<string, unknown> }
+
+export interface AIModelIntelligence {
+  evidence: ModelEvidence[];
+  conflicts: EvidenceConflict[];
+  quality: AIModelQuality;
+  reconciliationVersion: string;
 }
 
 export type FactStatus = "verified" | "conflicting" | "inferred" | "unverified";
@@ -142,6 +180,7 @@ export interface AIModel {
   quality: AIModelQuality;
   /** Internal field-level intelligence used to derive the flattened public fields. */
   facts: AIModelFacts;
+  intelligence?: AIModelIntelligence;
   metadata?: Record<string, unknown>;
 }
 

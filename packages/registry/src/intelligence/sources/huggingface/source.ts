@@ -1,6 +1,7 @@
 import type { EvidenceSource, IntelligenceRouteClaim, IntelligenceSourceResult } from "../../../schema/index.js";
 import type { IntelligenceSource } from "../types.js";
 import type { HuggingFaceModelInfo } from "./types.js";
+import { HuggingFaceClient, validateHuggingFaceModelInfo } from "./client.js";
 
 export interface HuggingFaceSourceOptions {
   token?: string;
@@ -13,15 +14,12 @@ const values = (value: string | string[] | undefined): string[] | undefined => v
 export class HuggingFaceSource implements IntelligenceSource {
   id = "huggingface";
   private readonly endpoint: string;
-  constructor(private readonly options: HuggingFaceSourceOptions = {}) { this.endpoint = options.endpoint ?? "https://huggingface.co"; }
+  private readonly client: HuggingFaceClient;
+  constructor(private readonly options: HuggingFaceSourceOptions = {}) { this.endpoint = options.endpoint ?? "https://huggingface.co"; this.client = new HuggingFaceClient({ endpoint: this.endpoint, token: options.token }); }
 
   private async fetchModel(modelId: string): Promise<HuggingFaceModelInfo> {
-    if (this.options.fetchModel) return this.options.fetchModel(modelId);
-    const query = new URLSearchParams();
-    for (const field of ["cardData", "downloads", "inference", "inferenceProviderMapping", "lastModified", "library_name", "likes", "pipeline_tag", "tags"]) query.append("expand", field);
-    const response = await fetch(`${this.endpoint}/api/models/${modelId}?${query}`, { headers: this.options.token ? { Authorization: `Bearer ${this.options.token}` } : undefined });
-    if (!response.ok) throw new Error(`Hugging Face model info returned HTTP ${response.status} for '${modelId}'`);
-    return response.json() as Promise<HuggingFaceModelInfo>;
+    if (this.options.fetchModel) { const result = await this.options.fetchModel(modelId); validateHuggingFaceModelInfo(result); return result; }
+    return this.client.getModel(modelId);
   }
 
   async collect(modelId: string, sourceModelId = modelId): Promise<IntelligenceSourceResult> {

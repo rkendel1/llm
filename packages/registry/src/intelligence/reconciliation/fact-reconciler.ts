@@ -5,7 +5,7 @@ const key = (value: unknown) => JSON.stringify(value);
 
 export function reconcileFact<T>(evidence: EvidenceSource<T>[], now = new Date()): ModelFact<T> | undefined {
   if (!evidence.length) return undefined;
-  const ranked = [...evidence].sort((a, b) => evidenceConfidence(b, now) - evidenceConfidence(a, now));
+  const ranked = [...evidence].sort((a, b) => evidenceConfidence(b, now) - evidenceConfidence(a, now) || a.id.localeCompare(b.id));
   const winner = ranked[0];
   const conflicts = ranked.filter((item) => key(item.value) !== key(winner.value));
   const corroborating = ranked.filter((item) => key(item.value) === key(winner.value));
