@@ -83,6 +83,7 @@ export type LLMRequest<TStructured = unknown> = {
   maxToolRounds?: number;
   timeoutMs?: number;
   signal?: AbortSignal;
+  strictCapabilities?: boolean;
 };
 
 export type LLMInput<TStructured = unknown> =

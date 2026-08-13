@@ -4,7 +4,8 @@
   "description": "Provider-agnostic LLM runtime, routing, and model registry",
   "files": [
     "dist",
-    "registry/registry-snapshot.json"
+    "registry/registry-snapshot.json",
+    "registry/snapshots/current.json"
   ],
   "main": "dist/src/index.js",
   "bin": {

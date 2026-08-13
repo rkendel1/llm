@@ -30,6 +30,10 @@ export interface RoutingPolicy {
   fallback?: boolean | FallbackOptions;
   /** Reject unknown capability metadata instead of treating it as a lower-confidence candidate. */
   strictCapabilities?: boolean;
+  unknownCapabilityPenalty?: number;
+  staleMetadataPenalty?: number;
+  conflictPenalty?: number;
+  inferredEvidencePenalty?: number;
 }
 
 export interface FallbackOptions {

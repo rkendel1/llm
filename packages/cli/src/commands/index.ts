@@ -7,3 +7,4 @@ export * from "./doctor.js";
 export * from "./proxy.js";
 export * from "./registry.js";
 export * from "./model.js";
+export * from "./route.js";

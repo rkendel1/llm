@@ -11,8 +11,8 @@ import {
 } from "./types.js";
 import { listProviders } from "./providerRegistry.js";
 import { setupProvider } from "./defaultProvider.js";
-import { ensureModelRegistryCurrent, getModelCatalog } from "./modelRegistry.js";
-import { DeterministicRouter, type RoutingPolicy, withRequestTrace, recordAttempt, updateTraceRoute, setTraceUsage, setTraceCost, getCurrentRequestTrace } from "../packages/router/src/index.js";
+import { ensureModelRegistryCurrent, getCanonicalModels, getModelCatalog } from "./modelRegistry.js";
+import { DeterministicRouter, IntelligentRouter, type RoutingPolicy, withRequestTrace, recordAttempt, updateTraceRoute, setTraceUsage, setTraceCost, getCurrentRequestTrace } from "../packages/router/src/index.js";
 import { withTimeoutAndAbort } from "./timeout.js";
 import { normalizeUsage, calculateCost, getPricing, toCostEstimate } from "../packages/providers/src/index.js";
 
@@ -56,6 +56,23 @@ async function pickProvider(request: LLMRequest): Promise<{
   const catalog = getModelCatalog();
   const preferredProviders = listProviders();
   const providers = preferredProviders.length > 0 ? preferredProviders : [setupProvider];
+  const canonicalModels = getCanonicalModels();
+  const canonicalExplicitMatch = typeof request.model === "string" && canonicalModels.some((model) => model.id === request.model || model.providerModelId === request.model || model.routes.some((route) => route.providerModelId === request.model));
+  const executableProviderIds = new Set(providers.map((provider) => provider.id));
+  const hasCanonicalExecutionRoute = canonicalModels.some((model) => model.routes.some((route) => executableProviderIds.has(route.provider) || route.availability?.local));
+  if (hasCanonicalExecutionRoute && typeof request.model === "string" && (["auto", "cheap", "fast", "reasoning", "vision", "local"].includes(request.model) || canonicalExplicitMatch)) {
+    const modes = ["auto", "cheap", "fast", "reasoning", "vision", "local"];
+    const explicit = !modes.includes(request.model) ? request.model : undefined;
+    const requiredCapabilities = [
+      ...(request.tools && Object.keys(request.tools).length ? ["tools" as const] : []),
+      ...(request.output ? ["structuredOutput" as const] : []),
+    ];
+    const router = new IntelligentRouter(canonicalModels, executableProviderIds);
+    const decision = router.route({ mode: explicit ? "auto" : request.model as any, explicitModelId: explicit, requiredCapabilities, strictCapabilities: request.strictCapabilities, fallback: !explicit });
+    const selectedProvider = providers.find((provider) => provider.id === decision.selected.route.provider);
+    if (!selectedProvider) throw new Error(`No credentials available for selected route provider '${decision.selected.route.provider}'`);
+    return { provider: selectedProvider, selectedModelId: decision.selected.route.providerModelId, routing: { requestedModel: request.model, selectedProvider: selectedProvider.id, selectedModel: decision.selected.route.providerModelId, reason: decision.selected.reasons.map((reason) => reason.message), alternatives: decision.fallback.slice(0, 2).map((item) => ({ provider: item.route.provider, model: item.route.providerModelId, reason: item.reasons[0]?.message ?? "Evidence-aware fallback" })) } };
+  }
 
   // If an explicit model ID is provided, find it in the registry
   if (request.model && typeof request.model === "string" && 
@@ -198,7 +215,7 @@ export async function invokeLLM<TStructured = unknown>(
   
   return withRequestTrace(requestedModel, "auto", async (trace) => {
     try {
-      const { provider, routing } = await withTimeoutAndAbort(
+      const { provider, routing, selectedModelId } = await withTimeoutAndAbort(
         pickProvider(request),
         request.timeoutMs,
         request.signal,
@@ -215,7 +232,7 @@ export async function invokeLLM<TStructured = unknown>(
       const startTime = Date.now();
 
       let response = await withTimeoutAndAbort(
-        provider.generate({ ...request, messages: allMessages }),
+        provider.generate({ ...request, model: selectedModelId ?? request.model, messages: allMessages }),
         request.timeoutMs,
         request.signal,
         "Provider generation timeout"
@@ -252,7 +269,7 @@ export async function invokeLLM<TStructured = unknown>(
         );
 
         response = await withTimeoutAndAbort(
-          provider.generate({ ...request, messages: allMessages }),
+          provider.generate({ ...request, model: selectedModelId ?? request.model, messages: allMessages }),
           request.timeoutMs,
           request.signal,
           "Provider generation timeout"
@@ -310,7 +327,7 @@ export async function* streamLLM(
   const requestedModel = typeof request.model === "string" ? request.model : "auto";
   const trace = getCurrentRequestTrace();
 
-  const { provider } = await withTimeoutAndAbort(
+  const { provider, selectedModelId } = await withTimeoutAndAbort(
     pickProvider(request),
     request.timeoutMs,
     request.signal,
@@ -319,7 +336,7 @@ export async function* streamLLM(
 
   if (!provider.stream) {
     const response = await withTimeoutAndAbort(
-      provider.generate(request),
+      provider.generate({ ...request, model: selectedModelId ?? request.model }),
       request.timeoutMs,
       request.signal,
       "Provider generation timeout"
@@ -343,7 +360,7 @@ export async function* streamLLM(
     return;
   }
 
-  for await (const chunk of provider.stream(request)) {
+  for await (const chunk of provider.stream({ ...request, model: selectedModelId ?? request.model })) {
     yield chunk;
   }
 }

@@ -1,21 +1,29 @@
 {
-  "version": "0.1.9",
-  "state": "current",
-  "generatedAt": "2026-08-13T16:34:07.460Z",
+  "version": "0.1.10",
+  "state": "published",
+  "generatedAt": "2026-08-13T16:44:12.351Z",
   "sources": [
+    {
+      "id": "huggingface",
+      "status": "success",
+      "snapshotId": "huggingface:2026-08-13T16:44:13.641Z",
+      "checksum": "325d402d457a21c713bb1b6e7f86fe75a69a6bc8d5fb06015d09661add66c22f",
+      "recordCount": 25,
+      "fetchedAt": "2026-08-13T16:44:13.641Z"
+    },
     {
       "id": "openrouter",
       "status": "success",
-      "snapshotId": "openrouter:2026-08-13T16:34:07.460Z",
-      "checksum": "4d76daddda553f4c3044af6aa91749d009067a4d4c5ffdadfe76779fe497bccc",
+      "snapshotId": "openrouter:2026-08-13T16:44:12.351Z",
+      "checksum": "43c72394a285b7488960564fc5d4e4b4db92989901cb3cdf1567d993d1802453",
       "recordCount": 409,
-      "fetchedAt": "2026-08-13T16:34:07.460Z"
+      "fetchedAt": "2026-08-13T16:44:12.351Z"
     }
   ],
   "metrics": {
     "canonicalModels": 341,
     "routes": 487,
-    "evidence": 359,
+    "evidence": 722,
     "conflicts": 9,
     "unknownCapabilities": 1722,
     "contextCompleteness": 100,
@@ -37,9 +45,9 @@
     "qualityPolicy": "1.0"
   },
   "checksums": {
-    "sources": "4d76daddda553f4c3044af6aa91749d009067a4d4c5ffdadfe76779fe497bccc",
-    "canonical": "c97f0a63ec17e6258645811ee3de28ee54434e93bcae899b5679a75e32dca527",
-    "evidence": "8272d56e28d6f63f8e07fd03dd36b5199da0648f182dc6b83230f611f6a091d0",
-    "registry": "e5a7e2d14509553bca40160424a9ad659d1abd89db1a356ec0e8cc8f163da8f1"
+    "sources": "43c72394a285b7488960564fc5d4e4b4db92989901cb3cdf1567d993d1802453",
+    "canonical": "9b8112eba88597d136a73d059357f008ae1963074f0172952aaaa94e001ef4aa",
+    "evidence": "b4c205c41a2dd5e0fb475525bb30282d9b61746aaef3b82d6c14ff15dc425588",
+    "registry": "569b41097cbf71f05b5a5d8016ed9f31617263b3e088c59d1aa2514a454ac274"
   }
 }

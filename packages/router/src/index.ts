@@ -8,3 +8,5 @@ export * from "./fallback.js";
 export * from "./router.js";
 export * from "./tracing.js";
 export * from "./resilience.js";
+export * from "./intelligence-types.js";
+export * from "./intelligent-router.js";

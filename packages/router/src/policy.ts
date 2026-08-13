@@ -22,6 +22,11 @@ export function normalizePolicy(policy?: RoutingPolicy | RoutingMode): RoutingPo
     minContext: policy.minContext,
     maxLatencyMs: policy.maxLatencyMs,
     fallback: policy.fallback ?? true,
+    strictCapabilities: policy.strictCapabilities ?? false,
+    unknownCapabilityPenalty: policy.unknownCapabilityPenalty,
+    staleMetadataPenalty: policy.staleMetadataPenalty,
+    conflictPenalty: policy.conflictPenalty,
+    inferredEvidencePenalty: policy.inferredEvidencePenalty,
   };
 }
 

@@ -8,6 +8,7 @@ import { ProxyCommand } from "./commands/proxy.js";
 import { RunCommand } from "./commands/run.js";
 import { RegistryCommand } from "./commands/registry.js";
 import { ModelCommand } from "./commands/model.js";
+import { RouteCommand } from "./commands/route.js";
 import { CommandNotFoundError } from "./errors.js";
 import { bold, info, section } from "./ui/formatting.js";
 
@@ -29,6 +30,7 @@ export class CLI {
       new RunCommand(),
       new RegistryCommand(),
       new ModelCommand(),
+      new RouteCommand(),
     ];
 
     for (const command of commands) {
