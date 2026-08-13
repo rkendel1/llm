@@ -26,6 +26,10 @@
     "@llm/cli": {
       "import": "./dist/packages/cli/src/index.js",
       "types": "./dist/packages/cli/src/index.d.ts"
+    },
+    "@llm/providers": {
+      "import": "./dist/packages/providers/src/index.js",
+      "types": "./dist/packages/providers/src/index.d.ts"
     }
   },
   "scripts": {

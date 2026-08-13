@@ -1,0 +1,34 @@
+{
+  "name": "@llm/providers",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/src/index.js",
+      "types": "./dist/src/index.d.ts"
+    },
+    "./ollama": {
+      "import": "./dist/src/ollama/index.js",
+      "types": "./dist/src/ollama/index.d.ts"
+    },
+    "./openai": {
+      "import": "./dist/src/openai/index.js",
+      "types": "./dist/src/openai/index.d.ts"
+    },
+    "./anthropic": {
+      "import": "./dist/src/anthropic/index.js",
+      "types": "./dist/src/anthropic/index.d.ts"
+    },
+    "./google": {
+      "import": "./dist/src/google/index.js",
+      "types": "./dist/src/google/index.d.ts"
+    },
+    "./openrouter": {
+      "import": "./dist/src/openrouter/index.js",
+      "types": "./dist/src/openrouter/index.d.ts"
+    }
+  }
+}

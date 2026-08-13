@@ -1,0 +1,49 @@
+// Infrastructure exports
+export { ProviderError, type ProviderCapabilities, type ProviderConfig } from "./types.js";
+export {
+  createCapabilities,
+  hasCapability,
+  filterCapabilities,
+} from "./capabilities.js";
+export {
+  withRetry,
+  normalizeErrorCode,
+  isRetryableError,
+  getErrorStatusCode,
+  formatErrorMessage,
+} from "./errors.js";
+export {
+  normalizeMessages,
+  parseToolCalls,
+  formatMessagesForProvider,
+  extractTextFromResponse,
+} from "./normalization.js";
+
+// Provider adapters
+export { OllamaAdapter, createOllamaAdapter } from "./ollama/index.js";
+export { OpenAIAdapter, createOpenAIAdapter } from "./openai/index.js";
+export { AnthropicAdapter, createAnthropicAdapter } from "./anthropic/index.js";
+export { GoogleAdapter, createGoogleAdapter } from "./google/index.js";
+export { OpenRouterAdapter, createOpenRouterAdapter } from "./openrouter/index.js";
+
+// Registries
+export {
+  getOllamaModels,
+  discoverOllamaModels,
+} from "./ollama/registry.js";
+export {
+  getOpenAIModels,
+  DEFAULT_OPENAI_MODELS,
+} from "./openai/registry.js";
+export {
+  getAnthropicModels,
+  DEFAULT_ANTHROPIC_MODELS,
+} from "./anthropic/registry.js";
+export {
+  getGoogleModels,
+  DEFAULT_GOOGLE_MODELS,
+} from "./google/registry.js";
+export {
+  getOpenRouterModels,
+  DEFAULT_OPENROUTER_MODELS,
+} from "./openrouter/registry.js";

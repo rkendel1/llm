@@ -100,7 +100,7 @@ export class SetupCommand extends Command {
         success("✓ Vault initialized at ~/.llm/credentials.enc")
       );
       console.log(info("Your credentials are encrypted and ready to use."));
-      console.log(`\nNext steps:\n  ${bold("llm status")} - Check your setup\n  ${bold("llm models")} - List available models\n`);
+      console.log(`\nNext steps:\n  ${bold("llm providers")} - View available providers\n  ${bold("llm status")} - Check your setup\n  ${bold("llm models")} - List available models\n\nSupported providers: Ollama (local), OpenAI, Anthropic, Google, OpenRouter\n`);
 
       return { success: true, message: "Setup complete" };
     } catch (error) {
