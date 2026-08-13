@@ -52,6 +52,18 @@ The default local endpoint is `http://localhost:11434`. Pass
 `{ ollamaApiBase: "http://your-host:11434" }` to
 `initializeDefaultProviders` when Ollama runs elsewhere.
 
+From the CLI:
+
+```bash
+npx --no-install llm run --model llama3.2:latest "Explain closures simply."
+```
+
+For a configured remote provider:
+
+```bash
+npx --no-install llm run --provider openai --model gpt-4-turbo "Hello"
+```
+
 ```ts
 import { llm } from "@easy-llm/llm";
 const answer = await llm("Explain this code");

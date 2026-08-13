@@ -25,7 +25,12 @@ export abstract class Command {
       if (arg.startsWith("--")) {
         const flagParts = arg.slice(2).split("=");
         const flagName = flagParts[0];
-        const flagValue = flagParts[1] || true;
+        const nextArg = args[i + 1];
+        const flagValue = flagParts.length > 1
+          ? flagParts.slice(1).join("=")
+          : nextArg && !nextArg.startsWith("-")
+            ? args[++i]
+            : true;
         flags[flagName] = flagValue;
       } else if (arg.startsWith("-")) {
         const flagName = arg.slice(1);

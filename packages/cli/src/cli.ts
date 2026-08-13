@@ -5,6 +5,7 @@ import { ModelsCommand } from "./commands/models.js";
 import { ProvidersCommand } from "./commands/providers.js";
 import { DoctorCommand } from "./commands/doctor.js";
 import { ProxyCommand } from "./commands/proxy.js";
+import { RunCommand } from "./commands/run.js";
 import { CommandNotFoundError } from "./errors.js";
 import { bold, info, section } from "./ui/formatting.js";
 
@@ -23,6 +24,7 @@ export class CLI {
       new ProvidersCommand(),
       new DoctorCommand(),
       new ProxyCommand(),
+      new RunCommand(),
     ];
 
     for (const command of commands) {
@@ -37,7 +39,7 @@ export class CLI {
     }
 
     if (args[0] === "--version" || args[0] === "-v") {
-      console.log("llm version 0.1.6");
+      console.log("llm version 0.1.7");
       return 0;
     }
 
@@ -83,7 +85,7 @@ export class CLI {
     console.log(`  ${bold("--version")}  Show version number`);
 
     console.log(
-      `\nExamples:\n  ${bold("npx --no-install llm setup")}    Initialize credentials vault\n  ${bold("npx --no-install llm status")}   Check system status\n  ${bold("npx --no-install llm models")}   List available models\n`
+      `\nExamples:\n  ${bold('npx --no-install llm run --model llama3.2:latest "Hello"')}\n  ${bold("npx --no-install llm setup")}    Initialize credentials vault\n  ${bold("npx --no-install llm models")}   List available models\n`
     );
   }
 }

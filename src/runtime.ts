@@ -62,8 +62,9 @@ async function pickProvider(request: LLMRequest): Promise<{
       !["auto", "cheap", "fast", "reasoning", "vision", "local"].includes(request.model)) {
     const model = catalog.resolve(request.model);
     if (model) {
+      const matchingProvider = providers.find((provider) => provider.id === model.provider);
       return {
-        provider: providers[0],
+        provider: matchingProvider ?? providers[0],
         routing: {
           requestedModel: request.model,
           selectedProvider: model.provider,
