@@ -29,17 +29,19 @@ export function filterByEligibility(
     // Check required capabilities (hard constraint)
     if (requirements.capabilities.length > 0) {
       if (
-        !hasRequiredCapabilities(model.capabilities, requirements.capabilities)
+        !hasRequiredCapabilities(model.capabilities, requirements.capabilities, policy.strictCapabilities ?? false)
       ) {
         const missing = requirements.capabilities.filter((cap) => {
-          const value = model.capabilities[cap];
-          return value !== true && value !== "partial";
+          const value: unknown = model.capabilities[cap];
+          return value === false || value === "unsupported" || ((policy.strictCapabilities ?? false) && (value === undefined || value === "unknown"));
         });
         rejectionReasons.push(`missing capabilities: ${missing.join(", ")}`);
       } else {
-        acceptanceReasons.push(
-          `supports required capabilities: ${requirements.capabilities.join(", ")}`,
-        );
+        const unknown = requirements.capabilities.filter((cap) => {
+          const value: unknown = model.capabilities[cap];
+          return value === undefined || value === "unknown";
+        });
+        acceptanceReasons.push(unknown.length ? `capabilities unverified (lower confidence): ${unknown.join(", ")}` : `supports required capabilities: ${requirements.capabilities.join(", ")}`);
       }
     } else {
       acceptanceReasons.push("model available");

@@ -336,3 +336,5 @@ export function createProviderAdapters(config: {
 
   return adapters;
 }
+export * from "./types.js";
+export * from "./openrouter/index.js";

@@ -6,6 +6,7 @@ import type {
   ScoringBreakdown,
 } from "./types.js";
 import { countCapabilityMatches } from "./capabilities.js";
+import type { AIModel } from "../../registry/src/schema/index.js";
 
 const CAPABILITY_MATCH_WEIGHT = 10;
 const POLICY_FIT_WEIGHT = 15;
@@ -42,7 +43,7 @@ export function scoreCandidate(
       requirements.capabilities,
     );
     breakdown.capabilityMatch =
-      (matches / requirements.capabilities.length) * CAPABILITY_MATCH_WEIGHT;
+      (matches / requirements.capabilities.length) * CAPABILITY_MATCH_WEIGHT * capabilityTrust(candidate, requirements.capabilities);
   } else {
     breakdown.capabilityMatch = CAPABILITY_MATCH_WEIGHT;
   }
@@ -82,6 +83,13 @@ export function scoreCandidate(
   const score = Object.values(breakdown).reduce((a, b) => a + b, 0);
 
   return { score, breakdown };
+}
+
+function capabilityTrust(candidate: ModelDefinition, capabilities: Array<string | number>): number {
+  const facts = (candidate as unknown as Partial<AIModel>).facts;
+  if (!facts) return 1;
+  const confidences = capabilities.map((capability) => facts[`capabilities.${String(capability)}`]?.confidence ?? .5);
+  return confidences.reduce((sum, value) => sum + value, 0) / confidences.length;
 }
 
 /**

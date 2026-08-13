@@ -6,6 +6,7 @@ import { ProvidersCommand } from "./commands/providers.js";
 import { DoctorCommand } from "./commands/doctor.js";
 import { ProxyCommand } from "./commands/proxy.js";
 import { RunCommand } from "./commands/run.js";
+import { RegistryCommand } from "./commands/registry.js";
 import { CommandNotFoundError } from "./errors.js";
 import { bold, info, section } from "./ui/formatting.js";
 
@@ -25,6 +26,7 @@ export class CLI {
       new DoctorCommand(),
       new ProxyCommand(),
       new RunCommand(),
+      new RegistryCommand(),
     ];
 
     for (const command of commands) {

@@ -9,3 +9,4 @@ export * from "./normalization/index.js";
 export * from "./verification/index.js";
 export * from "./snapshot/index.js";
 export * from "./publish/index.js";
+export * from "./pipeline.js";

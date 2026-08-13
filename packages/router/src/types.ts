@@ -28,6 +28,8 @@ export interface RoutingPolicy {
   minContext?: number;
   maxLatencyMs?: number;
   fallback?: boolean | FallbackOptions;
+  /** Reject unknown capability metadata instead of treating it as a lower-confidence candidate. */
+  strictCapabilities?: boolean;
 }
 
 export interface FallbackOptions {

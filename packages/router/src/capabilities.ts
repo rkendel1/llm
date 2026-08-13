@@ -48,12 +48,13 @@ export function inferRequirements(request: LLMRequest): RequestRequirements {
  * A capability can be true (supported), false (not supported), or "partial".
  */
 export function hasRequiredCapabilities(
-  modelCapabilities: Record<string, boolean | "partial" | undefined>,
+  modelCapabilities: Record<string, boolean | "partial" | "supported" | "unsupported" | "unknown" | undefined>,
   requiredCapabilities: ModelCapability[],
+  strict = true,
 ): boolean {
   return requiredCapabilities.every((cap) => {
     const value = modelCapabilities[cap];
-    return value === true || value === "partial";
+    return value === true || value === "partial" || value === "supported" || (!strict && (value === "unknown" || value === undefined));
   });
 }
 
@@ -61,11 +62,11 @@ export function hasRequiredCapabilities(
  * Check if a model has all preferred capabilities (for preference scoring).
  */
 export function countCapabilityMatches(
-  modelCapabilities: Record<string, boolean | "partial" | undefined>,
+  modelCapabilities: Record<string, boolean | "partial" | "supported" | "unsupported" | "unknown" | undefined>,
   capabilitiesToMatch: ModelCapability[],
 ): number {
   return capabilitiesToMatch.filter((cap) => {
     const value = modelCapabilities[cap];
-    return value === true || value === "partial";
+    return value === true || value === "partial" || value === "supported";
   }).length;
 }
