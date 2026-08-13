@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { llm } from "../../../src/index.js";
+import type { RoutingMode } from "../../../packages/router/src/index.js";
 
 async function main() {
   const args = process.argv.slice(2);
@@ -18,7 +19,7 @@ async function main() {
     process.exit(1);
   }
 
-  let mode = "auto";
+  let mode: RoutingMode = "auto";
   let prompt = "";
 
   // Parse arguments
@@ -27,12 +28,14 @@ async function main() {
     if (arg === "route") {
       continue;
     } else if (arg.startsWith("--")) {
-      mode = arg.slice(2);
+      const modeArg = arg.slice(2);
+      if (["auto", "cheap", "fast", "reasoning", "vision", "local"].includes(modeArg)) {
+        mode = modeArg as RoutingMode;
+      }
     } else {
       prompt = arg;
     }
   }
-
   if (!prompt) {
     console.error("Error: prompt is required");
     process.exit(1);

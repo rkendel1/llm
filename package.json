@@ -3,6 +3,35 @@
   "version": "0.1.0",
   "description": "",
   "main": "dist/src/index.js",
+  "bin": {
+    "llm": "dist/packages/cli/src/index.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/src/index.js",
+      "types": "./dist/src/index.d.ts"
+    },
+    "@llm/secrets": {
+      "import": "./dist/packages/secrets/src/index.js",
+      "types": "./dist/packages/secrets/src/index.d.ts"
+    },
+    "@llm/registry": {
+      "import": "./dist/packages/registry/src/index.js",
+      "types": "./dist/packages/registry/src/index.d.ts"
+    },
+    "@llm/router": {
+      "import": "./dist/packages/router/src/index.js",
+      "types": "./dist/packages/router/src/index.d.ts"
+    },
+    "@llm/cli": {
+      "import": "./dist/packages/cli/src/index.js",
+      "types": "./dist/packages/cli/src/index.d.ts"
+    },
+    "@llm/providers": {
+      "import": "./dist/packages/providers/src/index.js",
+      "types": "./dist/packages/providers/src/index.d.ts"
+    }
+  },
   "scripts": {
     "test": "vitest run",
     "build": "tsc -p tsconfig.build.json",

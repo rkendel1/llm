@@ -82,8 +82,14 @@ async function pickProvider(request: LLMRequest): Promise<{
       const router = new DeterministicRouter(catalog);
       const decision = await router.route(request, policy);
       
+      // Find the provider that matches the router's decision
+      const selectedProvider = providers.find((p) => p.id === decision.selected.provider);
+      if (!selectedProvider) {
+        throw new Error(`Provider ${decision.selected.provider} not found`);
+      }
+      
       return {
-        provider: providers[0],
+        provider: selectedProvider,
         routing: {
           requestedModel: request.model ?? "auto",
           selectedProvider: decision.selected.provider,
@@ -224,6 +230,10 @@ export async function invokeLLM<TStructured = unknown>(
   const resolvedModel = catalog.resolve(response.model, provider.id) ?? catalog.resolve(response.model);
   if (resolvedModel) {
     routing.selectedModelDefinition = resolvedModel;
+  }
+  // Always update selectedModel when we get it from the provider response
+  if (response.model) {
+    routing.selectedModel = response.model;
   }
 
   return {

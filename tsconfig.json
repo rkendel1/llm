@@ -6,7 +6,14 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "types": ["node", "vitest/globals"]
+    "types": ["node", "vitest/globals"],
+    "paths": {
+      "@llm/secrets": ["./packages/secrets/src/index.ts"],
+      "@llm/registry": ["./packages/registry/src/index.ts"],
+      "@llm/router": ["./packages/router/src/index.ts"],
+      "@llm/core": ["./packages/core/src/index.ts"],
+      "@llm/cli": ["./packages/cli/src/index.ts"]
+    }
   },
-  "include": ["src", "packages/registry/src", "test"]
+  "include": ["src", "packages/*/src", "test"]
 }
