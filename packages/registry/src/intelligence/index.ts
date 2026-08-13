@@ -1,6 +1,7 @@
 export * from "./evidence/evidence-store.js";
 export * from "./reconciliation/source-ranking.js";
 export * from "./reconciliation/fact-reconciler.js";
+export * from "./reconciliation/intelligence-enricher.js";
 export * from "./quality/confidence.js";
 export * from "./quality/anomaly-detection.js";
 export * from "./quality/quality-gates.js";
@@ -9,3 +10,4 @@ export * from "./verification/verification-runner.js";
 export * from "./verification/verification-scheduler.js";
 export * from "./snapshots/diff-engine.js";
 export * from "./snapshots/versioning.js";
+export * from "./sources/index.js";

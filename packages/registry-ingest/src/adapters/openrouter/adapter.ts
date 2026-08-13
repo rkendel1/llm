@@ -20,10 +20,11 @@ export interface OpenRouterModelRecord {
 
 const CAPABILITIES: CapabilityName[] = ["streaming", "vision", "tools", "reasoning", "structuredOutput", "audioInput", "audioOutput", "embeddings"];
 const emptyCapabilities = (): AIModelCapabilities => Object.fromEntries(CAPABILITIES.map((name) => [name, "unknown"])) as AIModelCapabilities;
+const positiveInteger = (value: unknown): number | undefined => typeof value === "number" && Number.isInteger(value) && value > 0 ? value : undefined;
 const dollarsPerTokenToMillion = (value: unknown): number | undefined => {
   if (value === undefined || value === null || value === "") return undefined;
   const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed * 1_000_000 : undefined;
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed * 1_000_000 : undefined;
 };
 
 function capabilities(raw: OpenRouterModelRecord, now: string): { values: AIModelCapabilities; evidence: CapabilityEvidence[] } {
@@ -66,8 +67,8 @@ export function normalizeOpenRouterRecord(raw: OpenRouterModelRecord, fetchedAt:
   const addFact = (field: string, value: unknown, confidence = .9) => {
     if (value !== undefined) evidence.push({ id: `openrouter:${raw.id}:${field}:${fetchedAt}`, modelId: canonicalId, field, value, source: "openrouter", kind: "aggregator", tier: 3, observedAt: fetchedAt, confidence });
   };
-  addFact("limits.contextWindow", raw.context_length ?? raw.top_provider?.context_length);
-  addFact("limits.maxOutputTokens", raw.top_provider?.max_completion_tokens);
+  addFact("limits.contextWindow", positiveInteger(raw.context_length) ?? positiveInteger(raw.top_provider?.context_length));
+  addFact("limits.maxOutputTokens", positiveInteger(raw.top_provider?.max_completion_tokens));
   addFact("pricing.inputPerMillionTokens", pricing?.inputPerMillionTokens);
   addFact("pricing.outputPerMillionTokens", pricing?.outputPerMillionTokens);
   addFact("availability.status", "unknown", .2);
@@ -77,7 +78,7 @@ export function normalizeOpenRouterRecord(raw: OpenRouterModelRecord, fetchedAt:
     providerModelId: canonicalId,
     name: raw.name,
     capabilities: capability.values,
-    limits: { contextWindow: raw.context_length ?? raw.top_provider?.context_length, maxOutputTokens: raw.top_provider?.max_completion_tokens },
+    limits: { contextWindow: positiveInteger(raw.context_length) ?? positiveInteger(raw.top_provider?.context_length), maxOutputTokens: positiveInteger(raw.top_provider?.max_completion_tokens) },
     pricing,
     availability: { status: "unknown" as const, local: false },
     lifecycle: { status: "unknown" as const },
@@ -104,6 +105,10 @@ export class CanonicalOpenRouterAdapter implements ProviderModelAdapter<OpenRout
     if (!raw.id?.trim()) issues.push({ severity: "error", code: "empty_model_id", message: "OpenRouter model has no ID" });
     if (raw.context_length !== undefined && (!Number.isInteger(raw.context_length) || raw.context_length <= 0)) issues.push({ severity: "error", code: "invalid_context", message: "Context length must be a positive integer", modelId: raw.id });
     if ((raw.context_length ?? 0) > 10_000_000_000) issues.push({ severity: "warning", code: "suspicious_context", message: "Context length exceeds 10B tokens", modelId: raw.id });
+    for (const field of ["prompt", "completion"] as const) {
+      const value = raw.pricing?.[field];
+      if (value !== undefined && Number(value) < 0) issues.push({ severity: "warning", code: "pricing_sentinel", message: `${field} pricing uses a negative sentinel and was normalized to unknown`, modelId: raw.id });
+    }
     return issues;
   }
 }

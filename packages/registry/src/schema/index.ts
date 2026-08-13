@@ -96,7 +96,24 @@ export interface EvidenceSource<T = unknown> {
   observedAt: string;
   expiresAt?: string;
   confidence: number;
+  /** Optional field-specific authority supplied by a source policy. */
+  authority?: number;
   metadata?: Record<string, unknown>;
+}
+
+export interface IntelligenceRouteClaim {
+  modelId: string;
+  provider: string;
+  providerModelId: string;
+  status: "live" | "staging" | "unknown";
+  task?: string;
+  source: string;
+  observedAt: string;
+}
+
+export interface IntelligenceSourceResult {
+  evidence: EvidenceSource[];
+  routeClaims: IntelligenceRouteClaim[];
 }
 
 export interface ModelFact<T> {
