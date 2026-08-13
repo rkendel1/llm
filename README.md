@@ -11,7 +11,7 @@ Models and providers are implementation details.
 
 ```bash
 npm install @easy-llm/llm
-npx llm setup
+npx --no-install llm setup
 ```
 
 Or run setup without installing first:
@@ -19,6 +19,10 @@ Or run setup without installing first:
 ```bash
 npx @easy-llm/llm setup
 ```
+
+Package binaries installed locally are run through `npx`. To use `llm`
+directly from any directory, install it globally with
+`npm install --global @easy-llm/llm`.
 
 ```ts
 import { llm } from "@easy-llm/llm";

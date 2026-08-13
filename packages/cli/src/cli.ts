@@ -37,7 +37,7 @@ export class CLI {
     }
 
     if (args[0] === "--version" || args[0] === "-v") {
-      console.log("llm version 0.1.3");
+      console.log("llm version 0.1.4");
       return 0;
     }
 
@@ -83,7 +83,7 @@ export class CLI {
     console.log(`  ${bold("--version")}  Show version number`);
 
     console.log(
-      `\nExamples:\n  ${bold("llm setup")}    Initialize credentials vault\n  ${bold("llm status")}   Check system status\n  ${bold("llm models")}   List available models\n`
+      `\nExamples:\n  ${bold("npx --no-install llm setup")}    Initialize credentials vault\n  ${bold("npx --no-install llm status")}   Check system status\n  ${bold("npx --no-install llm models")}   List available models\n`
     );
   }
 }

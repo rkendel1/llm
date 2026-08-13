@@ -1,6 +1,6 @@
 import { Command, type CommandContext, type CommandResult } from "./base.js";
 import { CredentialStore } from "../../../secrets/src/index.js";
-import { promptOnce, promptPassword, promptConfirm } from "../ui/prompts.js";
+import { promptOnce, promptPassword, promptConfirm, selectOption } from "../ui/prompts.js";
 import { success, info, bold, section } from "../ui/formatting.js";
 
 export class SetupCommand extends Command {
@@ -72,17 +72,20 @@ export class SetupCommand extends Command {
       let addMore = true;
 
       while (addMore) {
-        const provider = await promptOnce("\nProvider name (e.g., openai): ");
-        if (!provider) break;
+        const provider = await selectOption("Choose a provider", [
+          "openai",
+          "anthropic",
+          "google",
+          "openrouter",
+          "Finish without adding another key",
+        ]);
+        if (provider.startsWith("Finish")) break;
 
-        const key = await promptOnce("Key name (e.g., api_key): ");
-        if (!key) continue;
-
-        const value = await promptPassword("Value (hidden): ");
+        const value = await promptPassword(`${provider} API key (hidden): `);
         if (!value) continue;
 
-        await store.setCredential(provider, key, value);
-        console.log(success(`✓ Added ${provider}/${key}`));
+        await store.setCredential(provider, "api_key", value);
+        console.log(success(`✓ Added ${provider}/api_key`));
 
         addMore = await promptConfirm("\nAdd another key?");
       }
@@ -90,7 +93,7 @@ export class SetupCommand extends Command {
       console.log(section("Setup Complete!"));
       console.log(success(`✓ Vault ${initialized ? "initialized" : "updated"} at ~/.llm/credentials.enc`));
       console.log(info("Your credentials are encrypted and ready to use."));
-      console.log(`\nNext steps:\n  ${bold("llm providers")} - View available providers\n  ${bold("llm status")} - Check your setup\n  ${bold("llm models")} - List available models\n\nSupported providers: Ollama (local), OpenAI, Anthropic, Google, OpenRouter\n`);
+      console.log(`\nNext steps:\n  ${bold("npx --no-install llm providers")} - View available providers\n  ${bold("npx --no-install llm status")} - Check your setup\n  ${bold("npx --no-install llm models")} - List available models\n\nSupported providers: Ollama (local), OpenAI, Anthropic, Google, OpenRouter\n`);
 
       return { success: true, message: "Setup complete" };
     } catch (error) {
