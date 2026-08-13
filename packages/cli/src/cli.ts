@@ -37,7 +37,7 @@ export class CLI {
     }
 
     if (args[0] === "--version" || args[0] === "-v") {
-      console.log("llm version 0.1.1");
+      console.log("llm version 0.1.2");
       return 0;
     }
 

@@ -90,7 +90,7 @@ export class SetupCommand extends Command {
         await store.setCredential(provider, key, value);
         console.log(success(`✓ Added ${provider}/${key}`));
 
-        addMore = await promptConfirm("\nAdd another key?");
+        addMore = await promptConfirm("\nAdd another key?", rl);
       }
 
       close(rl);
@@ -110,4 +110,3 @@ export class SetupCommand extends Command {
     }
   }
 }
-

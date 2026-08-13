@@ -17,42 +17,67 @@ export async function promptPassword(
   question: string,
   rl: readline.Interface
 ): Promise<string> {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const stdin = process.stdin;
-    stdin.resume();
-    stdin.setRawMode(true);
-    stdin.pause();
+    if (!stdin.isTTY || typeof stdin.setRawMode !== "function") {
+      reject(new Error("Password entry requires an interactive terminal"));
+      return;
+    }
 
-    // Use process.stdout directly to write the question
+    rl.pause();
     process.stdout.write(question);
 
     let password = "";
+    const wasRaw = stdin.isRaw;
     stdin.setEncoding("utf8");
+    stdin.setRawMode(true);
 
-    stdin.on("data", (char) => {
-      if (char === "\n" || char === "\r" || char === "\u0004") {
-        // End of line
-        stdin.setRawMode(false);
-        stdin.pause();
-        process.stdout.write("\n");
-        resolve(password);
-      } else if (char === "\u0003") {
-        // Ctrl+C
-        process.exit();
-      } else if (char === "\u007F") {
-        // Backspace
-        password = password.slice(0, -1);
-      } else {
-        password += char;
+    const cleanup = () => {
+      stdin.removeListener("data", onData);
+      if (!wasRaw) stdin.setRawMode(false);
+      rl.resume();
+    };
+
+    const onData = (chunk: string | Buffer) => {
+      for (const char of chunk.toString()) {
+        if (char === "\n" || char === "\r" || char === "\u0004") {
+          cleanup();
+          process.stdout.write("\n");
+          resolve(password);
+          return;
+        }
+        if (char === "\u0003") {
+          cleanup();
+          process.stdout.write("\n");
+          reject(new Error("Setup cancelled"));
+          return;
+        }
+        if (char === "\u007f" || char === "\b") {
+          if (password.length > 0) {
+            password = password.slice(0, -1);
+            process.stdout.write("\b \b");
+          }
+          continue;
+        }
+        if (char >= " ") {
+          password += char;
+          process.stdout.write("*");
+        }
       }
-    });
+    };
+
+    stdin.on("data", onData);
+    stdin.resume();
   });
 }
 
-export async function promptConfirm(question: string): Promise<boolean> {
-  const rl = createInterface();
+export async function promptConfirm(
+  question: string,
+  existingInterface?: readline.Interface
+): Promise<boolean> {
+  const rl = existingInterface || createInterface();
   const answer = await prompt(`${question} (y/n) `, rl);
-  rl.close();
+  if (!existingInterface) rl.close();
   return answer.toLowerCase() === "y" || answer.toLowerCase() === "yes";
 }
 
@@ -84,4 +109,3 @@ export async function selectOption(
 export function close(rl: readline.Interface): void {
   rl.close();
 }
-
