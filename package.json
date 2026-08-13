@@ -2,6 +2,10 @@
   "name": "llm",
   "version": "0.1.0",
   "description": "",
+  "files": [
+    "dist",
+    "registry/registry-snapshot.json"
+  ],
   "main": "dist/src/index.js",
   "bin": {
     "llm": "dist/packages/cli/src/index.js"
@@ -11,33 +15,36 @@
       "import": "./dist/src/index.js",
       "types": "./dist/src/index.d.ts"
     },
-    "@llm/secrets": {
+    "./secrets": {
       "import": "./dist/packages/secrets/src/index.js",
       "types": "./dist/packages/secrets/src/index.d.ts"
     },
-    "@llm/registry": {
+    "./registry": {
       "import": "./dist/packages/registry/src/index.js",
       "types": "./dist/packages/registry/src/index.d.ts"
     },
-    "@llm/router": {
+    "./router": {
       "import": "./dist/packages/router/src/index.js",
       "types": "./dist/packages/router/src/index.d.ts"
     },
-    "@llm/cli": {
+    "./cli": {
       "import": "./dist/packages/cli/src/index.js",
       "types": "./dist/packages/cli/src/index.d.ts"
     },
-    "@llm/providers": {
+    "./providers": {
       "import": "./dist/packages/providers/src/index.js",
       "types": "./dist/packages/providers/src/index.d.ts"
     },
-    "@llm/proxy": {
+    "./proxy": {
       "import": "./dist/packages/proxy/src/index.js",
       "types": "./dist/packages/proxy/src/index.d.ts"
     },
-    "@llm/registry-ingest": {
+    "./registry-ingest": {
       "import": "./dist/packages/registry-ingest/src/index.js",
       "types": "./dist/packages/registry-ingest/src/index.d.ts"
+    },
+    "./registry-snapshot": {
+      "default": "./registry/registry-snapshot.json"
     }
   },
   "scripts": {
@@ -45,8 +52,8 @@
     "build": "tsc -p tsconfig.build.json",
     "test:watch": "vitest",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "ingest:registry": "node dist/packages/registry-ingest/src/index.js",
-    "registry:report": "node -e \"console.log('Registry ingestion completed successfully')\"",
+    "ingest:registry": "node dist/packages/registry-ingest/src/cli.js",
+    "registry:report": "node dist/packages/registry-ingest/src/cli.js --report",
     "prepack": "npm run build"
   },
   "repository": {

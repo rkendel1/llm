@@ -200,8 +200,9 @@ export class OpenRouterAdapter implements RegistrySource {
           output: model.output_tokens,
         },
         pricing: {
-          input: model.pricing?.prompt,
-          output: model.pricing?.completion,
+          input: model.pricing?.prompt === undefined ? undefined : Number(model.pricing.prompt) * 1_000_000,
+          output: model.pricing?.completion === undefined ? undefined : Number(model.pricing.completion) * 1_000_000,
+          currency: "USD",
         },
         metadata: {
           architecture: model.architecture,
