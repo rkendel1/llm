@@ -1,0 +1,45 @@
+# Source files
+src/
+packages/*/src/
+packages/*/test/
+
+# Configuration
+tsconfig*.json
+vitest.config.ts
+.eslintrc*
+.prettierrc*
+
+# Testing
+test/
+packages/*/test/
+**/*.test.ts
+**/*.spec.ts
+coverage/
+.nyc_output/
+
+# Development
+.git/
+.gitignore
+.github/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+node_modules/
+
+# CI/CD
+.github/
+*.yml
+*.yaml
+
+# Documentation
+*.md
+!README.md
+docs/
+
+# Build artifacts
+dist/**/*.map
+dist/**/*.test.js
+dist/**/*.spec.js

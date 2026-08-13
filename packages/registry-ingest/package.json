@@ -1,8 +1,18 @@
 {
   "name": "@llm/registry-ingest",
   "version": "0.1.0",
-  "private": true,
   "type": "module",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "description": "Registry ingestion and normalization pipeline for LLM model metadata",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "keywords": [
+    "llm",
+    "registry",
+    "ingestion",
+    "normalization",
+    "model-metadata"
+  ]
 }

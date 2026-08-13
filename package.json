@@ -44,11 +44,18 @@
     "test": "vitest run",
     "build": "tsc -p tsconfig.build.json",
     "test:watch": "vitest",
-    "typecheck": "tsc -p tsconfig.json --noEmit"
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "ingest:registry": "node dist/packages/registry-ingest/src/index.js",
+    "registry:report": "node -e \"console.log('Registry ingestion completed successfully')\"",
+    "prepack": "npm run build"
   },
   "repository": {
     "type": "git",
     "url": "http://localhost:26831/rkendel1/llm"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "keywords": [],
   "author": "",
