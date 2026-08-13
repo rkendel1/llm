@@ -5,7 +5,7 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { ModelCatalog } from "../../../registry/src/catalog.js";
 import type { DeterministicRouter } from "../../../router/src/router.js";
-import type { LLMProvider } from "../../../../src/types.js";
+import type { LLMProvider, LLMRequest, LLMResponse, RoutingExplanation } from "../../../../src/types.js";
 import type { OpenAIChatCompletionRequest, OpenAIChatCompletionResponse } from "../types.js";
 import {
   parseOpenAIChatCompletionRequest,
@@ -25,6 +25,7 @@ export async function handleChatCompletions(
   catalog: ModelCatalog,
   router: DeterministicRouter,
   _providers: LLMProvider[],
+  execute?: (request: LLMRequest) => Promise<{ response: LLMResponse; explanation: RoutingExplanation }>,
 ): Promise<void> {
   let body = "";
 
@@ -46,15 +47,13 @@ export async function handleChatCompletions(
         routingMode = aliasToRoutingMode(openAIRequest.model);
       }
 
-      // Route the request
-      const decision = await router.route(llmRequest, routingMode);
-      const selectedModel = decision.selected;
-
-      // For now, return an error if no provider is available
-      // Full implementation would use providers to generate response
-      throw new UnprocessableEntityError(
-        "Provider execution not yet implemented in proxy. This feature requires provider integration.",
-      );
+      if (!execute) throw new UnprocessableEntityError("Provider execution is not configured for this proxy instance.");
+      const { response, explanation } = await execute({ ...llmRequest, model: routingMode ?? llmRequest.model });
+      const openAIResponse = toLLMOpenAIResponse(response, modelAlias) as OpenAIChatCompletionResponse & { routing_explanation: RoutingExplanation };
+      openAIResponse.routing_explanation = explanation;
+      res.writeHead(200, { "Content-Type": "application/json", "X-LLM-Selected-Route": explanation.selected.routeId });
+      res.end(JSON.stringify(openAIResponse));
+      return;
 
       // Generate response (this is where provider execution would happen)
       // const response = await provider.generate(llmRequest);

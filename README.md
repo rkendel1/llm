@@ -50,7 +50,9 @@ const explanation = await llm.explain("Summarize this", { model: "cheap" });
 console.log(explanation.selected.modelId, explanation.reasons);
 ```
 
-The runtime loads the registry, resolves credentials, chooses an executable route, invokes it, and retries semantically equivalent fallback routes for retryable failures. The response includes the route and normalized usage metadata.
+The runtime loads the registry, resolves credentials, scores executable routes using capability evidence, confidence, freshness, observed health, latency, availability, pricing, and policy, then invokes the winner. Retryable failures are recorded and the remaining semantically equivalent routes are re-scored. The response includes the route and normalized usage metadata.
+
+Runtime outcomes are held separately from the immutable canonical registry. Route health starts as `unknown`, requires multiple observations before becoming healthy or degraded, and uses a rolling window so one old failure cannot permanently poison a route. Prompt content is never stored in observations.
 
 ## Credentials
 
@@ -80,6 +82,7 @@ llm route "Draft a release note"  # explain the same runtime decision
 llm models                        # canonical model inventory
 llm model <canonical-model-id>    # inspect one normalized record
 llm status                        # registry and executable-provider status
+llm status --routes               # locally observed route health and latency
 ```
 
 Add `--json` to automation-oriented inspection commands where supported.

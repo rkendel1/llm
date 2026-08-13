@@ -5,7 +5,7 @@
 import { createServer, type Server, type IncomingMessage, type ServerResponse } from "node:http";
 import type { ModelCatalog } from "../../registry/src/catalog.js";
 import type { DeterministicRouter } from "../../router/src/router.js";
-import type { LLMProvider } from "../../../src/types.js";
+import type { LLMProvider, LLMRequest, LLMResponse, RoutingExplanation } from "../../../src/types.js";
 import { handleModels } from "./routes/models.js";
 import { handleChatCompletions } from "./routes/chat.js";
 import { ConflictError } from "./errors.js";
@@ -16,6 +16,7 @@ export interface ProxyServerOptions {
   catalog: ModelCatalog;
   router: DeterministicRouter;
   providers: LLMProvider[];
+  execute?: (request: LLMRequest) => Promise<{ response: LLMResponse; explanation: RoutingExplanation }>;
 }
 
 export class ProxyServer {
@@ -25,6 +26,7 @@ export class ProxyServer {
   private providers: LLMProvider[];
   private host: string;
   private port: number;
+  private execute?: ProxyServerOptions["execute"];
 
   constructor(options: ProxyServerOptions) {
     this.catalog = options.catalog;
@@ -32,6 +34,7 @@ export class ProxyServer {
     this.providers = options.providers;
     this.host = options.host || "127.0.0.1";
     this.port = options.port || 4040;
+    this.execute = options.execute;
   }
 
   /**
@@ -127,7 +130,7 @@ export class ProxyServer {
 
     // /v1/chat/completions endpoint
     if (pathname === "/v1/chat/completions" && req.method === "POST") {
-      await handleChatCompletions(req, res, this.catalog, this.router, this.providers);
+      await handleChatCompletions(req, res, this.catalog, this.router, this.providers, this.execute);
       return;
     }
 

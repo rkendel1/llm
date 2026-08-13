@@ -10,3 +10,4 @@ export * from "./tracing.js";
 export * from "./resilience.js";
 export * from "./intelligence-types.js";
 export * from "./intelligent-router.js";
+export * from "./failure-classification.js";

@@ -12,7 +12,8 @@ import {
 import { listProviders, providersWereExplicitlyCleared } from "./providerRegistry.js";
 import { setupProvider } from "./defaultProvider.js";
 import { ensureModelRegistryCurrent, getCanonicalModels, getModelCatalog } from "./modelRegistry.js";
-import { DeterministicRouter, IntelligentRouter, isRetryableError, type RoutingPolicy, withRequestTrace, recordAttempt, updateTraceRoute, setTraceUsage, setTraceCost, getCurrentRequestTrace } from "../packages/router/src/index.js";
+import { DeterministicRouter, IntelligentRouter, classifyExecutionFailure, createRoutingObservation, type CandidateEvaluation, type RoutingPolicy, withRequestTrace, recordAttempt, updateTraceRoute, setTraceUsage, setTraceCost, getCurrentRequestTrace } from "../packages/router/src/index.js";
+import { runtimeObservationStore } from "../packages/registry/src/observations/index.js";
 import { withTimeoutAndAbort } from "./timeout.js";
 import { normalizeUsage, calculateCost, getPricing, toCostEstimate } from "../packages/providers/src/index.js";
 import { initializeDefaultProviders } from "./providerInit.js";
@@ -48,22 +49,27 @@ function convertModelPreferenceToPolicy(model?: LLMModelPreference): RoutingPoli
   return undefined;
 }
 
-async function planCanonicalRequest(request: LLMRequest, providers: LLMProvider[]) {
+async function planCanonicalRequest(request: LLMRequest, providers: LLMProvider[], excludedRouteIds = new Set<string>(), excludedProviders = new Set<string>()) {
   const canonicalModels = getCanonicalModels(), executableProviderIds = new Set(providers.map((provider) => provider.id));
+  for (const provider of excludedProviders) executableProviderIds.delete(provider);
   const canonicalExplicitMatch = typeof request.model === "string" && canonicalModels.some((model) => model.id === request.model || model.providerModelId === request.model || model.routes.some((route) => route.providerModelId === request.model));
   const hasRoute = canonicalModels.some((model) => model.routes.some((route) => executableProviderIds.has(route.provider) || route.availability?.local));
   if (!hasRoute || typeof request.model !== "string" || (!['auto','cheap','fast','reasoning','vision','local'].includes(request.model) && !canonicalExplicitMatch)) return undefined;
   const requiredCapabilities = [...(request.tools && Object.keys(request.tools).length ? ["tools" as const] : []), ...(request.output ? ["structuredOutput" as const] : []), ...(request.messages.some((message) => Array.isArray(message.content) && message.content.some((part) => part.type === "image")) ? ["vision" as const] : [])];
   const explicit = !["auto", "cheap", "fast", "reasoning", "vision", "local"].includes(request.model) ? request.model : undefined;
-  const decision = new IntelligentRouter(canonicalModels, executableProviderIds).route({ mode: explicit ? "auto" : request.model as any, explicitModelId: explicit, requiredCapabilities, strictCapabilities: request.strictCapabilities, fallback: !explicit });
+  const decision = new IntelligentRouter(canonicalModels, executableProviderIds, new Date(), runtimeObservationStore.list()).route({ mode: explicit ? "auto" : request.model as any, explicitModelId: explicit, requiredCapabilities, strictCapabilities: request.strictCapabilities, fallback: !explicit, excludedRouteIds });
   return { decision, providers };
+}
+
+function explainCandidate(item: CandidateEvaluation): import("./types.js").CandidateExplanation {
+  return { modelId: item.model.id, routeId: item.route.id, provider: item.route.provider, compatibility: item.compatibility, confidence: item.intelligence.confidence, freshness: item.intelligence.freshness, health: { status: item.availability.health.status, sampleCount: item.availability.health.sampleCount, successRate: item.availability.health.successRate, averageLatencyMs: item.availability.health.averageLatencyMs }, cost: { known: item.cost.pricingKnown, inputPerMillionTokens: item.cost.inputCost, freeTier: item.cost.freeTier?.available ?? false }, score: item.score, scoreBreakdown: item.scoreBreakdown, reasons: item.reasons.map((reason) => reason.message) };
 }
 
 export async function explainLLMRoute(input: LLMInput): Promise<import("./types.js").RoutingExplanation> {
   const request = normalizeInput(input); if (listProviders().length === 0) await initializeDefaultProviders(); await ensureModelRegistryCurrent();
   const planned = await planCanonicalRequest(request, listProviders().length ? listProviders() : [setupProvider]); if (!planned) throw new Error("No canonical executable routes are available");
   const snapshot = (await import("./modelRegistry.js")).getCanonicalRegistrySnapshot?.();
-  const { decision } = planned; return { intent: decision.mode, selected: { modelId: decision.selected.model.id, routeId: decision.selected.route.id, provider: decision.selected.route.provider }, candidates: decision.candidates.map((item) => ({ modelId: item.model.id, routeId: item.route.id, score: item.score, reasons: item.reasons.map((reason) => reason.message) })), fallback: decision.fallback.map((item) => ({ modelId: item.model.id, routeId: item.route.id, score: item.score })), reasons: decision.selected.reasons.map((reason) => reason.message), registry: { version: snapshot?.version ?? "unknown" } };
+  const { decision } = planned; const requirements = [...(request.tools ? ["tools"] : []), ...(request.output ? ["structuredOutput"] : []), ...(request.messages.some((message) => Array.isArray(message.content) && message.content.some((part) => part.type === "image")) ? ["vision"] : [])]; return { intent: decision.mode, request: { intent: decision.mode, requirements }, selected: explainCandidate(decision.selected), candidates: decision.candidates.map(explainCandidate), fallback: decision.fallback.map(explainCandidate), reasons: decision.selected.reasons.map((reason) => reason.message), registry: { version: snapshot?.version ?? "unknown" } };
 }
 
 async function pickProvider(request: LLMRequest): Promise<{
@@ -71,6 +77,7 @@ async function pickProvider(request: LLMRequest): Promise<{
   routing: LLMRoutingDecision;
   selectedModelId?: string;
   fallbackRoutes?: Array<{ provider: LLMProvider; modelId: string; reason: string }>;
+  candidate?: CandidateEvaluation;
 }> {
   request.model ??= "auto";
   if (listProviders().length === 0 && !providersWereExplicitlyCleared()) await initializeDefaultProviders();
@@ -84,7 +91,7 @@ async function pickProvider(request: LLMRequest): Promise<{
     const selectedProvider = providers.find((provider) => provider.id === decision.selected.route.provider);
     if (!selectedProvider) throw new Error(`No credentials available for selected route provider '${decision.selected.route.provider}'`);
     const fallbackRoutes = decision.fallback.flatMap((item) => { const provider = providers.find((candidate) => candidate.id === item.route.provider); return provider ? [{ provider, modelId: item.route.providerModelId, reason: item.reasons[0]?.message ?? "Evidence-aware fallback" }] : []; });
-    return { provider: selectedProvider, selectedModelId: decision.selected.route.providerModelId, fallbackRoutes, routing: { requestedModel: request.model, selectedProvider: selectedProvider.id, selectedModel: decision.selected.route.providerModelId, reason: decision.selected.reasons.map((reason) => reason.message), alternatives: fallbackRoutes.slice(0, 2).map((item) => ({ provider: item.provider.id, model: item.modelId, reason: item.reason })) } };
+    return { provider: selectedProvider, selectedModelId: decision.selected.route.providerModelId, fallbackRoutes, candidate: decision.selected, routing: { requestedModel: request.model, selectedProvider: selectedProvider.id, selectedModel: decision.selected.route.providerModelId, reason: decision.selected.reasons.map((reason) => reason.message), alternatives: fallbackRoutes.slice(0, 2).map((item) => ({ provider: item.provider.id, model: item.modelId, reason: item.reason })) } };
   }
 
   // If an explicit model ID is provided, find it in the registry
@@ -244,33 +251,42 @@ export async function invokeLLM<TStructured = unknown>(
       const allMessages = [...request.messages];
       const maxRounds = request.maxToolRounds ?? 2;
       
-      const startTime = Date.now();
-
       let response;
-      const attempts = [{ provider, modelId: selectedModelId ?? String(request.model ?? "auto") }, ...(picked.fallbackRoutes ?? []).map((item) => ({ provider: item.provider, modelId: item.modelId }))];
+      const excludedRoutes = new Set<string>(), excludedProviders = new Set<string>();
+      let candidate = picked.candidate;
+      let attempts = [{ provider, modelId: selectedModelId ?? String(request.model ?? "auto"), candidate }, ...(picked.fallbackRoutes ?? []).map((item) => ({ provider: item.provider, modelId: item.modelId, candidate: undefined as CandidateEvaluation | undefined }))];
       let lastError: unknown;
       for (let index = 0; index < attempts.length; index++) {
-        const candidate = attempts[index];
+        const attemptCandidate = attempts[index];
+        const startedAt = new Date().toISOString(), startedMs = Date.now();
         try {
-          response = await withTimeoutAndAbort(candidate.provider.generate({ ...request, model: candidate.modelId, messages: allMessages }), request.timeoutMs, request.signal, "Provider generation timeout");
-          provider = candidate.provider; selectedModelId = candidate.modelId;
-          if (index > 0) { routing.selectedProvider = provider.id; routing.selectedModel = candidate.modelId; routing.reason.push(`Fallback ${index} succeeded after a retryable route failure`); }
+          response = await withTimeoutAndAbort(attemptCandidate.provider.generate({ ...request, model: attemptCandidate.modelId, messages: allMessages }), request.timeoutMs, request.signal, "Provider generation timeout");
+          provider = attemptCandidate.provider; selectedModelId = attemptCandidate.modelId; candidate = attemptCandidate.candidate;
+          const completedAt = new Date().toISOString(), latencyMs = Date.now() - startedMs;
+          recordAttempt({ provider: provider.id, model: response.model, startedAt, completedAt, status: "success", latencyMs });
+          if (candidate) runtimeObservationStore.record(createRoutingObservation(candidate, trace.requestId, undefined, completedAt, startedAt));
+          if (index > 0) { routing.selectedProvider = provider.id; routing.selectedModel = attemptCandidate.modelId; routing.reason.push(`Fallback ${index} selected after re-scoring remaining equivalent routes`); }
           break;
-        } catch (error) { lastError = error; if (!isRetryableError(error instanceof Error ? error : new Error(String(error))) || index === attempts.length - 1) throw error; }
+        } catch (error) {
+          lastError = error; const normalized = error instanceof Error ? error : new Error(String(error)), failure = classifyExecutionFailure(normalized), completedAt = new Date().toISOString(), latencyMs = Date.now() - startedMs;
+          recordAttempt({ provider: attemptCandidate.provider.id, model: attemptCandidate.modelId, startedAt, completedAt, status: failure.event === "timeout" ? "timeout" : failure.event === "rate_limited" ? "rate_limited" : "failed", latencyMs, errorMessage: normalized.message });
+          if (attemptCandidate.candidate) {
+            runtimeObservationStore.record(createRoutingObservation(attemptCandidate.candidate, trace.requestId, normalized, completedAt, startedAt));
+            excludedRoutes.add(attemptCandidate.candidate.route.id);
+            if (failure.suppressProvider) excludedProviders.add(attemptCandidate.candidate.route.provider);
+          }
+          if (!failure.retryable) throw error;
+          const replanned = attemptCandidate.candidate ? await planCanonicalRequest(request, listProviders(), excludedRoutes, excludedProviders).catch(() => undefined) : undefined;
+          if (replanned) {
+            const next = replanned.decision.selected, nextProvider = listProviders().find((item) => item.id === next.route.provider);
+            if (nextProvider) attempts = [...attempts.slice(0, index + 1), { provider: nextProvider, modelId: next.route.providerModelId, candidate: next }];
+          }
+          if (index === attempts.length - 1) throw error;
+        }
       }
       if (!response) throw lastError instanceof Error ? lastError : new Error("All fallback attempts failed");
       toolCalls.push(...(response.toolCalls ?? []));
       
-      const attempt = {
-        provider: provider.id,
-        model: response.model,
-        startedAt: new Date().toISOString(),
-        completedAt: new Date().toISOString(),
-        status: "success" as const,
-        latencyMs: Date.now() - startTime,
-      };
-      recordAttempt(attempt);
-
       let rounds = 0;
       while ((response.toolCalls?.length ?? 0) > 0 && rounds < maxRounds) {
         const toolResults = await executeToolCalls(

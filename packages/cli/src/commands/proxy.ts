@@ -5,6 +5,7 @@ import { ProxyServer } from "../../../proxy/src/index.js";
 import { getCacheFilePath } from "./utils.js";
 import { bold, success, info, section, error } from "../ui/formatting.js";
 import { ConflictError } from "../../../proxy/src/errors.js";
+import { llm } from "../../../../src/index.js";
 
 export class ProxyCommand extends Command {
   name = "proxy";
@@ -51,6 +52,7 @@ export class ProxyCommand extends Command {
         catalog: registry.getCatalog(),
         router,
         providers: [],
+        execute: async (request) => ({ explanation: await llm.explain(request), response: await llm(request) }),
       });
 
       // Start server

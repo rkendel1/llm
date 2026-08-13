@@ -1,9 +1,11 @@
 import { describe, expect, it, beforeEach } from "vitest";
 import { llm, type LLMProvider, type RegistryProviderAdapter } from "../src/index.js";
+import { runtimeObservationStore } from "../packages/registry/src/index.js";
 
 describe("llm core runtime", () => {
   beforeEach(() => {
     llm.clearProviders();
+    runtimeObservationStore.clear();
   });
 
   it("returns setup guidance when no providers are registered", async () => {
@@ -139,5 +141,31 @@ describe("llm core runtime", () => {
     const result = await llm("hello");
     expect(result.routing.selectedModelDefinition?.id).toBe("gpt-4.1-mini");
     expect(result.routing.selectedModelDefinition?.lifecycle.lastVerifiedAt).toBeTruthy();
+  });
+
+  it("records failures and re-scores an equivalent canonical fallback", async () => {
+    const attempted: string[] = [];
+    llm.registerProvider({
+      id: "openrouter",
+      supports: () => true,
+      generate: async (request) => {
+        const selected = String(request.model); attempted.push(selected);
+        if (attempted.length === 1) throw new Error("503 route unavailable");
+        return { text: "recovered", model: selected };
+      },
+    });
+    const result = await llm({ messages: [{ role: "user", content: "hello" }], model: "anthropic/claude-fable-5" });
+    expect(result.text).toBe("recovered");
+    expect(attempted).toHaveLength(2);
+    expect(new Set(attempted).size).toBe(2);
+    expect(runtimeObservationStore.list().map((item) => item.event)).toEqual(["unavailable", "success"]);
+  });
+
+  it("does not blindly fallback for invalid requests", async () => {
+    let attempts = 0;
+    llm.registerProvider({ id: "openrouter", supports: () => true, generate: async () => { attempts += 1; throw new Error("400 invalid request"); } });
+    await expect(llm({ messages: [{ role: "user", content: "hello" }], model: "anthropic/claude-fable-5" })).rejects.toThrow("invalid request");
+    expect(attempts).toBe(1);
+    expect(runtimeObservationStore.list()[0]?.event).toBe("invalid_request");
   });
 });

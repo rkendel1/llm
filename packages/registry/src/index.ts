@@ -8,6 +8,7 @@ export * from "./quality/index.js";
 export * from "./diff/index.js";
 export * from "./release/index.js";
 export * from "./canonical-loader.js";
+export * from "./observations/index.js";
 export * from "./pricing.js";
 export * from "./normalize.js";
 export * from "./cache.js";
