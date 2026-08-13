@@ -20,6 +20,44 @@ export class BadRequestError extends ProxyError {
   }
 }
 
+export class UnauthorizedError extends ProxyError {
+  constructor(message: string) {
+    super(message, 401, "UNAUTHORIZED");
+    this.name = "UnauthorizedError";
+  }
+}
+
+export class MalformedJSONError extends ProxyError {
+  constructor(message: string = "Malformed JSON") {
+    super(message, 400, "MALFORMED_JSON");
+    this.name = "MalformedJSONError";
+  }
+}
+
+export class PayloadTooLargeError extends ProxyError {
+  constructor(message: string = "Payload too large") {
+    super(message, 413, "PAYLOAD_TOO_LARGE");
+    this.name = "PayloadTooLargeError";
+  }
+}
+
+export class RequestTimeoutError extends ProxyError {
+  constructor(message: string = "Request timeout") {
+    super(message, 408, "REQUEST_TIMEOUT");
+    this.name = "RequestTimeoutError";
+  }
+}
+
+export class RateLimitError extends ProxyError {
+  constructor(
+    message: string = "Rate limit exceeded",
+    public retryAfter?: number,
+  ) {
+    super(message, 429, "RATE_LIMITED");
+    this.name = "RateLimitError";
+  }
+}
+
 export class NotFoundError extends ProxyError {
   constructor(message: string) {
     super(message, 404, "NOT_FOUND");
