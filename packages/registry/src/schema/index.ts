@@ -198,6 +198,7 @@ export interface CanonicalRegistrySnapshot {
   models: AIModel[];
   sourceVersions: Record<string, string>;
   rawRecords?: RawModelRecord[];
+  sourceHealth?: Record<string, { status: "success" | "stale" | "failed"; recordCount?: number; fetchedAt?: string; error?: string }>;
 }
 
 export type ValidationSeverity = "error" | "warning" | "info";

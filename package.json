@@ -54,6 +54,14 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "ingest:registry": "node dist/packages/registry-ingest/src/cli.js",
     "registry:report": "node dist/packages/registry-ingest/src/cli.js --report",
+    "registry:capture-baseline": "node dist/packages/registry-ingest/src/registry-ops.js capture",
+    "registry:validate": "node dist/packages/registry-ingest/src/registry-ops.js validate",
+    "registry:validate-current": "node dist/packages/registry-ingest/src/registry-ops.js validate --current",
+    "registry:quality:gate": "node dist/packages/registry-ingest/src/registry-ops.js quality",
+    "registry:diff": "node dist/packages/registry-ingest/src/registry-ops.js diff",
+    "registry:release-report": "node dist/packages/registry-ingest/src/registry-ops.js report",
+    "registry:publish-candidate": "node dist/packages/registry-ingest/src/registry-ops.js publish",
+    "registry:manifests": "node dist/packages/registry-ingest/src/registry-ops.js manifests",
     "prepack": "npm run build"
   },
   "repository": {

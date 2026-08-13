@@ -32,6 +32,8 @@ describe("Hugging Face intelligence source", () => {
     expect(enriched.routes).toContainEqual(expect.objectContaining({ provider: "together", providerModelId: "Qwen/Qwen3-Turbo" }));
     expect(enriched.routes.some((route) => route.provider === "staging")).toBe(false);
     expect(enriched.facts.license.value).toBe("apache-2.0");
+    const evidenceIds = new Set(enriched.intelligence?.evidence.map((item) => item.id));
+    for (const conflict of enriched.intelligence?.conflicts ?? []) for (const value of conflict.values) for (const id of value.evidenceIds) expect(evidenceIds.has(id)).toBe(true);
   });
 
   it("uses field-specific authority", async () => {

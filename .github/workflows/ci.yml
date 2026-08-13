@@ -34,6 +34,13 @@ jobs:
       - name: Test
         run: npm test
 
+      - name: Validate Registry Candidate
+        if: hashFiles('registry/snapshots/candidate.json') != ''
+        run: |
+          npm run registry:validate
+          npm run registry:quality:gate
+          npm run registry:diff
+
       - name: Upload coverage
         uses: codecov/codecov-action@v4
         with:

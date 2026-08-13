@@ -34,6 +34,9 @@ jobs:
       - name: Test
         run: npm test
 
+      - name: Validate Registry
+        run: npm run registry:validate-current
+
       - name: Publish to npm
         run: npm publish
         env:
@@ -50,6 +53,7 @@ jobs:
             ## Release Notes
 
             **Version:** ${{ github.ref_name }}
+            **Registry:** See registry/snapshots/current.json
 
             Published to npm: https://www.npmjs.com/package/@easy-llm/llm
 
