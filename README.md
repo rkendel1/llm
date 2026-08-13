@@ -14,6 +14,12 @@ npm install @easy-llm/llm
 npx llm setup
 ```
 
+Or run setup without installing first:
+
+```bash
+npx @easy-llm/llm setup
+```
+
 ```ts
 import { llm } from "@easy-llm/llm";
 const answer = await llm("Explain this code");

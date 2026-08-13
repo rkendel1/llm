@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import { realpathSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { CLI } from "./cli.js";
 import { CLIError } from "./errors.js";
 import { error } from "./ui/formatting.js";
@@ -30,7 +32,17 @@ async function main() {
   }
 }
 
-// Only run main if this is the entry point
-if (import.meta.url === `file://${process.argv[1]}`) {
+// npm and npx invoke package binaries through a symlink in node_modules/.bin.
+// Resolve both paths so the CLI still starts when it is not called directly.
+function isEntryPoint(): boolean {
+  if (!process.argv[1]) return false;
+  try {
+    return realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url));
+  } catch {
+    return false;
+  }
+}
+
+if (isEntryPoint()) {
   main();
 }
