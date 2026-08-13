@@ -1,7 +1,7 @@
 {
-  "name": "llm",
+  "name": "@easy-llm/llm",
   "version": "0.1.0",
-  "description": "",
+  "description": "Provider-agnostic LLM runtime, routing, and model registry",
   "files": [
     "dist",
     "registry/registry-snapshot.json"
@@ -58,13 +58,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://localhost:26831/rkendel1/llm"
+    "url": "https://github.com/rkendel1/llm.git"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
-  "keywords": [],
+  "keywords": [
+    "llm",
+    "ai",
+    "openai",
+    "anthropic",
+    "gemini",
+    "openrouter",
+    "model-router",
+    "model-registry"
+  ],
   "author": "",
   "license": "ISC",
   "type": "module",

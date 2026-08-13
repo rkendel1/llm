@@ -51,7 +51,7 @@ jobs:
 
             **Version:** ${{ github.ref_name }}
 
-            Published to npm: https://www.npmjs.com/package/llm
+            Published to npm: https://www.npmjs.com/package/@easy-llm/llm
 
             See [CHANGELOG.md](./CHANGELOG.md) for detailed changes.
           draft: false

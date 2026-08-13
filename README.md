@@ -10,13 +10,25 @@ Models and providers are implementation details.
 ## Quick Start
 
 ```bash
-npm install llm
+npm install @easy-llm/llm
 npx llm setup
 ```
 
 ```ts
-import { llm } from "llm";
+import { llm } from "@easy-llm/llm";
 const answer = await llm("Explain this code");
+```
+
+### Shipped Model Registry
+
+The package includes an automatically refreshed model registry with normalized
+context windows, capabilities, lifecycle data, and pricing where available.
+
+```ts
+import registry from "@easy-llm/llm/registry-snapshot" with { type: "json" };
+
+console.log(registry.models.length);
+console.log(registry.models[0]);
 ```
 
 ## The Difference
@@ -55,7 +67,7 @@ try {
 ### llm Approach
 
 ```ts
-import { llm } from "llm";
+import { llm } from "@easy-llm/llm";
 await llm("Explain this code");
 ```
 
