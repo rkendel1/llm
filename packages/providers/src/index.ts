@@ -18,6 +18,23 @@ export {
   formatMessagesForProvider,
   extractTextFromResponse,
 } from "./normalization.js";
+export {
+  checkProviderHealth,
+  checkProvidersHealth,
+  filterHealthyProviders,
+  type ProviderHealthStatus,
+  type HealthCheckOptions,
+} from "./health.js";
+export {
+  recordProviderExecution,
+  onProviderExecution,
+  getProviderTelemetry,
+  getAllProviderTelemetry,
+  clearTelemetry,
+  withTelemetry,
+  type ProviderExecutionEvent,
+  type ProviderTelemetry,
+} from "./telemetry.js";
 
 // Provider adapters
 export { OllamaAdapter, createOllamaAdapter } from "./ollama/index.js";
