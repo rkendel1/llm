@@ -3,6 +3,7 @@ import { OllamaClient } from "./client.js";
 import { formatMessagesForProvider } from "../normalization.js";
 import { createCapabilities } from "../capabilities.js";
 import { ProviderError } from "../types.js";
+import { contentToText } from "../content.js";
 
 export class OllamaAdapter implements LLMProvider {
   id = "ollama";
@@ -31,7 +32,7 @@ export class OllamaAdapter implements LLMProvider {
   async generate(request: LLMRequest): Promise<ProviderResponse> {
     try {
       const model = typeof request.model === "string" ? request.model : "llama2";
-      const messages = formatMessagesForProvider(request.messages, "ollama") as Array<{
+      const messages = formatMessagesForProvider(request.messages.map((message) => ({ ...message, content: contentToText(message.content) })), "ollama") as Array<{
         role: string;
         content: string;
       }>;
@@ -50,7 +51,7 @@ export class OllamaAdapter implements LLMProvider {
   async *stream(request: LLMRequest): AsyncIterable<LLMStreamChunk> {
     try {
       const model = typeof request.model === "string" ? request.model : "llama2";
-      const messages = formatMessagesForProvider(request.messages, "ollama") as Array<{
+      const messages = formatMessagesForProvider(request.messages.map((message) => ({ ...message, content: contentToText(message.content) })), "ollama") as Array<{
         role: string;
         content: string;
       }>;

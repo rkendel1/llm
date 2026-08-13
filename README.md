@@ -1,217 +1,113 @@
 # llm
 
-**AI without the model management.**
-One package. One setup. Every provider. Automatic routing. Local fallback.
-
-Models and providers are implementation details.
-
-`llm` lets developers express what they need—automatic, cheap, fast, reasoning, vision, or local—and handles provider selection, model discovery, capability matching, credentials, failures, and fallback automatically.
-
-## Quick Start
+One API for hosted and local language models, backed by a normalized model registry and automatic routing.
 
 ```bash
 npm install @easy-llm/llm
-npx --no-install llm setup
+npx llm setup
+npx llm doctor
+npx llm run "Explain closures simply."
 ```
 
-Or run setup without installing first:
+The default is `auto`: you do not need to choose a provider or memorize a model ID.
 
-```bash
-npx @easy-llm/llm setup
-```
-
-Package binaries installed locally are run through `npx`. To use `llm`
-directly from any directory, install it globally with
-`npm install --global @easy-llm/llm`.
-
-### Local Ollama
-
-Ollama needs no API key. Start Ollama, pull a model, and initialize the local
-provider before making a request:
-
-```bash
-ollama serve
-ollama pull llama3.2
-```
+## TypeScript API
 
 ```ts
 import { llm } from "@easy-llm/llm";
 
-await llm.initializeDefaultProviders();
-await llm.refreshModelRegistry();
-
-const response = await llm({
-  model: "llama3.2:latest",
-  messages: [{ role: "user", content: "Explain closures simply." }],
-});
-
+const response = await llm("Explain this code");
 console.log(response.text);
 ```
 
-The default local endpoint is `http://localhost:11434`. Pass
-`{ ollamaApiBase: "http://your-host:11434" }` to
-`initializeDefaultProviders` when Ollama runs elsewhere.
-
-From the CLI:
-
-```bash
-npx --no-install llm run --model llama3.2:latest "Explain closures simply."
-```
-
-For a configured remote provider:
-
-```bash
-npx --no-install llm run --provider openai --model gpt-4-turbo "Hello"
-```
+Use a routing intent when one quality matters most:
 
 ```ts
-import { llm } from "@easy-llm/llm";
-const answer = await llm("Explain this code");
+await llm(prompt, { model: "cheap" });
+await llm(prompt, { model: "fast" });
+await llm(prompt, { model: "reasoning" });
+await llm(prompt, { model: "local" });
 ```
 
-### Shipped Model Registry
-
-The package includes an automatically refreshed model registry with normalized
-context windows, capabilities, lifecycle data, and pricing where available.
+You can also request an exact canonical model ID. Images automatically require a vision-capable route:
 
 ```ts
-import registry from "@easy-llm/llm/registry-snapshot" with { type: "json" };
-
-console.log(registry.models.length);
-console.log(registry.models[0]);
-```
-
-## The Difference
-
-### Traditional Approach
-
-```ts
-// Choose a provider
-import OpenAI from "openai";
-
-// Find the model ID
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-// Handle the specific API
-const response = await client.chat.completions.create({
-  model: "gpt-4-turbo",
+await llm({
   messages: [{
     role: "user",
-    content: "Explain this code"
-  }]
+    content: [
+      { type: "text", text: "What is in this image?" },
+      { type: "image", source: { url: "https://example.com/image.jpg" } },
+    ],
+  }],
 });
-
-// Implement error handling and fallback
-try {
-  // ... provider-specific error handling
-} catch (error) {
-  // fallback to another provider?
-}
-
-// Track costs, tokens, rate limits...
-// Add another provider? Rewrite integration.
 ```
 
-### llm Approach
+Inspect a decision without executing it:
 
 ```ts
-import { llm } from "@easy-llm/llm";
-await llm("Explain this code");
+const explanation = await llm.explain("Summarize this", { model: "cheap" });
+console.log(explanation.selected.modelId, explanation.reasons);
 ```
 
-Setup is a one-time CLI:
+The runtime loads the registry, resolves credentials, chooses an executable route, invokes it, and retries semantically equivalent fallback routes for retryable failures. The response includes the route and normalized usage metadata.
+
+## Credentials
+
+Credential resolution has one precedence order:
+
+1. An explicitly supplied runtime credential
+2. The provider environment variable, such as `OPENAI_API_KEY`
+3. The encrypted `llm` vault
+
+`llm setup` creates or updates the vault and verifies that the packaged canonical registry loads. In a long-running process, unlock the vault once:
+
+```ts
+await llm.unlock(process.env.LLM_VAULT_PASSWORD!);
+// Subsequent llm(...) calls reuse the unlocked session.
+```
+
+Ollama needs no credential. Its default endpoint is `http://localhost:11434`.
+
+## CLI journey
 
 ```bash
-npx llm setup
+llm setup                         # configure credentials
+llm doctor                        # actionable readiness summary
+llm doctor --deep                 # include provider connectivity checks
+llm run "Draft a release note"    # automatic execution
+llm route "Draft a release note"  # explain the same runtime decision
+llm models                        # canonical model inventory
+llm model <canonical-model-id>    # inspect one normalized record
+llm status                        # registry and executable-provider status
 ```
 
-That's it. The runtime automatically:
+Add `--json` to automation-oriented inspection commands where supported.
 
-- Discovers installed providers (OpenAI, Anthropic, Google, OpenRouter, Ollama)
-- Loads the current model registry
-- Understands capabilities (vision, reasoning, tools, structured output)
-- Scores and selects the best model
-- Resolves credentials securely
-- Executes the request
-- Normalizes the response
-- Falls back if needed
-- Tracks usage and cost
+## Canonical registry
 
-## Features
-
-### Production Hardening
-
-- **Request tracing** with privacy-first observability (no prompts captured)
-- **Automatic routing** with deterministic scoring
-- **Fallback & resilience** with circuit breaker and rate-limit awareness
-- **Timeout and cancellation** support via AbortSignal
-- **Concurrency limits** to prevent overload
-- **Provider health** monitoring and caching
-- **Cost estimation** with normalized token accounting
-
-### Developer Features
-
-- **Six routing modes**: `auto`, `cheap`, `fast`, `reasoning`, `vision`, `local`
-- **Automatic capabilities** matching (vision-capable models for images, etc.)
-- **Tool calling** with multi-round execution
-- **Structured output** with custom parsing
-- **Streaming** for real-time responses
-- **Local fallback** (Ollama) for privacy or cost
-
-### Provider Support
-
-- **OpenAI** (GPT-4, GPT-4o, GPT-3.5)
-- **Anthropic** (Claude 3.5, Claude 3)
-- **Google** (Gemini, Gemini 2.0)
-- **OpenRouter** (200+ models)
-- **Ollama** (local inference)
-- Extensible provider interface
-
-## Core API
-
-### Simple Usage
+The npm package ships the same normalized registry used by routing and the CLI. Consumers do not need repository-relative files.
 
 ```ts
-const result = await llm("Explain this code");
-console.log(result.text);
+import { loadCanonicalRegistry } from "@easy-llm/llm/registry";
+
+const registry = await loadCanonicalRegistry();
+console.log(registry.version, registry.models.length);
 ```
 
-### Routing Modes
+The loader prefers an explicitly supplied registry, then the packaged canonical snapshot. A local path is only a development fallback after packaged resolution fails.
 
-```ts
-// Pick what matters, not which model
-await llm(prompt, { model: "cheap" });      // Cost-optimized
-await llm(prompt, { model: "fast" });       // Speed-optimized
-await llm(prompt, { model: "reasoning" });  // o1/Claude reasoning
-await llm(prompt, { model: "vision" });     // GPT-4V/Gemini vision
-await llm(prompt, { model: "local" });      // Ollama only
-```
+## Advanced requests
 
-### Structured Output
+The object request form remains available for messages, tools, structured output, streaming, timeouts, and cancellation:
 
 ```ts
 const result = await llm({
-  messages: [{ role: "user", content: "Return JSON..." }],
-  output: {
-    parse: (text) => JSON.parse(text) as MyType,
-  },
+  messages: [{ role: "user", content: "Return a JSON list of three colors" }],
+  output: { parse: (text) => JSON.parse(text) as string[] },
+  timeoutMs: 10_000,
 });
 ```
-
-### Tool Calling
-
-```ts
-const result = await llm({
-  messages: [{ role: "user", content: "What is 2 + 3?" }],
-  tools: {
-    add: (args: { a: number; b: number }) => args.a + args.b,
-  },
-});
-```
-
-### Streaming
 
 ```ts
 for await (const chunk of llm.stream("Write a haiku")) {
@@ -219,111 +115,21 @@ for await (const chunk of llm.stream("Write a haiku")) {
 }
 ```
 
-### Timeouts & Cancellation
+## Providers
 
-```ts
-const controller = new AbortController();
-const result = await llm(prompt, {
-  timeoutMs: 10_000,
-  signal: controller.signal,
-});
-controller.abort(); // Cancel anytime
-```
-
-## OpenAI-Compatible Proxy
-
-Use the local proxy with existing OpenAI SDK clients:
-
-```bash
-npx llm proxy
-```
-
-```ts
-const client = new OpenAI({
-  baseURL: "http://127.0.0.1:4040/v1",
-  apiKey: "local",
-});
-
-// Use model aliases: "auto", "cheap", "fast", "reasoning", "vision", "local"
-const result = await client.chat.completions.create({
-  model: "auto",  // Router handles selection
-  messages: [...]
-});
-```
-
-No application changes except the endpoint.
-
-## CLI Commands
-
-- `llm setup` — Configure providers and credentials
-- `llm models` — List available models
-- `llm providers` — Show connected providers  
-- `llm status` — Runtime health and metrics
-- `llm doctor` — Diagnose issues
-- `llm proxy` — Start OpenAI-compatible proxy
-
-## Testing & Certification
-
-```bash
-# Offline certification (no API keys needed)
-pnpm certify
-
-# Live provider tests (with credentials)
-LLM_LIVE_TEST=1 pnpm certify:providers
-```
-
-The certification suite validates:
-
-- ✅ Registry freshness and model metadata
-- ✅ Credential handling and security
-- ✅ Provider discovery and execution
-- ✅ Capability-aware routing
-- ✅ Deterministic model selection
-- ✅ Fallback with error handling
-- ✅ Streaming and tool calling
-- ✅ Structured output parsing
-- ✅ OpenAI proxy compatibility
-- ✅ Local-only isolation
-- ✅ No credential leakage
-
-## Philosophy
-
-This is not a wrapper around OpenAI.
-
-It's a **runtime** that:
-
-1. **Owns the registry** — Knows every model, its capabilities, and pricing
-2. **Owns the routing** — Deterministically selects the best model for your request
-3. **Owns the credentials** — Manages secrets securely in a local vault
-4. **Owns the fallback** — Retries intelligently when providers fail
-5. **Owns the execution** — Normalizes responses across providers
-6. **Owns the observability** — Tracks requests, usage, and costs without capturing prompts
-
-Developers focus on **what they need** (automatic, fast, reasoning, vision, local).
-
-The runtime handles **which model provides it**.
+Built-in adapters cover OpenAI, Anthropic, Google, OpenRouter, and Ollama. OpenAI and OpenRouter accept native image content through the unified request shape; other adapters preserve a text-compatible representation when native image transport is unavailable.
 
 ## Development
 
 ```bash
-npm install
-npm run build
+npm run typecheck
 npm test
+npm run build
+npm run test:fresh-install
 ```
 
-## Status
+The fresh-install test packs the project, installs the tarball in an empty consumer, loads the packaged registry, and executes an automatically routed request.
 
-PR7 production hardening is complete:
+## License
 
-- ✅ Request lifecycle tracing
-- ✅ Privacy-first observability
-- ✅ Usage and cost accounting
-- ✅ Resilience patterns (timeouts, circuit breaker, concurrency)
-- ✅ Proxy hardening (security headers, request validation)
-- ✅ Provider health caching
-- ✅ Registry freshness detection
-- ✅ Certification suite
-- ✅ End-to-end tests
-- ✅ Full documentation
-
-Ready for production use.
+MIT

@@ -1,0 +1,3 @@
+import type { LLMContentPart } from "../../../src/types.js";
+export const contentToText = (content: string | LLMContentPart[]): string => typeof content === "string" ? content : content.filter((part) => part.type === "text").map((part) => part.text).join("\n");
+export const contentToOpenAI = (content: string | LLMContentPart[]): string | Array<{ type: "text"; text: string } | { type: "image_url"; image_url: { url: string } }> => typeof content === "string" ? content : content.map((part) => part.type === "text" ? part : { type: "image_url", image_url: { url: part.source.url ?? `data:${part.source.mediaType ?? "image/png"};base64,${part.source.data ?? ""}` } });

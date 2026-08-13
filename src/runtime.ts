@@ -9,12 +9,13 @@ import {
   LLMToolCall,
   LLMModelPreference,
 } from "./types.js";
-import { listProviders } from "./providerRegistry.js";
+import { listProviders, providersWereExplicitlyCleared } from "./providerRegistry.js";
 import { setupProvider } from "./defaultProvider.js";
 import { ensureModelRegistryCurrent, getCanonicalModels, getModelCatalog } from "./modelRegistry.js";
-import { DeterministicRouter, IntelligentRouter, type RoutingPolicy, withRequestTrace, recordAttempt, updateTraceRoute, setTraceUsage, setTraceCost, getCurrentRequestTrace } from "../packages/router/src/index.js";
+import { DeterministicRouter, IntelligentRouter, isRetryableError, type RoutingPolicy, withRequestTrace, recordAttempt, updateTraceRoute, setTraceUsage, setTraceCost, getCurrentRequestTrace } from "../packages/router/src/index.js";
 import { withTimeoutAndAbort } from "./timeout.js";
 import { normalizeUsage, calculateCost, getPricing, toCostEstimate } from "../packages/providers/src/index.js";
+import { initializeDefaultProviders } from "./providerInit.js";
 
 function normalizeInput<TStructured>(
   input: LLMInput<TStructured>,
@@ -47,31 +48,43 @@ function convertModelPreferenceToPolicy(model?: LLMModelPreference): RoutingPoli
   return undefined;
 }
 
+async function planCanonicalRequest(request: LLMRequest, providers: LLMProvider[]) {
+  const canonicalModels = getCanonicalModels(), executableProviderIds = new Set(providers.map((provider) => provider.id));
+  const canonicalExplicitMatch = typeof request.model === "string" && canonicalModels.some((model) => model.id === request.model || model.providerModelId === request.model || model.routes.some((route) => route.providerModelId === request.model));
+  const hasRoute = canonicalModels.some((model) => model.routes.some((route) => executableProviderIds.has(route.provider) || route.availability?.local));
+  if (!hasRoute || typeof request.model !== "string" || (!['auto','cheap','fast','reasoning','vision','local'].includes(request.model) && !canonicalExplicitMatch)) return undefined;
+  const requiredCapabilities = [...(request.tools && Object.keys(request.tools).length ? ["tools" as const] : []), ...(request.output ? ["structuredOutput" as const] : []), ...(request.messages.some((message) => Array.isArray(message.content) && message.content.some((part) => part.type === "image")) ? ["vision" as const] : [])];
+  const explicit = !["auto", "cheap", "fast", "reasoning", "vision", "local"].includes(request.model) ? request.model : undefined;
+  const decision = new IntelligentRouter(canonicalModels, executableProviderIds).route({ mode: explicit ? "auto" : request.model as any, explicitModelId: explicit, requiredCapabilities, strictCapabilities: request.strictCapabilities, fallback: !explicit });
+  return { decision, providers };
+}
+
+export async function explainLLMRoute(input: LLMInput): Promise<import("./types.js").RoutingExplanation> {
+  const request = normalizeInput(input); if (listProviders().length === 0) await initializeDefaultProviders(); await ensureModelRegistryCurrent();
+  const planned = await planCanonicalRequest(request, listProviders().length ? listProviders() : [setupProvider]); if (!planned) throw new Error("No canonical executable routes are available");
+  const snapshot = (await import("./modelRegistry.js")).getCanonicalRegistrySnapshot?.();
+  const { decision } = planned; return { intent: decision.mode, selected: { modelId: decision.selected.model.id, routeId: decision.selected.route.id, provider: decision.selected.route.provider }, candidates: decision.candidates.map((item) => ({ modelId: item.model.id, routeId: item.route.id, score: item.score, reasons: item.reasons.map((reason) => reason.message) })), fallback: decision.fallback.map((item) => ({ modelId: item.model.id, routeId: item.route.id, score: item.score })), reasons: decision.selected.reasons.map((reason) => reason.message), registry: { version: snapshot?.version ?? "unknown" } };
+}
+
 async function pickProvider(request: LLMRequest): Promise<{
   provider: LLMProvider;
   routing: LLMRoutingDecision;
   selectedModelId?: string;
+  fallbackRoutes?: Array<{ provider: LLMProvider; modelId: string; reason: string }>;
 }> {
+  request.model ??= "auto";
+  if (listProviders().length === 0 && !providersWereExplicitlyCleared()) await initializeDefaultProviders();
   await ensureModelRegistryCurrent();
   const catalog = getModelCatalog();
   const preferredProviders = listProviders();
   const providers = preferredProviders.length > 0 ? preferredProviders : [setupProvider];
-  const canonicalModels = getCanonicalModels();
-  const canonicalExplicitMatch = typeof request.model === "string" && canonicalModels.some((model) => model.id === request.model || model.providerModelId === request.model || model.routes.some((route) => route.providerModelId === request.model));
-  const executableProviderIds = new Set(providers.map((provider) => provider.id));
-  const hasCanonicalExecutionRoute = canonicalModels.some((model) => model.routes.some((route) => executableProviderIds.has(route.provider) || route.availability?.local));
-  if (hasCanonicalExecutionRoute && typeof request.model === "string" && (["auto", "cheap", "fast", "reasoning", "vision", "local"].includes(request.model) || canonicalExplicitMatch)) {
-    const modes = ["auto", "cheap", "fast", "reasoning", "vision", "local"];
-    const explicit = !modes.includes(request.model) ? request.model : undefined;
-    const requiredCapabilities = [
-      ...(request.tools && Object.keys(request.tools).length ? ["tools" as const] : []),
-      ...(request.output ? ["structuredOutput" as const] : []),
-    ];
-    const router = new IntelligentRouter(canonicalModels, executableProviderIds);
-    const decision = router.route({ mode: explicit ? "auto" : request.model as any, explicitModelId: explicit, requiredCapabilities, strictCapabilities: request.strictCapabilities, fallback: !explicit });
+  const planned = await planCanonicalRequest(request, providers);
+  if (planned) {
+    const { decision } = planned;
     const selectedProvider = providers.find((provider) => provider.id === decision.selected.route.provider);
     if (!selectedProvider) throw new Error(`No credentials available for selected route provider '${decision.selected.route.provider}'`);
-    return { provider: selectedProvider, selectedModelId: decision.selected.route.providerModelId, routing: { requestedModel: request.model, selectedProvider: selectedProvider.id, selectedModel: decision.selected.route.providerModelId, reason: decision.selected.reasons.map((reason) => reason.message), alternatives: decision.fallback.slice(0, 2).map((item) => ({ provider: item.route.provider, model: item.route.providerModelId, reason: item.reasons[0]?.message ?? "Evidence-aware fallback" })) } };
+    const fallbackRoutes = decision.fallback.flatMap((item) => { const provider = providers.find((candidate) => candidate.id === item.route.provider); return provider ? [{ provider, modelId: item.route.providerModelId, reason: item.reasons[0]?.message ?? "Evidence-aware fallback" }] : []; });
+    return { provider: selectedProvider, selectedModelId: decision.selected.route.providerModelId, fallbackRoutes, routing: { requestedModel: request.model, selectedProvider: selectedProvider.id, selectedModel: decision.selected.route.providerModelId, reason: decision.selected.reasons.map((reason) => reason.message), alternatives: fallbackRoutes.slice(0, 2).map((item) => ({ provider: item.provider.id, model: item.modelId, reason: item.reason })) } };
   }
 
   // If an explicit model ID is provided, find it in the registry
@@ -215,12 +228,14 @@ export async function invokeLLM<TStructured = unknown>(
   
   return withRequestTrace(requestedModel, "auto", async (trace) => {
     try {
-      const { provider, routing, selectedModelId } = await withTimeoutAndAbort(
+      const picked = await withTimeoutAndAbort(
         pickProvider(request),
         request.timeoutMs,
         request.signal,
         "Provider selection timeout"
       );
+      let { provider, selectedModelId } = picked;
+      const routing = picked.routing;
       
       const catalog = getModelCatalog();
       updateTraceRoute(provider.id, routing.selectedModel, routing.selectedModel);
@@ -231,12 +246,19 @@ export async function invokeLLM<TStructured = unknown>(
       
       const startTime = Date.now();
 
-      let response = await withTimeoutAndAbort(
-        provider.generate({ ...request, model: selectedModelId ?? request.model, messages: allMessages }),
-        request.timeoutMs,
-        request.signal,
-        "Provider generation timeout"
-      );
+      let response;
+      const attempts = [{ provider, modelId: selectedModelId ?? String(request.model ?? "auto") }, ...(picked.fallbackRoutes ?? []).map((item) => ({ provider: item.provider, modelId: item.modelId }))];
+      let lastError: unknown;
+      for (let index = 0; index < attempts.length; index++) {
+        const candidate = attempts[index];
+        try {
+          response = await withTimeoutAndAbort(candidate.provider.generate({ ...request, model: candidate.modelId, messages: allMessages }), request.timeoutMs, request.signal, "Provider generation timeout");
+          provider = candidate.provider; selectedModelId = candidate.modelId;
+          if (index > 0) { routing.selectedProvider = provider.id; routing.selectedModel = candidate.modelId; routing.reason.push(`Fallback ${index} succeeded after a retryable route failure`); }
+          break;
+        } catch (error) { lastError = error; if (!isRetryableError(error instanceof Error ? error : new Error(String(error))) || index === attempts.length - 1) throw error; }
+      }
+      if (!response) throw lastError instanceof Error ? lastError : new Error("All fallback attempts failed");
       toolCalls.push(...(response.toolCalls ?? []));
       
       const attempt = {

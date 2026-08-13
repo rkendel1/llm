@@ -2,6 +2,7 @@ import type { LLMProvider, LLMRequest, ProviderResponse, LLMStreamChunk } from "
 import { GoogleClient, type GoogleMessage, type GoogleTool } from "./client.js";
 import { createCapabilities } from "../capabilities.js";
 import { ProviderError } from "../types.js";
+import { contentToText } from "../content.js";
 
 const GOOGLE_MODELS = [
   "gemini-pro",
@@ -42,7 +43,7 @@ export class GoogleAdapter implements LLMProvider {
         .filter((m) => m.role !== "tool")
         .map((m) => ({
           role: m.role === "assistant" ? "model" : "user",
-          parts: [{ text: m.content }],
+          parts: [{ text: contentToText(m.content) }],
         }));
 
       let tools: GoogleTool[] | undefined;
@@ -84,7 +85,7 @@ export class GoogleAdapter implements LLMProvider {
         .filter((m) => m.role !== "tool")
         .map((m) => ({
           role: m.role === "assistant" ? "model" : "user",
-          parts: [{ text: m.content }],
+          parts: [{ text: contentToText(m.content) }],
         }));
 
       let tools: GoogleTool[] | undefined;

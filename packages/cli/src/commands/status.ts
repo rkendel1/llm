@@ -1,62 +1,7 @@
+import { resolveCredentials } from "../../../../src/credentials.js";
+import { resolveRegistry } from "../../../registry/src/index.js";
 import { Command, type CommandContext, type CommandResult } from "./base.js";
-import { CredentialStore } from "../../../secrets/src/index.js";
-import { bold, success, warning, info, section, table } from "../ui/formatting.js";
-import { promptPassword } from "../ui/prompts.js";
-
 export class StatusCommand extends Command {
-  name = "status";
-  description = "Check system status and vault";
-
-  async execute(context: CommandContext): Promise<CommandResult> {
-    try {
-      console.log(section("📊 System Status"));
-
-      // Check Node version
-      const nodeVersion = process.version;
-      console.log(`${bold("Node:")}     ${nodeVersion}`);
-
-      // Check vault status
-      const store = new CredentialStore();
-      const vaultExists = store.vaultExists();
-      const vaultStatus = vaultExists ? success("✓ Available") : warning("✗ Not initialized");
-      console.log(`${bold("Vault:")}    ${vaultStatus}`);
-
-      if (!vaultExists) {
-        console.log(
-          `\nRun ${info("llm setup")} to initialize your vault.\n`
-        );
-        return { success: true };
-      }
-
-      // List vault contents (without revealing values)
-      console.log(section("📝 Vault Contents"));
-      
-      try {
-        const password = await promptPassword("Master password (hidden): ");
-        await store.unlockVault(password);
-        const providers = await store.listProviders();
-        if (providers.length === 0) {
-          console.log(warning("Vault is empty - no credentials stored yet.\n"));
-          return { success: true };
-        }
-
-        const rows: string[][] = [];
-        for (const provider of providers) {
-          const keys = await store.listKeys(provider);
-          rows.push([provider, keys.join(", "), success("✓")]);
-        }
-
-        const output = table(["Provider", "Keys", "Status"], rows);
-        console.log(output);
-        console.log("");
-      } catch (error) {
-        console.log(warning(`${error instanceof Error ? error.message : "Unable to unlock vault"}\n`));
-      }
-
-      return { success: true };
-    } catch (error) {
-      const message = error instanceof Error ? error.message : "Unknown error";
-      return { success: false, message, code: 1 };
-    }
-  }
+  name = "status"; description = "Show what can execute right now";
+  async execute(context: CommandContext): Promise<CommandResult> { try { const registry = await resolveRegistry(), credentials = await resolveCredentials(), available = new Set(credentials.filter((item) => item.available).map((item) => item.provider)); const routes = Object.fromEntries([...available].map((provider) => [provider, registry.models.reduce((sum, model) => sum + model.routes.filter((route) => route.provider === provider).length, 0)])); const readyModels = registry.models.filter((model) => model.routes.some((route) => available.has(route.provider as any))).length; const result = { registry: registry.version, providers: credentials.map(({ value, ...item }) => ({ ...item, routes: routes[item.provider] ?? 0 })), readyModels, routing: { auto: true, cheap: true, fast: "heuristic", reasoning: true, vision: true } }; if (context.flags.json) console.log(JSON.stringify(result, null, 2)); else { console.log(`easy-llm\n──────────────\nRegistry  ${result.registry} ✓\nAvailable providers`); for (const provider of result.providers) console.log(`  ${provider.available ? "✓" : "○"} ${provider.provider} — ${provider.source}, ${provider.routes} routes`); console.log(`Ready models: ${readyModels}\nRouting: auto ✓  cheap ✓  fast △ heuristic  reasoning ✓  vision ✓`); } return { success: true, data: result }; } catch (error) { return { success: false, code: 1, message: error instanceof Error ? error.message : String(error) }; } }
 }

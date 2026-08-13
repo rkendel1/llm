@@ -1,5 +1,5 @@
 import { clearProviders, listProviders, registerProvider } from "./providerRegistry.js";
-import { invokeLLM, streamLLM } from "./runtime.js";
+import { explainLLMRoute, invokeLLM, streamLLM } from "./runtime.js";
 import {
   getModelCatalog,
   getModelRegistrySnapshot,
@@ -9,8 +9,9 @@ import {
   setRegistryProviders,
 } from "./modelRegistry.js";
 import { initializeDefaultProviders } from "./providerInit.js";
-import type { LLMInput, LLMResponse, LLMStreamChunk, LLMProvider } from "./types.js";
+import type { LLMInput, LLMCallOptions, LLMResponse, LLMStreamChunk, LLMProvider } from "./types.js";
 import type { RegistryProviderAdapter, RegistrySnapshot } from "../packages/registry/src/index.js";
+import { lockCredentialSession, unlockCredentialSession } from "./credentials.js";
 
 // Re-export provider infrastructure
 export * from "../packages/providers/src/index.js";
@@ -21,6 +22,7 @@ export type * from "../packages/registry/src/types.js";
 
 export type LLMFunction = {
   <TStructured = unknown>(input: LLMInput<TStructured>): Promise<LLMResponse<TStructured>>;
+  <TStructured = unknown>(prompt: string, options: LLMCallOptions<TStructured>): Promise<LLMResponse<TStructured>>;
   stream: (input: LLMInput) => AsyncIterable<LLMStreamChunk>;
   registerProvider: (provider: LLMProvider) => void;
   clearProviders: () => void;
@@ -33,10 +35,13 @@ export type LLMFunction = {
   queryModels: () => ReturnType<typeof getModelCatalog>;
   // Provider initialization helper
   initializeDefaultProviders: typeof initializeDefaultProviders;
+  unlock: typeof unlockCredentialSession;
+  lock: typeof lockCredentialSession;
+  explain: typeof explainLLMRoute;
 };
 
-const fn = (async <TStructured = unknown>(input: LLMInput<TStructured>) =>
-  invokeLLM(input)) as LLMFunction;
+const fn = (async <TStructured = unknown>(input: LLMInput<TStructured>, options?: LLMCallOptions<TStructured>) =>
+  invokeLLM(typeof input === "string" && options ? { ...options, messages: options.messages ?? [{ role: "user", content: input }] } : input)) as LLMFunction;
 
 fn.stream = streamLLM;
 fn.registerProvider = registerProvider;
@@ -49,5 +54,8 @@ fn.inspectModelRegistry = inspectModelRegistry;
 fn.getModelRegistrySnapshot = getModelRegistrySnapshot;
 fn.queryModels = getModelCatalog;
 fn.initializeDefaultProviders = initializeDefaultProviders;
+fn.unlock = unlockCredentialSession;
+fn.lock = lockCredentialSession;
+fn.explain = explainLLMRoute;
 
 export const llm = fn;

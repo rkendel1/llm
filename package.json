@@ -45,13 +45,14 @@
       "types": "./dist/packages/registry-ingest/src/index.d.ts"
     },
     "./registry-snapshot": {
-      "default": "./registry/registry-snapshot.json"
+      "default": "./registry/snapshots/current.json"
     }
   },
   "scripts": {
     "test": "vitest run",
     "build": "tsc -p tsconfig.build.json",
     "test:watch": "vitest",
+    "test:fresh-install": "node scripts/fresh-install.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "ingest:registry": "node dist/packages/registry-ingest/src/cli.js",
     "registry:report": "node dist/packages/registry-ingest/src/cli.js --report",

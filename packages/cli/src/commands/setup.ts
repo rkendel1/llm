@@ -2,6 +2,8 @@ import { Command, type CommandContext, type CommandResult } from "./base.js";
 import { CredentialStore } from "../../../secrets/src/index.js";
 import { promptOnce, promptPassword, promptConfirm, selectOption } from "../ui/prompts.js";
 import { success, info, bold, section } from "../ui/formatting.js";
+import { llm } from "../../../../src/index.js";
+import { resolveRegistry } from "../../../registry/src/index.js";
 
 export class SetupCommand extends Command {
   name = "setup";
@@ -12,6 +14,7 @@ export class SetupCommand extends Command {
       const store = new CredentialStore();
       let resetExisting = false;
       let initialized = false;
+      let sessionPassword: string | undefined;
 
       console.log(section("🔐 LLM Setup Wizard"));
       console.log(
@@ -28,6 +31,7 @@ export class SetupCommand extends Command {
         if (action === "u" || action === "update") {
           const password = await promptPassword("Master password: ");
           await store.unlockVault(password);
+          sessionPassword = password;
           console.log(success("✓ Vault unlocked"));
         } else if (action === "r" || action === "reset") {
           const confirmed = await promptConfirm("Resetting permanently removes stored credentials. Continue?");
@@ -65,6 +69,7 @@ export class SetupCommand extends Command {
           await store.initializeVault(password);
         }
         initialized = true;
+        sessionPassword = password;
         console.log(success("\n✓ Master password created"));
       }
 
@@ -91,9 +96,12 @@ export class SetupCommand extends Command {
         addMore = await promptConfirm("\nAdd another key?");
       }
 
+      if (sessionPassword) await llm.unlock(sessionPassword);
+      const registry = await resolveRegistry();
       console.log(section("Setup Complete!"));
       console.log(success(`✓ Vault ${initialized ? "initialized" : "updated"} at ~/.llm/credentials.enc`));
       console.log(info("Your credentials are encrypted and ready to use."));
+      console.log(success(`✓ Canonical registry ${registry.version} loaded (${registry.models.length} models)`));
       console.log(`\nNext steps:\n  ${bold("npx --no-install llm providers")}\n  ${bold("npx --no-install llm status")}\n  ${bold("npx --no-install llm models")}\n\nSupported providers: Ollama (local), OpenAI, Anthropic, Google, OpenRouter\n`);
 
       return { success: true, message: "Setup complete" };

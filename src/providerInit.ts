@@ -1,6 +1,7 @@
 import { registerProvider } from "./providerRegistry.js";
 import { setRegistryProviders } from "./modelRegistry.js";
 import type { RegistryProviderAdapter } from "../packages/registry/src/index.js";
+import { resolveCredentials } from "./credentials.js";
 
 // Lazy-load providers to avoid circular dependencies and heavy imports
 async function loadProviders() {
@@ -50,6 +51,9 @@ export interface ProviderInitConfig {
  */
 export async function initializeDefaultProviders(config?: ProviderInitConfig): Promise<void> {
   try {
+    const resolved = await resolveCredentials({ openai: config?.openaiApiKey, anthropic: config?.anthropicApiKey, google: config?.googleApiKey, openrouter: config?.openrouterApiKey });
+    const credential = (provider: string) => resolved.find((item) => item.provider === provider)?.value;
+    config = { ...config, openaiApiKey: credential("openai"), anthropicApiKey: credential("anthropic"), googleApiKey: credential("google"), openrouterApiKey: credential("openrouter") };
     const providers = await loadProviders();
     const registryAdapters: RegistryProviderAdapter[] = [];
 

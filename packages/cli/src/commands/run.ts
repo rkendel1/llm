@@ -13,47 +13,24 @@ export class RunCommand extends Command {
 
   async execute(context: CommandContext): Promise<CommandResult> {
     const prompt = context.args.join(" ").trim();
-    const model = typeof context.flags.model === "string" ? context.flags.model : undefined;
-    const provider = typeof context.flags.provider === "string" ? context.flags.provider : "ollama";
+    const model = typeof context.flags.model === "string" ? context.flags.model : "auto";
 
-    if (!prompt || !model) {
+    if (!prompt) {
       return {
         success: false,
         code: 1,
-        message: error('Usage: llm run --model <model> [--provider <provider>] "Your prompt"'),
+        message: error('Usage: llm run "Your prompt" [--model auto|cheap|fast|reasoning|vision|local|<id>]'),
       };
     }
 
-    if (provider !== "ollama" && !remoteProviders.has(provider as RemoteProvider)) {
-      return { success: false, code: 1, message: error(`Unsupported provider: ${provider}`) };
-    }
-
     try {
-      const config: ProviderInitConfig = {};
-
-      if (provider !== "ollama") {
-        const remoteProvider = provider as RemoteProvider;
-        const store = new CredentialStore();
-        if (!store.vaultExists()) {
-          throw new Error("Credential vault not found. Run 'npx --no-install llm setup' first.");
-        }
+      const store = new CredentialStore();
+      const hasEnvironmentCredential = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY", "GOOGLE_API_KEY", "OPENROUTER_API_KEY"].some((name) => Boolean(process.env[name]));
+      if (store.vaultExists() && !hasEnvironmentCredential && !process.env.LLM_VAULT_PASSWORD) {
         const password = await promptPassword("Master password (hidden): ");
-        await store.unlockVault(password);
-        const apiKey = await store.getCredential(remoteProvider, "api_key");
-        if (!apiKey) throw new Error(`${remoteProvider} is not configured in the credential vault`);
-
-        if (remoteProvider === "openai") config.openaiApiKey = apiKey;
-        if (remoteProvider === "anthropic") config.anthropicApiKey = apiKey;
-        if (remoteProvider === "google") config.googleApiKey = apiKey;
-        if (remoteProvider === "openrouter") config.openrouterApiKey = apiKey;
+        await llm.unlock(password);
       }
-
-      await llm.initializeDefaultProviders(config);
-      await llm.refreshModelRegistry();
-      const response = await llm({
-        model,
-        messages: [{ role: "user", content: prompt }],
-      });
+      const response = await llm(prompt, { model });
 
       process.stdout.write(`${response.text}\n`);
       return { success: true, data: response };

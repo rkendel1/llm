@@ -2,6 +2,7 @@ import type { LLMProvider, LLMRequest, ProviderResponse, LLMStreamChunk } from "
 import { AnthropicClient, type AnthropicMessage, type AnthropicTool } from "./client.js";
 import { createCapabilities } from "../capabilities.js";
 import { ProviderError } from "../types.js";
+import { contentToText } from "../content.js";
 
 const ANTHROPIC_MODELS = ["claude-3-opus", "claude-3-sonnet", "claude-3-haiku"];
 
@@ -34,7 +35,7 @@ export class AnthropicAdapter implements LLMProvider {
         .filter((m) => m.role !== "system")
         .map((m) => ({
           role: m.role === "assistant" || m.role === "user" ? m.role : "user",
-          content: m.content,
+          content: contentToText(m.content),
         }));
 
       let tools: AnthropicTool[] | undefined;
@@ -70,7 +71,7 @@ export class AnthropicAdapter implements LLMProvider {
         .filter((m) => m.role !== "system")
         .map((m) => ({
           role: m.role === "assistant" || m.role === "user" ? m.role : "user",
-          content: m.content,
+          content: contentToText(m.content),
         }));
 
       let tools: AnthropicTool[] | undefined;

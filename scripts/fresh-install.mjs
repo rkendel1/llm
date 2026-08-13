@@ -1,0 +1,22 @@
+import { execFileSync } from "node:child_process";
+import { mkdtemp, readdir, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join, resolve } from "node:path";
+const root = resolve(new URL("..", import.meta.url).pathname), consumer = await mkdtemp(join(tmpdir(), "easy-llm-consumer-"));
+const environment = { ...process.env, npm_config_cache: join(consumer, ".npm-cache") };
+execFileSync("npm", ["pack", "--silent", "--pack-destination", consumer], { cwd: root, stdio: "inherit", env: environment });
+const tarball = (await readdir(consumer)).find((file) => file.endsWith(".tgz")); if (!tarball) throw new Error("npm pack did not create a tarball");
+await writeFile(join(consumer, "package.json"), JSON.stringify({ private: true, type: "module" }));
+execFileSync("npm", ["install", `./${tarball}`, "--ignore-scripts", "--no-audit", "--no-fund", "--silent"], { cwd: consumer, stdio: "inherit", env: environment });
+await writeFile(join(consumer, "smoke.mjs"), `
+import { llm } from "@easy-llm/llm";
+import { loadCanonicalRegistry } from "@easy-llm/llm/registry";
+const registry = await loadCanonicalRegistry();
+if (registry.version !== "0.1.10" || registry.models.length !== 341) throw new Error("Packaged canonical registry mismatch");
+llm.clearProviders();
+llm.registerProvider({ id: "openrouter", supports: () => true, generate: async (request) => ({ text: "hello", model: String(request.model) }) });
+const response = await llm("hello");
+if (response.text !== "hello" || response.provider !== "openrouter") throw new Error("Installed runtime did not execute canonical route");
+console.log(JSON.stringify({ registry: registry.version, models: registry.models.length, provider: response.provider, selected: response.routing.selectedModel }));
+`);
+execFileSync("node", ["smoke.mjs"], { cwd: consumer, stdio: "inherit" });

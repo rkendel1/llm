@@ -46,3 +46,16 @@ jobs:
         with:
           fail_ci_if_error: false
         if: matrix.node-version == '20.x'
+
+  fresh-install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Pack and test as an npm consumer
+        run: npm run test:fresh-install

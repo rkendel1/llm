@@ -1,11 +1,10 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import type { AIModel, CanonicalRegistrySnapshot } from "../../../registry/src/index.js";
+import { resolveRegistry, type AIModel } from "../../../registry/src/index.js";
 import { Command, type CommandContext, type CommandResult } from "./base.js";
 
 async function loadCanonicalModel(id: string): Promise<AIModel | undefined> {
-  const path = resolve(process.env.REGISTRY_SNAPSHOT_DIR || "registry/snapshots", "current.json");
-  const snapshot = JSON.parse(await readFile(path, "utf8")) as CanonicalRegistrySnapshot;
+  const snapshot = await resolveRegistry(process.env.REGISTRY_SNAPSHOT_PATH ? { localPath: process.env.REGISTRY_SNAPSHOT_PATH } : {});
   return snapshot.models.find((model) => model.id === id || model.providerModelId === id || model.routes.some((route) => route.providerModelId === id));
 }
 

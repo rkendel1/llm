@@ -1,5 +1,4 @@
 import { join } from "node:path";
-import { readFile } from "node:fs/promises";
 import {
   ModelCatalog,
   ModelRegistry,
@@ -7,6 +6,7 @@ import {
   RegistrySnapshot,
   type CanonicalRegistrySnapshot,
   type AIModel,
+  resolveRegistry,
 } from "../packages/registry/src/index.js";
 
 const defaultCacheFile = join(process.cwd(), ".llm", "registry-cache.json");
@@ -49,7 +49,7 @@ export function setRegistryProviders(providers: RegistryProviderAdapter[]): void
 
 export async function ensureModelRegistryCurrent(): Promise<void> {
   if (!canonicalSnapshot) {
-    try { canonicalSnapshot = JSON.parse(await readFile(join(process.cwd(), "registry", "snapshots", "current.json"), "utf8")) as CanonicalRegistrySnapshot; } catch { /* canonical registry is optional for backward compatibility */ }
+    canonicalSnapshot = await resolveRegistry();
   }
   await loadModelRegistryCache();
   if (!providersConfigured) {
@@ -78,6 +78,7 @@ export async function ensureModelRegistryCurrent(): Promise<void> {
 }
 
 export function getCanonicalModels(): AIModel[] { return canonicalSnapshot?.models ?? []; }
+export function getCanonicalRegistrySnapshot(): CanonicalRegistrySnapshot | undefined { return canonicalSnapshot; }
 
 export function inspectModelRegistry() {
   return modelRegistry.inspect();

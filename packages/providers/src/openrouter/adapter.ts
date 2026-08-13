@@ -2,6 +2,7 @@ import type { LLMProvider, LLMRequest, ProviderResponse, LLMStreamChunk } from "
 import { OpenRouterClient, type OpenRouterMessage, type OpenRouterTool } from "./client.js";
 import { createCapabilities } from "../capabilities.js";
 import { ProviderError } from "../types.js";
+import { contentToOpenAI } from "../content.js";
 
 export class OpenRouterAdapter implements LLMProvider {
   id = "openrouter";
@@ -29,7 +30,7 @@ export class OpenRouterAdapter implements LLMProvider {
         .filter((m) => m.role !== "tool")
         .map((m) => ({
           role: m.role as "system" | "user" | "assistant",
-          content: m.content,
+          content: contentToOpenAI(m.content),
         }));
 
       let tools: OpenRouterTool[] | undefined;
@@ -73,7 +74,7 @@ export class OpenRouterAdapter implements LLMProvider {
         .filter((m) => m.role !== "tool")
         .map((m) => ({
           role: m.role as "system" | "user" | "assistant",
-          content: m.content,
+          content: contentToOpenAI(m.content),
         }));
 
       let tools: OpenRouterTool[] | undefined;

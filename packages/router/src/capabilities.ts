@@ -25,10 +25,7 @@ export function inferRequirements(request: LLMRequest): RequestRequirements {
     const inputModalities = new Set<"text" | "image" | "audio" | "video">();
     inputModalities.add("text"); // text is always present
 
-    for (const message of request.messages) {
-      // In a real implementation, we'd check for embedded content
-      // For now, we assume text-based messages
-    }
+    for (const message of request.messages) if (Array.isArray(message.content)) for (const part of message.content) if (part.type === "image") { inputModalities.add("image"); if (!capabilities.includes("vision")) capabilities.push("vision"); }
 
     modalities.input = Array.from(inputModalities);
   }

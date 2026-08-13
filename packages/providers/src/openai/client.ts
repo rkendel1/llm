@@ -2,7 +2,7 @@ import type { ProviderResponse, LLMToolCall } from "../types.js";
 
 export type OpenAIMessage = {
   role: "system" | "user" | "assistant" | "tool";
-  content?: string | null;
+  content?: string | Array<{ type: "text"; text: string } | { type: "image_url"; image_url: { url: string } }> | null;
   tool_call_id?: string;
   name?: string;
   tool_calls?: Array<{

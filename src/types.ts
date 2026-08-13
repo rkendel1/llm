@@ -1,8 +1,9 @@
 export type LLMRole = "system" | "user" | "assistant" | "tool";
+export type LLMContentPart = { type: "text"; text: string } | { type: "image"; source: { url?: string; data?: string; mediaType?: string } };
 
 export type LLMMessage = {
   role: LLMRole;
-  content: string;
+  content: string | LLMContentPart[];
   name?: string;
   toolCallId?: string;
 };
@@ -42,6 +43,7 @@ export type LLMRoutingDecision = {
     reason: string;
   }>;
 };
+export interface RoutingExplanation { intent: string; selected: { modelId: string; routeId: string; provider: string }; candidates: Array<{ modelId: string; routeId: string; score: number; reasons: string[] }>; fallback: Array<{ modelId: string; routeId: string; score: number }>; reasons: string[]; registry: { version: string; checksum?: string } }
 
 export type LLMResponse<TStructured = unknown> = {
   text: string;
@@ -89,6 +91,7 @@ export type LLMRequest<TStructured = unknown> = {
 export type LLMInput<TStructured = unknown> =
   | string
   | LLMRequest<TStructured>;
+export type LLMCallOptions<TStructured = unknown> = Omit<LLMRequest<TStructured>, "messages"> & { messages?: LLMMessage[] };
 
 export type ProviderResponse = {
   text: string;

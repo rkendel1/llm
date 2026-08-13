@@ -2,6 +2,7 @@ import type { LLMProvider, LLMRequest, ProviderResponse, LLMStreamChunk } from "
 import { OpenAIClient, type OpenAIMessage, type OpenAITool } from "./client.js";
 import { createCapabilities } from "../capabilities.js";
 import { ProviderError } from "../types.js";
+import { contentToOpenAI } from "../content.js";
 
 const OPENAI_MODELS = ["gpt-4-turbo", "gpt-4", "gpt-4-32k", "gpt-3.5-turbo"];
 
@@ -32,7 +33,7 @@ export class OpenAIAdapter implements LLMProvider {
 
       const messages: OpenAIMessage[] = request.messages.map((m) => ({
         role: m.role as "system" | "user" | "assistant" | "tool",
-        content: m.content,
+        content: contentToOpenAI(m.content),
         name: m.name,
         tool_call_id: m.toolCallId,
       }));
@@ -71,7 +72,7 @@ export class OpenAIAdapter implements LLMProvider {
 
       const messages: OpenAIMessage[] = request.messages.map((m) => ({
         role: m.role as "system" | "user" | "assistant" | "tool",
-        content: m.content,
+        content: contentToOpenAI(m.content),
         name: m.name,
         tool_call_id: m.toolCallId,
       }));

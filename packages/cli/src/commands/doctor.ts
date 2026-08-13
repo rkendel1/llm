@@ -1,119 +1,18 @@
+import { llm } from "../../../../src/index.js";
+import { credentialSessionUnlocked, credentialVaultExists, resolveCredentials } from "../../../../src/credentials.js";
+import { resolveRegistry } from "../../../registry/src/index.js";
 import { Command, type CommandContext, type CommandResult } from "./base.js";
-import { CredentialStore } from "../../../secrets/src/index.js";
-import { bold, info, section, success, warning, error } from "../ui/formatting.js";
-import { loadAvailableCatalog } from "./utils.js";
-
 export class DoctorCommand extends Command {
-  name = "doctor";
-  description = "Run diagnostic checks";
-
+  name = "doctor"; description = "Check canonical runtime readiness";
   async execute(context: CommandContext): Promise<CommandResult> {
-    try {
-      console.log(section("🏥 System Diagnostics"));
-
-      const checks: { name: string; passed: boolean; message: string }[] = [];
-
-      // Check 1: Node.js version
-      const nodeVersion = process.version;
-      const majorVersion = parseInt(nodeVersion.slice(1).split(".")[0], 10);
-      const nodeCheck = majorVersion >= 18;
-      checks.push({
-        name: "Node.js Version",
-        passed: nodeCheck,
-        message: nodeCheck ? `${nodeVersion} (OK)` : `${nodeVersion} (requires 18+)`,
-      });
-
-      // Check 2: Registry available
-      try {
-        const catalog = await loadAvailableCatalog();
-        const modelCount = catalog.all().length;
-        checks.push({
-          name: "Model Registry",
-          passed: modelCount > 0,
-          message: modelCount > 0 ? `${modelCount} models available` : "No models found",
-        });
-      } catch (e) {
-        checks.push({
-          name: "Model Registry",
-          passed: false,
-          message: e instanceof Error ? e.message : "Unknown error",
-        });
-      }
-
-      // Check 3: Vault initialization
-      const store = new CredentialStore();
-      const vaultExists = store.vaultExists();
-      checks.push({
-        name: "Vault",
-        passed: vaultExists,
-        message: vaultExists ? "Initialized" : "Not initialized - run 'llm setup'",
-      });
-
-      // Check 4: Vault writable (if it exists)
-      if (vaultExists) {
-        try {
-          const vaultPath = (await import("../../../secrets/src/index.js")).getVaultPath();
-          const fs = await import("node:fs/promises");
-          const stats = await fs.stat(vaultPath);
-          checks.push({
-            name: "Vault Readable",
-            passed: true,
-            message: `${(stats.size / 1024).toFixed(1)}KB`,
-          });
-        } catch (e) {
-          checks.push({
-            name: "Vault Readable",
-            passed: false,
-            message: e instanceof Error ? e.message : "Unknown error",
-          });
-        }
-      }
-
-      // Check 5: Home directory accessible
-      try {
-        const homeDir = (await import("../../../secrets/src/index.js")).getLLMDir();
-        checks.push({
-          name: "Config Directory",
-          passed: true,
-          message: homeDir,
-        });
-      } catch (e) {
-        checks.push({
-          name: "Config Directory",
-          passed: false,
-          message: e instanceof Error ? e.message : "Unknown error",
-        });
-      }
-
-      // Print results
-      for (const check of checks) {
-        const status = check.passed ? success("✓") : error("✗");
-        console.log(`${status} ${bold(check.name + ":")}  ${check.message}`);
-      }
-
-      const passedCount = checks.filter((c) => c.passed).length;
-      const allPassed = passedCount === checks.length;
-
-      console.log("");
-      if (allPassed) {
-        console.log(success(`✓ All checks passed (${passedCount}/${checks.length})`));
-      } else {
-        console.log(
-          warning(
-            `⚠ Some checks failed (${passedCount}/${checks.length} passed)`
-          )
-        );
-      }
-      console.log("");
-
-      return {
-        success: allPassed,
-        data: { passed: passedCount, total: checks.length },
-        code: allPassed ? 0 : 1,
-      };
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "Unknown error";
-      return { success: false, message, code: 1 };
-    }
+    try { const registry = await resolveRegistry(), credentials = await resolveCredentials();
+      let ollama = false; try { const response = await fetch("http://localhost:11434/api/tags", { signal: AbortSignal.timeout(1000) }); ollama = response.ok; } catch {}
+      const executableProviders = credentials.filter((item) => item.available).map((item) => item.provider); if (ollama) executableProviders.push("ollama" as any);
+      let deep: { passed: boolean; message: string } | undefined;
+      if (context.flags.deep) try { const response = await llm("Reply with OK."); deep = { passed: Boolean(response.text), message: `${response.provider}/${response.model}` }; } catch (error) { deep = { passed: false, message: error instanceof Error ? error.message : String(error) }; }
+      const result = { status: executableProviders.length && (!deep || deep.passed) ? "READY" : "NOT_READY", registry: { loaded: true, version: registry.version, models: registry.models.length, routes: registry.models.reduce((sum, model) => sum + model.routes.length, 0) }, credentials: credentials.map(({ provider, source, available }) => ({ provider, source, available })), vault: { exists: credentialVaultExists(), unlocked: credentialSessionUnlocked() }, local: { ollama }, routing: { engine: "intelligent", canonical: true, evidenceAware: true }, execution: deep };
+      if (context.flags.json) console.log(JSON.stringify(result, null, 2)); else { console.log(`easy-llm readiness\n────────────────────────────\nRegistry\n  ✓ Canonical ${result.registry.version}\n  ✓ ${result.registry.models} models / ${result.registry.routes} routes\nCredentials`); for (const item of result.credentials) console.log(`  ${item.available ? "✓" : "○"} ${item.provider} — ${item.source}`); console.log(`Local\n  ${ollama ? "✓" : "○"} Ollama ${ollama ? "detected" : "not detected"}\nRouting\n  ✓ Intelligent canonical router`); if (deep) console.log(`Execution\n  ${deep.passed ? "✓" : "✗"} ${deep.message}`); console.log(`Status: ${result.status}`); }
+      return { success: result.status === "READY", code: result.status === "READY" ? 0 : 1, data: result };
+    } catch (error) { return { success: false, code: 1, message: error instanceof Error ? error.message : String(error) }; }
   }
 }
