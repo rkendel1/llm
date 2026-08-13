@@ -83,6 +83,8 @@ llm models                        # canonical model inventory
 llm model <canonical-model-id>    # inspect one normalized record
 llm status                        # registry and executable-provider status
 llm status --routes               # locally observed route health and latency
+llm evaluate                      # certify Routing Contract invariants
+llm evaluate --json               # stable CI-readable certification report
 ```
 
 Add `--json` to automation-oriented inspection commands where supported.

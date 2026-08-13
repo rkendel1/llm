@@ -17,6 +17,8 @@ import { runtimeObservationStore } from "../packages/registry/src/observations/i
 import { withTimeoutAndAbort } from "./timeout.js";
 import { normalizeUsage, calculateCost, getPricing, toCostEstimate } from "../packages/providers/src/index.js";
 import { initializeDefaultProviders } from "./providerInit.js";
+import { createHash } from "node:crypto";
+import { createDecisionFingerprint } from "../packages/router/src/evaluation/fingerprint.js";
 
 function normalizeInput<TStructured>(
   input: LLMInput<TStructured>,
@@ -69,7 +71,7 @@ export async function explainLLMRoute(input: LLMInput): Promise<import("./types.
   const request = normalizeInput(input); if (listProviders().length === 0) await initializeDefaultProviders(); await ensureModelRegistryCurrent();
   const planned = await planCanonicalRequest(request, listProviders().length ? listProviders() : [setupProvider]); if (!planned) throw new Error("No canonical executable routes are available");
   const snapshot = (await import("./modelRegistry.js")).getCanonicalRegistrySnapshot?.();
-  const { decision } = planned; const requirements = [...(request.tools ? ["tools"] : []), ...(request.output ? ["structuredOutput"] : []), ...(request.messages.some((message) => Array.isArray(message.content) && message.content.some((part) => part.type === "image")) ? ["vision"] : [])]; return { intent: decision.mode, request: { intent: decision.mode, requirements }, selected: explainCandidate(decision.selected), candidates: decision.candidates.map(explainCandidate), fallback: decision.fallback.map(explainCandidate), reasons: decision.selected.reasons.map((reason) => reason.message), registry: { version: snapshot?.version ?? "unknown" } };
+  const { decision } = planned; const requirements = [...(request.tools ? ["tools"] : []), ...(request.output ? ["structuredOutput"] : []), ...(request.messages.some((message) => Array.isArray(message.content) && message.content.some((part) => part.type === "image")) ? ["vision"] : [])], registryVersion = snapshot?.version ?? "unknown", checksum = createHash("sha256").update(JSON.stringify(snapshot ?? {})).digest("hex"), fingerprint = createDecisionFingerprint({ registryVersion, registryChecksum: checksum, request: { messages: request.messages, model: request.model, requirements }, policy: decision.mode, decision }); return { intent: decision.mode, request: { intent: decision.mode, requirements }, selected: explainCandidate(decision.selected), candidates: decision.candidates.map(explainCandidate), fallback: decision.fallback.map(explainCandidate), reasons: decision.selected.reasons.map((reason) => reason.message), registry: { version: registryVersion, checksum }, decision: { fingerprint: fingerprint.hash, scoreVersion: fingerprint.fingerprint.scoreVersion, candidateOrder: fingerprint.fingerprint.candidateOrder } };
 }
 
 async function pickProvider(request: LLMRequest): Promise<{

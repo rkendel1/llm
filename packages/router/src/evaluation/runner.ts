@@ -1,0 +1,35 @@
+import { createHash } from "node:crypto";
+import { IntelligentRouter } from "../intelligent-router.js";
+import type { CandidateEvaluation } from "../intelligence-types.js";
+import { assertFallbackEquivalent, evaluateSelection } from "./assertions.js";
+import { createDecisionFingerprint } from "./fingerprint.js";
+import { latencyMetrics, percentage, type CapabilityMetrics, type CostMetrics, type LatencyMetrics, type ReliabilityMetrics, type RoutingMetrics } from "./metrics.js";
+import { REPRESENTATIVE_ROUTING_SCENARIOS, type RoutingScenario } from "./scenarios.js";
+
+export interface ScenarioEvaluation { id: string; valid: boolean; selectedRoute?: string; baselineRoute?: string; violations: string[]; deterministic: boolean; fingerprint?: string; fallbackEquivalent: boolean }
+export interface RoutingEvaluationReport { schemaVersion: "1"; generatedAt: string; result: "PASS" | "FAIL"; scenarios: ScenarioEvaluation[]; capability: CapabilityMetrics; routing: RoutingMetrics; baseline: { capability: CapabilityMetrics; validSelections: number; invalidSelections: number }; cost: { auto: CostMetrics; baseline: CostMetrics; savingsPercent?: number }; latency: LatencyMetrics; reliability: ReliabilityMetrics; determinism: { passed: number; failed: number; accuracy: number }; thresholds: { capabilityAccuracy: number; routingValidity: number; fallbackEquivalence: number; determinism: number } }
+
+function baseline(scenario: RoutingScenario): CandidateEvaluation | undefined {
+  const executable = scenario.models.filter((model) => model.routes.some((route) => scenario.executableProviders.includes(route.provider)));
+  const target = scenario.requirements.policy === "cheap" ? [...executable].filter((model) => model.pricing?.inputPerMillionTokens !== undefined).sort((a, b) => (a.pricing?.inputPerMillionTokens ?? Infinity) - (b.pricing?.inputPerMillionTokens ?? Infinity) || a.id.localeCompare(b.id))[0] : executable[0];
+  if (!target) return undefined;
+  return new IntelligentRouter([target], new Set(scenario.executableProviders), new Date("2026-08-13T00:00:00.000Z"), scenario.observations ?? []).route({ mode: "auto", explicitModelId: target.id, requiredCapabilities: [], fallback: false }).selected;
+}
+
+export function runRoutingEvaluation(scenarios: RoutingScenario[] = REPRESENTATIVE_ROUTING_SCENARIOS, generatedAt = new Date().toISOString()): RoutingEvaluationReport {
+  const results: ScenarioEvaluation[] = []; let required = 0, satisfied = 0, valid = 0, baselineRequired = 0, baselineSatisfied = 0, baselineValid = 0, fallbackSuccesses = 0, fallbackFailures = 0, deterministicPassed = 0, autoCost = 0, baselineCost = 0, autoKnown = 0, baselineKnown = 0; const latencies: number[] = []; let successes = 0, failures = 0;
+  for (const scenario of scenarios) {
+    try {
+      const now = new Date("2026-08-13T00:00:00.000Z"), policy = { mode: scenario.requirements.policy ?? "auto", requiredCapabilities: scenario.requirements.capabilities, strictCapabilities: scenario.requirements.strictCapabilities }, router = new IntelligentRouter(scenario.models, new Set(scenario.executableProviders), now, scenario.observations ?? []), one = router.route(policy), two = router.route(policy), oracle = evaluateSelection(scenario, one.selected), fallbackViolations = one.fallback.flatMap((item) => assertFallbackEquivalent(scenario, item)), isDeterministic = one.selected.route.id === two.selected.route.id && one.selected.score === two.selected.score && one.candidates.map((item) => item.route.id).join("|") === two.candidates.map((item) => item.route.id).join("|");
+      required += oracle.capabilityRequired; satisfied += oracle.capabilitySatisfied; if (oracle.valid) valid += 1; if (isDeterministic) deterministicPassed += 1;
+      if (one.fallback.length && !fallbackViolations.length) fallbackSuccesses += 1; else if (one.fallback.length) fallbackFailures += 1;
+      if (one.selected.cost.pricingKnown) { autoKnown += 1; autoCost += one.selected.cost.inputCost ?? 0; }
+      const naive = baseline(scenario); if (naive) { const baselineOracle = evaluateSelection(scenario, naive); baselineRequired += baselineOracle.capabilityRequired; baselineSatisfied += baselineOracle.capabilitySatisfied; if (baselineOracle.valid) baselineValid += 1; } if (naive?.cost.pricingKnown) { baselineKnown += 1; baselineCost += naive.cost.inputCost ?? 0; }
+      for (const observation of scenario.observations ?? []) { if (observation.latencyMs !== undefined) latencies.push(observation.latencyMs); observation.event === "success" ? successes += 1 : failures += 1; }
+      const registryChecksum = createHash("sha256").update(JSON.stringify(scenario.models)).digest("hex"), fingerprint = createDecisionFingerprint({ registryVersion: "evaluation-v1", registryChecksum, request: { prompt: scenario.prompt, requirements: scenario.requirements }, policy: policy.mode, decision: one });
+      results.push({ id: scenario.id, valid: oracle.valid && fallbackViolations.length === 0 && isDeterministic, selectedRoute: one.selected.route.id, baselineRoute: naive?.route.id, violations: [...oracle.violations, ...fallbackViolations], deterministic: isDeterministic, fingerprint: fingerprint.hash, fallbackEquivalent: fallbackViolations.length === 0 });
+    } catch (error) { results.push({ id: scenario.id, valid: false, violations: [error instanceof Error ? error.message : String(error)], deterministic: false, fallbackEquivalent: false }); }
+  }
+  const capability = { required, satisfied, violations: required - satisfied, accuracy: percentage(satisfied, required) }, routing = { scenarios: scenarios.length, validSelections: valid, invalidSelections: scenarios.length - valid, fallbackSuccesses, fallbackFailures }, determinism = { passed: deterministicPassed, failed: scenarios.length - deterministicPassed, accuracy: percentage(deterministicPassed, scenarios.length) }, fallbackTotal = fallbackSuccesses + fallbackFailures, thresholds = { capabilityAccuracy: capability.accuracy, routingValidity: percentage(valid, scenarios.length), fallbackEquivalence: percentage(fallbackSuccesses, fallbackTotal), determinism: determinism.accuracy }, attempts = successes + failures;
+  return { schemaVersion: "1", generatedAt, result: Object.values(thresholds).every((value) => value === 1) ? "PASS" : "FAIL", scenarios: results, capability, routing, baseline: { capability: { required: baselineRequired, satisfied: baselineSatisfied, violations: baselineRequired - baselineSatisfied, accuracy: percentage(baselineSatisfied, baselineRequired) }, validSelections: baselineValid, invalidSelections: scenarios.length - baselineValid }, cost: { auto: { estimatedCost: autoCost, knownCostScenarios: autoKnown }, baseline: { estimatedCost: baselineCost, knownCostScenarios: baselineKnown }, savingsPercent: baselineCost > 0 ? (baselineCost - autoCost) / baselineCost : undefined }, latency: latencyMetrics(latencies), reliability: { attempts, successRate: attempts ? successes / attempts : undefined, failureRate: attempts ? failures / attempts : undefined }, determinism, thresholds };
+}

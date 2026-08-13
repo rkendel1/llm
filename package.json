@@ -53,6 +53,7 @@
     "build": "tsc -p tsconfig.build.json",
     "test:watch": "vitest",
     "test:fresh-install": "node scripts/fresh-install.mjs",
+    "evaluate:routing": "node dist/packages/cli/src/index.js evaluate --json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "ingest:registry": "node dist/packages/registry-ingest/src/cli.js",
     "registry:report": "node dist/packages/registry-ingest/src/cli.js --report",

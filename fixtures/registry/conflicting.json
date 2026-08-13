@@ -1,0 +1,1 @@
+{"version":"fixture-conflicting-v1","generatedAt":"2026-08-13T00:00:00Z","purpose":"Conflicting capability evidence","conflicts":[{"fact":"capabilities.vision","values":["supported","unsupported"]}]}

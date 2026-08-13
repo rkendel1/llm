@@ -1,0 +1,9 @@
+import { describe, expect, it } from "vitest";
+import { createDecisionFingerprint, IntelligentRouter, latencyMetrics, REPRESENTATIVE_ROUTING_SCENARIOS, runRoutingEvaluation } from "../packages/router/src/index.js";
+
+describe("routing evaluation certification", () => {
+  it("certifies the representative suite", () => { const report = runRoutingEvaluation(REPRESENTATIVE_ROUTING_SCENARIOS, "2026-08-13T00:00:00Z"); expect(report.result).toBe("PASS"); expect(report.routing.scenarios).toBeGreaterThanOrEqual(20); expect(report.capability.accuracy).toBe(1); expect(report.determinism.accuracy).toBe(1); expect(report.routing.fallbackFailures).toBe(0); });
+  it("produces stable decision fingerprints", () => { const scenario = REPRESENTATIVE_ROUTING_SCENARIOS[0], decision = new IntelligentRouter(scenario.models, new Set(scenario.executableProviders), new Date("2026-08-13T00:00:00Z")).route({ mode: "auto" }), input = { registryVersion: "v1", registryChecksum: "abc", request: { prompt: scenario.prompt }, policy: "auto", decision }, one = createDecisionFingerprint(input), two = createDecisionFingerprint(input); expect(one).toEqual(two); expect(one.hash).toHaveLength(64); expect(createDecisionFingerprint({ ...input, policy: "cheap" }).hash).not.toBe(one.hash); });
+  it("does not fabricate latency percentiles", () => { expect(latencyMetrics([100, 200]).status).toBe("insufficient_observations"); expect(latencyMetrics([100, 200, 900])).toMatchObject({ status: "observed", average: 400, p50: 200, p95: 900 }); });
+  it("keeps the naive baseline genuinely naive", () => { const report = runRoutingEvaluation(REPRESENTATIVE_ROUTING_SCENARIOS, "2026-08-13T00:00:00Z"), tools = report.scenarios.find((item) => item.id === "tools-weather"); expect(tools?.selectedRoute).not.toBe(tools?.baselineRoute); });
+});

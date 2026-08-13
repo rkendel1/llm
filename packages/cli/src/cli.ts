@@ -9,6 +9,7 @@ import { RunCommand } from "./commands/run.js";
 import { RegistryCommand } from "./commands/registry.js";
 import { ModelCommand } from "./commands/model.js";
 import { RouteCommand } from "./commands/route.js";
+import { EvaluateCommand } from "./commands/evaluate.js";
 import { CommandNotFoundError } from "./errors.js";
 import { bold, info, section } from "./ui/formatting.js";
 
@@ -31,6 +32,7 @@ export class CLI {
       new RegistryCommand(),
       new ModelCommand(),
       new RouteCommand(),
+      new EvaluateCommand(),
     ];
 
     for (const command of commands) {

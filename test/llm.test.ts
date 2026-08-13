@@ -1,6 +1,6 @@
 import { describe, expect, it, beforeEach } from "vitest";
 import { llm, type LLMProvider, type RegistryProviderAdapter } from "../src/index.js";
-import { runtimeObservationStore } from "../packages/registry/src/index.js";
+import { resolveRegistry, runtimeObservationStore } from "../packages/registry/src/index.js";
 
 describe("llm core runtime", () => {
   beforeEach(() => {
@@ -167,5 +167,13 @@ describe("llm core runtime", () => {
     await expect(llm({ messages: [{ role: "user", content: "hello" }], model: "anthropic/claude-fable-5" })).rejects.toThrow("invalid request");
     expect(attempts).toBe(1);
     expect(runtimeObservationStore.list()[0]?.event).toBe("invalid_request");
+  });
+
+  it("keeps explanation and execution on the same route for identical state", async () => {
+    llm.registerProvider({ id: "openrouter", supports: () => true, generate: async (request) => ({ text: "ok", model: String(request.model) }) });
+    const request = { messages: [{ role: "user" as const, content: "hello" }], model: "anthropic/claude-fable-5" }, explanation = await llm.explain(request), registry = await resolveRegistry(), route = registry.models.find((model) => model.id === explanation.selected.modelId)?.routes.find((item) => item.id === explanation.selected.routeId), response = await llm(request);
+    expect(route?.providerModelId).toBe(response.routing.selectedModel);
+    expect(explanation.decision.fingerprint).toHaveLength(64);
+    expect(explanation.registry.checksum).toHaveLength(64);
   });
 });
