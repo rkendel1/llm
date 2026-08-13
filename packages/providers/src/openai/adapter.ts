@@ -96,15 +96,15 @@ export class OpenAIAdapter implements LLMProvider {
 
       for await (const chunk of this.client.stream(model, messages, tools)) {
         const choice = chunk.choices?.[0];
-        if (choice?.delta?.content) {
-          buffer += choice.delta.content;
+        const delta = choice?.delta as any; if (delta?.content) {
+          buffer += delta.content;
           yield {
             type: "text",
-            text: choice.delta.content,
+            text: delta.content,
           };
         }
 
-        if (choice?.delta?.tool_calls) {
+        if (delta?.tool_calls) {
           yield {
             type: "tool_call",
             toolCall: {

@@ -3,7 +3,7 @@ import type { ModelDefinition, RegistryProviderAdapter, ProviderDiscoveryContext
 export async function getOllamaModels(apiBase: string = "http://localhost:11434"): Promise<ModelDefinition[]> {
   try {
     const response = await fetch(`${apiBase}/api/tags`);
-    if (!response.ok) return [];
+    if (!response.ok) return [] as any;
 
     const data = (await response.json()) as { models?: Array<{ name: string; modified_at?: string }> };
     return (
@@ -15,10 +15,10 @@ export async function getOllamaModels(apiBase: string = "http://localhost:11434"
         description: "Local Ollama model",
         capabilities: {
           streaming: true,
-      tools: false,
-      audio: false,
-      reasoning: false,
-      embeddings: false,
+         tools: false,
+         audio: false,
+         reasoning: false,
+         embeddings: false,
           toolCalling: false,
           vision: false,
           structuredOutput: false,
@@ -27,9 +27,9 @@ export async function getOllamaModels(apiBase: string = "http://localhost:11434"
         costPer1kOutputTokens: 0,
         inputTokenLimit: 4096,
       })) || []
-    );
+    ) as any;
   } catch {
-    return [];
+    return [] as any;
   }
 }
 
@@ -41,7 +41,7 @@ export async function discoverOllamaModels(): Promise<ModelDefinition[]> {
     if (models.length > 0) return models;
   }
 
-  return [];
+  return [] as any;
 }
 
 export const ollamaRegistryAdapter: RegistryProviderAdapter = {

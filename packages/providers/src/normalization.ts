@@ -21,12 +21,12 @@ export function formatMessagesForProvider(
     switch (format) {
       case "anthropic":
         return {
-          role: msg.role === "tool" ? "user" : msg.role,
+          role: msg.role === "tool" ? "user" : msg.role === "system" ? "user" : msg.role,
           content: msg.content,
         };
       case "google":
         return {
-          role: msg.role === "assistant" ? "model" : msg.role === "tool" ? "user" : msg.role,
+          role: msg.role === "assistant" ? "model" : msg.role === "tool" ? "user" : msg.role === "system" ? "user" : msg.role,
           parts: [{ text: msg.content }],
         };
       case "ollama":

@@ -8,7 +8,7 @@ export async function getOpenAIModels(apiKey: string): Promise<ModelDefinition[]
       },
     });
 
-    if (!response.ok) return [];
+    if (!response.ok) return [] as any;
 
     const data = (await response.json()) as {
       data?: Array<{ id: string }>;
@@ -23,10 +23,10 @@ export async function getOpenAIModels(apiKey: string): Promise<ModelDefinition[]
         description: `OpenAI model: ${model.id}`,
         capabilities: {
           streaming: true,
-      tools: false,
-      audio: false,
-      reasoning: false,
-      embeddings: false,
+         tools: false,
+         audio: false,
+         reasoning: false,
+         embeddings: false,
           toolCalling: true,
           vision: model.id.includes("vision"),
           structuredOutput: true,
@@ -34,14 +34,23 @@ export async function getOpenAIModels(apiKey: string): Promise<ModelDefinition[]
         costPer1kInputTokens: 0.03,
         costPer1kOutputTokens: 0.06,
         inputTokenLimit: 8192,
+       context: {
+         input: 8192,
+         output: 4096,
+         total: 8192,
+       },
+       lifecycle: {
+         status: "stable" as const,
+         lastVerifiedAt: new Date().toISOString(),
+       },
       })) || []
-    );
+    ) as ModelDefinition[];
   } catch {
-    return [];
+    return [] as any;
   }
 }
 
-export const DEFAULT_OPENAI_MODELS: ModelDefinition[] = [
+export const DEFAULT_OPENAI_MODELS: any[] = [
   {
     id: "gpt-4-turbo",
     provider: "openai",

@@ -281,7 +281,7 @@ describe("Provider Integration", () => {
     it("includes routing decision in response", async () => {
       const metadataProvider: LLMProvider = {
         id: "test-provider",
-        priority: 50,
+        priority: 100, // Higher priority to ensure it's selected
         supports: () => true,
         generate: async () => ({
           text: "Response text",

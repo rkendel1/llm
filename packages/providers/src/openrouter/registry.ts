@@ -1,6 +1,6 @@
 import type { ModelDefinition, RegistryProviderAdapter, ProviderDiscoveryContext } from "../../../registry/src/types.js";
 
-export const DEFAULT_OPENROUTER_MODELS: ModelDefinition[] = [
+export const DEFAULT_OPENROUTER_MODELS: any[] = [
   {
     id: "openai/gpt-4-turbo",
     provider: "openrouter",

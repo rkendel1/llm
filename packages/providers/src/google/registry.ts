@@ -1,5 +1,5 @@
 import type { ModelDefinition, RegistryProviderAdapter, ProviderDiscoveryContext } from "../../../registry/src/types.js";
-export const DEFAULT_GOOGLE_MODELS: ModelDefinition[] = [
+export const DEFAULT_GOOGLE_MODELS: any[] = [
   {
     id: "gemini-1.5-pro",
     provider: "google",

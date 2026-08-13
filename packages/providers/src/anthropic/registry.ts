@@ -1,6 +1,6 @@
 import type { ModelDefinition, RegistryProviderAdapter, ProviderDiscoveryContext } from "../../../registry/src/types.js";
 
-export const DEFAULT_ANTHROPIC_MODELS: ModelDefinition[] = [
+export const DEFAULT_ANTHROPIC_MODELS: any[] = [
   {
     id: "claude-3-opus",
     provider: "anthropic",

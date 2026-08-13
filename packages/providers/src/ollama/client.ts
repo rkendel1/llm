@@ -83,13 +83,19 @@ export class OllamaClient {
         for (const line of lines) {
           if (line.trim()) {
             const data = JSON.parse(line) as { response?: string; done?: boolean };
-            yield data;
+            yield {
+              response: data.response ?? "",
+              done: data.done ?? false,
+            };
           }
         }
       }
       if (buffer.trim()) {
         const data = JSON.parse(buffer) as { response?: string; done?: boolean };
-        yield data;
+        yield {
+          response: data.response ?? "",
+          done: data.done ?? false,
+        };
       }
     } finally {
       reader.releaseLock();
