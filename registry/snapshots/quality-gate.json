@@ -6,7 +6,7 @@
     "previous": {
       "canonicalModels": 341,
       "routes": 487,
-      "evidence": 359,
+      "evidence": 722,
       "conflicts": 9,
       "unknownCapabilities": 1722,
       "contextCompleteness": 100,
@@ -21,19 +21,19 @@
       }
     },
     "candidate": {
-      "canonicalModels": 341,
-      "routes": 487,
+      "canonicalModels": 343,
+      "routes": 490,
       "evidence": 722,
       "conflicts": 9,
-      "unknownCapabilities": 1722,
+      "unknownCapabilities": 1730,
       "contextCompleteness": 100,
-      "pricingCompleteness": 98.53372434017595,
+      "pricingCompleteness": 98.54227405247813,
       "supportedCapabilities": {
-        "vision": 185,
-        "tools": 275,
-        "reasoning": 217,
-        "structuredOutput": 299,
-        "audioInput": 26,
+        "vision": 187,
+        "tools": 276,
+        "reasoning": 219,
+        "structuredOutput": 301,
+        "audioInput": 27,
         "audioOutput": 4
       }
     }
