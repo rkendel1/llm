@@ -1,19 +1,895 @@
 {
   "models": {
-    "added": [],
+    "added": [
+      "dots-studio/dots-3-note-preview",
+      "google/gemini-3.7-flash",
+      "qwen/qwen3.8-27b"
+    ],
     "removed": [],
     "changed": [
+      "deepseek/deepseek-v4-flash",
+      "deepseek/deepseek-v4-flash-0731",
+      "google/gemini-3.1-flash-lite-image",
+      "google/gemini-3.6-flash",
+      "google/gemma-3-12b-it",
+      "google/gemma-3-27b-it",
+      "google/gemma-3-4b-it",
+      "google/gemma-4-26b-a4b-it",
+      "google/gemma-4-31b-it",
+      "liquid/lfm-2.5-2.6b",
+      "meta-llama/llama-3.1-70b-instruct",
+      "meta-llama/llama-3.1-8b-instruct",
+      "meta-llama/llama-3.2-3b-instruct",
+      "meta-llama/llama-3.3-70b-instruct",
+      "meta-llama/llama-4-maverick",
+      "meta-llama/llama-guard-4-12b",
+      "microsoft/phi-4",
+      "minimax/minimax-m1",
+      "moonshotai/kimi-k2.5",
+      "moonshotai/kimi-k2.6",
+      "moonshotai/kimi-k2.7-code",
       "moonshotai/kimi-k3",
-      "z-ai/glm-5.2"
+      "openai/gpt-oss-120b",
+      "openai/gpt-oss-20b",
+      "poolside/laguna-s-2.1",
+      "qwen/qwen-plus-2025-07-28:thinking",
+      "qwen/qwen2.5-vl-72b-instruct",
+      "qwen/qwen3-14b",
+      "qwen/qwen3-235b-a22b",
+      "qwen/qwen3-30b-a3b",
+      "qwen/qwen3-30b-a3b-instruct-2507",
+      "qwen/qwen3-32b",
+      "qwen/qwen3-8b",
+      "qwen/qwen3-coder-30b-a3b-instruct",
+      "qwen/qwen3-coder-next",
+      "qwen/qwen3-next-80b-a3b-instruct",
+      "qwen/qwen3-vl-235b-a22b-instruct",
+      "qwen/qwen3-vl-30b-a3b-instruct",
+      "qwen/qwen3-vl-32b-instruct",
+      "qwen/qwen3-vl-8b-instruct",
+      "qwen/qwen3.5-122b-a10b",
+      "qwen/qwen3.5-27b",
+      "qwen/qwen3.5-35b-a3b",
+      "qwen/qwen3.5-397b-a17b",
+      "qwen/qwen3.5-9b",
+      "qwen/qwen3.6-27b",
+      "qwen/qwen3.6-35b-a3b",
+      "qwen/qwen3.8-2.4t-a95b",
+      "tencent/hy3-preview",
+      "z-ai/glm-4.6",
+      "z-ai/glm-5",
+      "z-ai/glm-5.1",
+      "z-ai/glm-5.2",
+      "~deepseek/deepseek-v4-flash-latest",
+      "~google/gemini-flash-latest"
     ]
   },
   "routes": {
-    "added": [],
+    "added": [
+      "dots-studio/dots-3-note-preview::openrouter/free",
+      "google/gemini-3.7-flash::openrouter/batch",
+      "google/gemini-3.7-flash::openrouter/standard",
+      "google/gemma-3-27b-it::deepinfra/google/gemma-3-27b-it",
+      "google/gemma-3-27b-it::featherless-ai/google/gemma-3-27b-it",
+      "meta-llama/llama-3.1-70b-instruct::featherless-ai/meta-llama/Llama-3.1-70B-Instruct",
+      "meta-llama/llama-3.3-70b-instruct::featherless-ai/meta-llama/Llama-3.3-70B-Instruct",
+      "meta-llama/llama-3.3-70b-instruct::groq/llama-3.3-70b-versatile",
+      "meta-llama/llama-3.3-70b-instruct::novita/meta-llama/llama-3.3-70b-instruct",
+      "meta-llama/llama-3.3-70b-instruct::ovhcloud/Meta-Llama-3_3-70B-Instruct",
+      "meta-llama/llama-3.3-70b-instruct::scaleway/llama-3.3-70b-instruct",
+      "meta-llama/llama-3.3-70b-instruct::together/meta-llama/Llama-3.3-70B-Instruct-Turbo",
+      "meta-llama/llama-guard-4-12b::deepinfra/meta-llama/Llama-Guard-4-12B",
+      "meta-llama/llama-guard-4-12b::together/meta-llama/Llama-Guard-4-12B",
+      "microsoft/phi-4::deepinfra/microsoft/phi-4",
+      "microsoft/phi-4::featherless-ai/microsoft/phi-4",
+      "moonshotai/kimi-k2.6::baseten/moonshotai/Kimi-K2.6",
+      "moonshotai/kimi-k2.6::deepinfra/moonshotai/Kimi-K2.6",
+      "moonshotai/kimi-k2.6::featherless-ai/moonshotai/Kimi-K2.6",
+      "moonshotai/kimi-k2.6::fireworks-ai/accounts/fireworks/models/kimi-k2p6",
+      "moonshotai/kimi-k2.6::novita/moonshotai/kimi-k2.6",
+      "moonshotai/kimi-k2.6::together/moonshotai/Kimi-K2.6",
+      "moonshotai/kimi-k2.7-code::baseten/moonshotai/Kimi-K2.7-Code",
+      "moonshotai/kimi-k2.7-code::deepinfra/moonshotai/Kimi-K2.7-Code",
+      "moonshotai/kimi-k2.7-code::featherless-ai/moonshotai/Kimi-K2.7-Code",
+      "moonshotai/kimi-k2.7-code::fireworks-ai/accounts/fireworks/models/kimi-k2p7-code",
+      "moonshotai/kimi-k2.7-code::novita/moonshotai/kimi-k2.7-code",
+      "moonshotai/kimi-k2.7-code::together/moonshotai/Kimi-K2.7-Code",
+      "poolside/laguna-s-2.1::featherless-ai/poolside/Laguna-S-2.1",
+      "qwen/qwen2.5-vl-72b-instruct::featherless-ai/Qwen/Qwen2.5-VL-72B-Instruct",
+      "qwen/qwen2.5-vl-72b-instruct::ovhcloud/Qwen2.5-VL-72B-Instruct",
+      "qwen/qwen3-235b-a22b::featherless-ai/Qwen/Qwen3-235B-A22B",
+      "qwen/qwen3-235b-a22b::novita/qwen/qwen3-235b-a22b-fp8",
+      "qwen/qwen3-235b-a22b::nscale/Qwen/Qwen3-235B-A22B",
+      "qwen/qwen3-coder-next::featherless-ai/Qwen/Qwen3-Coder-Next",
+      "qwen/qwen3-coder-next::novita/qwen/qwen3-coder-next",
+      "qwen/qwen3-next-80b-a3b-instruct::deepinfra/Qwen/Qwen3-Next-80B-A3B-Instruct",
+      "qwen/qwen3-next-80b-a3b-instruct::featherless-ai/Qwen/Qwen3-Next-80B-A3B-Instruct",
+      "qwen/qwen3-next-80b-a3b-instruct::novita/qwen/qwen3-next-80b-a3b-instruct",
+      "qwen/qwen3-vl-30b-a3b-instruct::deepinfra/Qwen/Qwen3-VL-30B-A3B-Instruct",
+      "qwen/qwen3-vl-30b-a3b-instruct::featherless-ai/Qwen/Qwen3-VL-30B-A3B-Instruct",
+      "qwen/qwen3-vl-30b-a3b-instruct::novita/qwen/qwen3-vl-30b-a3b-instruct",
+      "qwen/qwen3.5-397b-a17b::deepinfra/Qwen/Qwen3.5-397B-A17B",
+      "qwen/qwen3.5-397b-a17b::featherless-ai/Qwen/Qwen3.5-397B-A17B",
+      "qwen/qwen3.5-397b-a17b::novita/qwen/qwen3.5-397b-a17b",
+      "qwen/qwen3.5-397b-a17b::ovhcloud/Qwen3.5-397B-A17B",
+      "qwen/qwen3.5-397b-a17b::scaleway/qwen3.5-397b-a17b",
+      "qwen/qwen3.8-27b::openrouter/standard"
+    ],
     "removed": [],
     "changed": []
   },
   "evidence": {
     "added": [
+      "huggingface:Qwen/Qwen2.5-VL-72B-Instruct:availability.huggingFaceInference:2025-06-06T02:48:50.000Z",
+      "huggingface:Qwen/Qwen2.5-VL-72B-Instruct:capabilities.streaming:2025-06-06T02:48:50.000Z",
+      "huggingface:Qwen/Qwen2.5-VL-72B-Instruct:capabilities.vision:2025-06-06T02:48:50.000Z",
+      "huggingface:Qwen/Qwen2.5-VL-72B-Instruct:identity.huggingFaceId:2025-06-06T02:48:50.000Z",
+      "huggingface:Qwen/Qwen2.5-VL-72B-Instruct:languages:2025-06-06T02:48:50.000Z",
+      "huggingface:Qwen/Qwen2.5-VL-72B-Instruct:library:2025-06-06T02:48:50.000Z",
+      "huggingface:Qwen/Qwen2.5-VL-72B-Instruct:license:2025-06-06T02:48:50.000Z",
+      "huggingface:Qwen/Qwen2.5-VL-72B-Instruct:openWeights.available:2025-06-06T02:48:50.000Z",
+      "huggingface:Qwen/Qwen2.5-VL-72B-Instruct:pipeline:2025-06-06T02:48:50.000Z",
+      "huggingface:Qwen/Qwen2.5-VL-72B-Instruct:popularity.downloads:2025-06-06T02:48:50.000Z",
+      "huggingface:Qwen/Qwen2.5-VL-72B-Instruct:popularity.likes:2025-06-06T02:48:50.000Z",
+      "huggingface:Qwen/Qwen2.5-VL-72B-Instruct:routes.featherless-ai:2025-06-06T02:48:50.000Z",
+      "huggingface:Qwen/Qwen2.5-VL-72B-Instruct:routes.ovhcloud:2025-06-06T02:48:50.000Z",
+      "huggingface:Qwen/Qwen2.5-VL-72B-Instruct:tags:2025-06-06T02:48:50.000Z",
+      "huggingface:Qwen/Qwen3-235B-A22B:availability.huggingFaceInference:2025-07-26T03:45:13.000Z",
+      "huggingface:Qwen/Qwen3-235B-A22B:capabilities.streaming:2025-07-26T03:45:13.000Z",
+      "huggingface:Qwen/Qwen3-235B-A22B:identity.huggingFaceId:2025-07-26T03:45:13.000Z",
+      "huggingface:Qwen/Qwen3-235B-A22B:library:2025-07-26T03:45:13.000Z",
+      "huggingface:Qwen/Qwen3-235B-A22B:license:2025-07-26T03:45:13.000Z",
+      "huggingface:Qwen/Qwen3-235B-A22B:openWeights.available:2025-07-26T03:45:13.000Z",
+      "huggingface:Qwen/Qwen3-235B-A22B:pipeline:2025-07-26T03:45:13.000Z",
+      "huggingface:Qwen/Qwen3-235B-A22B:popularity.downloads:2025-07-26T03:45:13.000Z",
+      "huggingface:Qwen/Qwen3-235B-A22B:popularity.likes:2025-07-26T03:45:13.000Z",
+      "huggingface:Qwen/Qwen3-235B-A22B:routes.featherless-ai:2025-07-26T03:45:13.000Z",
+      "huggingface:Qwen/Qwen3-235B-A22B:routes.novita:2025-07-26T03:45:13.000Z",
+      "huggingface:Qwen/Qwen3-235B-A22B:routes.nscale:2025-07-26T03:45:13.000Z",
+      "huggingface:Qwen/Qwen3-235B-A22B:tags:2025-07-26T03:45:13.000Z",
+      "huggingface:Qwen/Qwen3-Coder-Next:availability.huggingFaceInference:2026-02-03T16:16:38.000Z",
+      "huggingface:Qwen/Qwen3-Coder-Next:capabilities.streaming:2026-02-03T16:16:38.000Z",
+      "huggingface:Qwen/Qwen3-Coder-Next:identity.huggingFaceId:2026-02-03T16:16:38.000Z",
+      "huggingface:Qwen/Qwen3-Coder-Next:library:2026-02-03T16:16:38.000Z",
+      "huggingface:Qwen/Qwen3-Coder-Next:license:2026-02-03T16:16:38.000Z",
+      "huggingface:Qwen/Qwen3-Coder-Next:openWeights.available:2026-02-03T16:16:38.000Z",
+      "huggingface:Qwen/Qwen3-Coder-Next:pipeline:2026-02-03T16:16:38.000Z",
+      "huggingface:Qwen/Qwen3-Coder-Next:popularity.downloads:2026-02-03T16:16:38.000Z",
+      "huggingface:Qwen/Qwen3-Coder-Next:popularity.likes:2026-02-03T16:16:38.000Z",
+      "huggingface:Qwen/Qwen3-Coder-Next:routes.featherless-ai:2026-02-03T16:16:38.000Z",
+      "huggingface:Qwen/Qwen3-Coder-Next:routes.novita:2026-02-03T16:16:38.000Z",
+      "huggingface:Qwen/Qwen3-Coder-Next:tags:2026-02-03T16:16:38.000Z",
+      "huggingface:Qwen/Qwen3-Next-80B-A3B-Instruct:availability.huggingFaceInference:2025-09-17T06:57:40.000Z",
+      "huggingface:Qwen/Qwen3-Next-80B-A3B-Instruct:capabilities.streaming:2025-09-17T06:57:40.000Z",
+      "huggingface:Qwen/Qwen3-Next-80B-A3B-Instruct:identity.huggingFaceId:2025-09-17T06:57:40.000Z",
+      "huggingface:Qwen/Qwen3-Next-80B-A3B-Instruct:library:2025-09-17T06:57:40.000Z",
+      "huggingface:Qwen/Qwen3-Next-80B-A3B-Instruct:license:2025-09-17T06:57:40.000Z",
+      "huggingface:Qwen/Qwen3-Next-80B-A3B-Instruct:openWeights.available:2025-09-17T06:57:40.000Z",
+      "huggingface:Qwen/Qwen3-Next-80B-A3B-Instruct:pipeline:2025-09-17T06:57:40.000Z",
+      "huggingface:Qwen/Qwen3-Next-80B-A3B-Instruct:popularity.downloads:2025-09-17T06:57:40.000Z",
+      "huggingface:Qwen/Qwen3-Next-80B-A3B-Instruct:popularity.likes:2025-09-17T06:57:40.000Z",
+      "huggingface:Qwen/Qwen3-Next-80B-A3B-Instruct:routes.deepinfra:2025-09-17T06:57:40.000Z",
+      "huggingface:Qwen/Qwen3-Next-80B-A3B-Instruct:routes.featherless-ai:2025-09-17T06:57:40.000Z",
+      "huggingface:Qwen/Qwen3-Next-80B-A3B-Instruct:routes.novita:2025-09-17T06:57:40.000Z",
+      "huggingface:Qwen/Qwen3-Next-80B-A3B-Instruct:tags:2025-09-17T06:57:40.000Z",
+      "huggingface:Qwen/Qwen3-VL-30B-A3B-Instruct:availability.huggingFaceInference:2025-11-26T13:18:04.000Z",
+      "huggingface:Qwen/Qwen3-VL-30B-A3B-Instruct:capabilities.streaming:2025-11-26T13:18:04.000Z",
+      "huggingface:Qwen/Qwen3-VL-30B-A3B-Instruct:capabilities.vision:2025-11-26T13:18:04.000Z",
+      "huggingface:Qwen/Qwen3-VL-30B-A3B-Instruct:identity.huggingFaceId:2025-11-26T13:18:04.000Z",
+      "huggingface:Qwen/Qwen3-VL-30B-A3B-Instruct:library:2025-11-26T13:18:04.000Z",
+      "huggingface:Qwen/Qwen3-VL-30B-A3B-Instruct:license:2025-11-26T13:18:04.000Z",
+      "huggingface:Qwen/Qwen3-VL-30B-A3B-Instruct:openWeights.available:2025-11-26T13:18:04.000Z",
+      "huggingface:Qwen/Qwen3-VL-30B-A3B-Instruct:pipeline:2025-11-26T13:18:04.000Z",
+      "huggingface:Qwen/Qwen3-VL-30B-A3B-Instruct:popularity.downloads:2025-11-26T13:18:04.000Z",
+      "huggingface:Qwen/Qwen3-VL-30B-A3B-Instruct:popularity.likes:2025-11-26T13:18:04.000Z",
+      "huggingface:Qwen/Qwen3-VL-30B-A3B-Instruct:routes.deepinfra:2025-11-26T13:18:04.000Z",
+      "huggingface:Qwen/Qwen3-VL-30B-A3B-Instruct:routes.featherless-ai:2025-11-26T13:18:04.000Z",
+      "huggingface:Qwen/Qwen3-VL-30B-A3B-Instruct:routes.novita:2025-11-26T13:18:04.000Z",
+      "huggingface:Qwen/Qwen3-VL-30B-A3B-Instruct:tags:2025-11-26T13:18:04.000Z",
+      "huggingface:Qwen/Qwen3.5-397B-A17B:availability.huggingFaceInference:2026-04-24T05:51:23.000Z",
+      "huggingface:Qwen/Qwen3.5-397B-A17B:capabilities.streaming:2026-04-24T05:51:23.000Z",
+      "huggingface:Qwen/Qwen3.5-397B-A17B:capabilities.vision:2026-04-24T05:51:23.000Z",
+      "huggingface:Qwen/Qwen3.5-397B-A17B:identity.huggingFaceId:2026-04-24T05:51:23.000Z",
+      "huggingface:Qwen/Qwen3.5-397B-A17B:library:2026-04-24T05:51:23.000Z",
+      "huggingface:Qwen/Qwen3.5-397B-A17B:license:2026-04-24T05:51:23.000Z",
+      "huggingface:Qwen/Qwen3.5-397B-A17B:openWeights.available:2026-04-24T05:51:23.000Z",
+      "huggingface:Qwen/Qwen3.5-397B-A17B:pipeline:2026-04-24T05:51:23.000Z",
+      "huggingface:Qwen/Qwen3.5-397B-A17B:popularity.downloads:2026-04-24T05:51:23.000Z",
+      "huggingface:Qwen/Qwen3.5-397B-A17B:popularity.likes:2026-04-24T05:51:23.000Z",
+      "huggingface:Qwen/Qwen3.5-397B-A17B:routes.deepinfra:2026-04-24T05:51:23.000Z",
+      "huggingface:Qwen/Qwen3.5-397B-A17B:routes.featherless-ai:2026-04-24T05:51:23.000Z",
+      "huggingface:Qwen/Qwen3.5-397B-A17B:routes.novita:2026-04-24T05:51:23.000Z",
+      "huggingface:Qwen/Qwen3.5-397B-A17B:routes.ovhcloud:2026-04-24T05:51:23.000Z",
+      "huggingface:Qwen/Qwen3.5-397B-A17B:routes.scaleway:2026-04-24T05:51:23.000Z",
+      "huggingface:Qwen/Qwen3.5-397B-A17B:tags:2026-04-24T05:51:23.000Z",
+      "huggingface:google/gemma-3-27b-it:availability.huggingFaceInference:2025-03-21T20:29:02.000Z",
+      "huggingface:google/gemma-3-27b-it:capabilities.streaming:2025-03-21T20:29:02.000Z",
+      "huggingface:google/gemma-3-27b-it:capabilities.vision:2025-03-21T20:29:02.000Z",
+      "huggingface:google/gemma-3-27b-it:identity.huggingFaceId:2025-03-21T20:29:02.000Z",
+      "huggingface:google/gemma-3-27b-it:library:2025-03-21T20:29:02.000Z",
+      "huggingface:google/gemma-3-27b-it:license:2025-03-21T20:29:02.000Z",
+      "huggingface:google/gemma-3-27b-it:lineage.baseModels:2025-03-21T20:29:02.000Z",
+      "huggingface:google/gemma-3-27b-it:openWeights.available:2025-03-21T20:29:02.000Z",
+      "huggingface:google/gemma-3-27b-it:pipeline:2025-03-21T20:29:02.000Z",
+      "huggingface:google/gemma-3-27b-it:popularity.downloads:2025-03-21T20:29:02.000Z",
+      "huggingface:google/gemma-3-27b-it:popularity.likes:2025-03-21T20:29:02.000Z",
+      "huggingface:google/gemma-3-27b-it:routes.deepinfra:2025-03-21T20:29:02.000Z",
+      "huggingface:google/gemma-3-27b-it:routes.featherless-ai:2025-03-21T20:29:02.000Z",
+      "huggingface:google/gemma-3-27b-it:tags:2025-03-21T20:29:02.000Z",
+      "huggingface:meta-llama/Llama-3.1-70B-Instruct:availability.huggingFaceInference:2024-12-15T01:55:33.000Z",
+      "huggingface:meta-llama/Llama-3.1-70B-Instruct:capabilities.streaming:2024-12-15T01:55:33.000Z",
+      "huggingface:meta-llama/Llama-3.1-70B-Instruct:identity.huggingFaceId:2024-12-15T01:55:33.000Z",
+      "huggingface:meta-llama/Llama-3.1-70B-Instruct:languages:2024-12-15T01:55:33.000Z",
+      "huggingface:meta-llama/Llama-3.1-70B-Instruct:library:2024-12-15T01:55:33.000Z",
+      "huggingface:meta-llama/Llama-3.1-70B-Instruct:license:2024-12-15T01:55:33.000Z",
+      "huggingface:meta-llama/Llama-3.1-70B-Instruct:lineage.baseModels:2024-12-15T01:55:33.000Z",
+      "huggingface:meta-llama/Llama-3.1-70B-Instruct:openWeights.available:2024-12-15T01:55:33.000Z",
+      "huggingface:meta-llama/Llama-3.1-70B-Instruct:pipeline:2024-12-15T01:55:33.000Z",
+      "huggingface:meta-llama/Llama-3.1-70B-Instruct:popularity.downloads:2024-12-15T01:55:33.000Z",
+      "huggingface:meta-llama/Llama-3.1-70B-Instruct:popularity.likes:2024-12-15T01:55:33.000Z",
+      "huggingface:meta-llama/Llama-3.1-70B-Instruct:routes.featherless-ai:2024-12-15T01:55:33.000Z",
+      "huggingface:meta-llama/Llama-3.1-70B-Instruct:tags:2024-12-15T01:55:33.000Z",
+      "huggingface:meta-llama/Llama-3.3-70B-Instruct:availability.huggingFaceInference:2024-12-21T18:28:01.000Z",
+      "huggingface:meta-llama/Llama-3.3-70B-Instruct:capabilities.streaming:2024-12-21T18:28:01.000Z",
+      "huggingface:meta-llama/Llama-3.3-70B-Instruct:identity.huggingFaceId:2024-12-21T18:28:01.000Z",
+      "huggingface:meta-llama/Llama-3.3-70B-Instruct:languages:2024-12-21T18:28:01.000Z",
+      "huggingface:meta-llama/Llama-3.3-70B-Instruct:library:2024-12-21T18:28:01.000Z",
+      "huggingface:meta-llama/Llama-3.3-70B-Instruct:license:2024-12-21T18:28:01.000Z",
+      "huggingface:meta-llama/Llama-3.3-70B-Instruct:lineage.baseModels:2024-12-21T18:28:01.000Z",
+      "huggingface:meta-llama/Llama-3.3-70B-Instruct:openWeights.available:2024-12-21T18:28:01.000Z",
+      "huggingface:meta-llama/Llama-3.3-70B-Instruct:pipeline:2024-12-21T18:28:01.000Z",
+      "huggingface:meta-llama/Llama-3.3-70B-Instruct:popularity.downloads:2024-12-21T18:28:01.000Z",
+      "huggingface:meta-llama/Llama-3.3-70B-Instruct:popularity.likes:2024-12-21T18:28:01.000Z",
+      "huggingface:meta-llama/Llama-3.3-70B-Instruct:routes.featherless-ai:2024-12-21T18:28:01.000Z",
+      "huggingface:meta-llama/Llama-3.3-70B-Instruct:routes.groq:2024-12-21T18:28:01.000Z",
+      "huggingface:meta-llama/Llama-3.3-70B-Instruct:routes.novita:2024-12-21T18:28:01.000Z",
+      "huggingface:meta-llama/Llama-3.3-70B-Instruct:routes.ovhcloud:2024-12-21T18:28:01.000Z",
+      "huggingface:meta-llama/Llama-3.3-70B-Instruct:routes.scaleway:2024-12-21T18:28:01.000Z",
+      "huggingface:meta-llama/Llama-3.3-70B-Instruct:routes.together:2024-12-21T18:28:01.000Z",
+      "huggingface:meta-llama/Llama-3.3-70B-Instruct:tags:2024-12-21T18:28:01.000Z",
+      "huggingface:meta-llama/Llama-Guard-4-12B:availability.huggingFaceInference:2025-04-29T18:14:44.000Z",
+      "huggingface:meta-llama/Llama-Guard-4-12B:capabilities.streaming:2025-04-29T18:14:44.000Z",
+      "huggingface:meta-llama/Llama-Guard-4-12B:capabilities.vision:2025-04-29T18:14:44.000Z",
+      "huggingface:meta-llama/Llama-Guard-4-12B:identity.huggingFaceId:2025-04-29T18:14:44.000Z",
+      "huggingface:meta-llama/Llama-Guard-4-12B:languages:2025-04-29T18:14:44.000Z",
+      "huggingface:meta-llama/Llama-Guard-4-12B:library:2025-04-29T18:14:44.000Z",
+      "huggingface:meta-llama/Llama-Guard-4-12B:license:2025-04-29T18:14:44.000Z",
+      "huggingface:meta-llama/Llama-Guard-4-12B:openWeights.available:2025-04-29T18:14:44.000Z",
+      "huggingface:meta-llama/Llama-Guard-4-12B:pipeline:2025-04-29T18:14:44.000Z",
+      "huggingface:meta-llama/Llama-Guard-4-12B:popularity.downloads:2025-04-29T18:14:44.000Z",
+      "huggingface:meta-llama/Llama-Guard-4-12B:popularity.likes:2025-04-29T18:14:44.000Z",
+      "huggingface:meta-llama/Llama-Guard-4-12B:routes.deepinfra:2025-04-29T18:14:44.000Z",
+      "huggingface:meta-llama/Llama-Guard-4-12B:routes.together:2025-04-29T18:14:44.000Z",
+      "huggingface:meta-llama/Llama-Guard-4-12B:tags:2025-04-29T18:14:44.000Z",
+      "huggingface:microsoft/phi-4:availability.huggingFaceInference:2026-07-14T14:22:25.000Z",
+      "huggingface:microsoft/phi-4:capabilities.streaming:2026-07-14T14:22:25.000Z",
+      "huggingface:microsoft/phi-4:identity.huggingFaceId:2026-07-14T14:22:25.000Z",
+      "huggingface:microsoft/phi-4:languages:2026-07-14T14:22:25.000Z",
+      "huggingface:microsoft/phi-4:library:2026-07-14T14:22:25.000Z",
+      "huggingface:microsoft/phi-4:license:2026-07-14T14:22:25.000Z",
+      "huggingface:microsoft/phi-4:openWeights.available:2026-07-14T14:22:25.000Z",
+      "huggingface:microsoft/phi-4:pipeline:2026-07-14T14:22:25.000Z",
+      "huggingface:microsoft/phi-4:popularity.downloads:2026-07-14T14:22:25.000Z",
+      "huggingface:microsoft/phi-4:popularity.likes:2026-07-14T14:22:25.000Z",
+      "huggingface:microsoft/phi-4:routes.deepinfra:2026-07-14T14:22:25.000Z",
+      "huggingface:microsoft/phi-4:routes.featherless-ai:2026-07-14T14:22:25.000Z",
+      "huggingface:microsoft/phi-4:tags:2026-07-14T14:22:25.000Z",
+      "huggingface:moonshotai/Kimi-K2.6:availability.huggingFaceInference:2026-05-19T09:01:54.000Z",
+      "huggingface:moonshotai/Kimi-K2.6:capabilities.streaming:2026-05-19T09:01:54.000Z",
+      "huggingface:moonshotai/Kimi-K2.6:capabilities.vision:2026-05-19T09:01:54.000Z",
+      "huggingface:moonshotai/Kimi-K2.6:identity.huggingFaceId:2026-05-19T09:01:54.000Z",
+      "huggingface:moonshotai/Kimi-K2.6:library:2026-05-19T09:01:54.000Z",
+      "huggingface:moonshotai/Kimi-K2.6:license:2026-05-19T09:01:54.000Z",
+      "huggingface:moonshotai/Kimi-K2.6:openWeights.available:2026-05-19T09:01:54.000Z",
+      "huggingface:moonshotai/Kimi-K2.6:pipeline:2026-05-19T09:01:54.000Z",
+      "huggingface:moonshotai/Kimi-K2.6:popularity.downloads:2026-05-19T09:01:54.000Z",
+      "huggingface:moonshotai/Kimi-K2.6:popularity.likes:2026-05-19T09:01:54.000Z",
+      "huggingface:moonshotai/Kimi-K2.6:routes.baseten:2026-05-19T09:01:54.000Z",
+      "huggingface:moonshotai/Kimi-K2.6:routes.deepinfra:2026-05-19T09:01:54.000Z",
+      "huggingface:moonshotai/Kimi-K2.6:routes.featherless-ai:2026-05-19T09:01:54.000Z",
+      "huggingface:moonshotai/Kimi-K2.6:routes.fireworks-ai:2026-05-19T09:01:54.000Z",
+      "huggingface:moonshotai/Kimi-K2.6:routes.novita:2026-05-19T09:01:54.000Z",
+      "huggingface:moonshotai/Kimi-K2.6:routes.together:2026-05-19T09:01:54.000Z",
+      "huggingface:moonshotai/Kimi-K2.6:tags:2026-05-19T09:01:54.000Z",
+      "huggingface:moonshotai/Kimi-K2.7-Code:availability.huggingFaceInference:2026-06-15T07:49:29.000Z",
+      "huggingface:moonshotai/Kimi-K2.7-Code:capabilities.streaming:2026-06-15T07:49:29.000Z",
+      "huggingface:moonshotai/Kimi-K2.7-Code:capabilities.vision:2026-06-15T07:49:29.000Z",
+      "huggingface:moonshotai/Kimi-K2.7-Code:identity.huggingFaceId:2026-06-15T07:49:29.000Z",
+      "huggingface:moonshotai/Kimi-K2.7-Code:library:2026-06-15T07:49:29.000Z",
+      "huggingface:moonshotai/Kimi-K2.7-Code:license:2026-06-15T07:49:29.000Z",
+      "huggingface:moonshotai/Kimi-K2.7-Code:openWeights.available:2026-06-15T07:49:29.000Z",
+      "huggingface:moonshotai/Kimi-K2.7-Code:pipeline:2026-06-15T07:49:29.000Z",
+      "huggingface:moonshotai/Kimi-K2.7-Code:popularity.downloads:2026-06-15T07:49:29.000Z",
+      "huggingface:moonshotai/Kimi-K2.7-Code:popularity.likes:2026-06-15T07:49:29.000Z",
+      "huggingface:moonshotai/Kimi-K2.7-Code:routes.baseten:2026-06-15T07:49:29.000Z",
+      "huggingface:moonshotai/Kimi-K2.7-Code:routes.deepinfra:2026-06-15T07:49:29.000Z",
+      "huggingface:moonshotai/Kimi-K2.7-Code:routes.featherless-ai:2026-06-15T07:49:29.000Z",
+      "huggingface:moonshotai/Kimi-K2.7-Code:routes.fireworks-ai:2026-06-15T07:49:29.000Z",
+      "huggingface:moonshotai/Kimi-K2.7-Code:routes.novita:2026-06-15T07:49:29.000Z",
+      "huggingface:moonshotai/Kimi-K2.7-Code:routes.together:2026-06-15T07:49:29.000Z",
+      "huggingface:moonshotai/Kimi-K2.7-Code:tags:2026-06-15T07:49:29.000Z",
+      "huggingface:poolside/Laguna-S-2.1:availability.huggingFaceInference:2026-07-27T11:25:04.000Z",
+      "huggingface:poolside/Laguna-S-2.1:capabilities.streaming:2026-07-27T11:25:04.000Z",
+      "huggingface:poolside/Laguna-S-2.1:identity.huggingFaceId:2026-07-27T11:25:04.000Z",
+      "huggingface:poolside/Laguna-S-2.1:library:2026-07-27T11:25:04.000Z",
+      "huggingface:poolside/Laguna-S-2.1:license:2026-07-27T11:25:04.000Z",
+      "huggingface:poolside/Laguna-S-2.1:openWeights.available:2026-07-27T11:25:04.000Z",
+      "huggingface:poolside/Laguna-S-2.1:pipeline:2026-07-27T11:25:04.000Z",
+      "huggingface:poolside/Laguna-S-2.1:popularity.downloads:2026-07-27T11:25:04.000Z",
+      "huggingface:poolside/Laguna-S-2.1:popularity.likes:2026-07-27T11:25:04.000Z",
+      "huggingface:poolside/Laguna-S-2.1:routes.featherless-ai:2026-07-27T11:25:04.000Z",
+      "huggingface:poolside/Laguna-S-2.1:tags:2026-07-27T11:25:04.000Z",
+      "openrouter:google/gemma-3-12b-it:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-12b-it:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-12b-it:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-12b-it:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-12b-it:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-12b-it:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-12b-it:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-12b-it:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-12b-it:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-12b-it:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-12b-it:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-12b-it:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-12b-it:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-27b-it:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-27b-it:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-27b-it:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-27b-it:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-27b-it:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-27b-it:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-27b-it:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-27b-it:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-27b-it:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-27b-it:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-27b-it:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-27b-it:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-27b-it:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-4b-it:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-4b-it:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-4b-it:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-4b-it:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-4b-it:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-4b-it:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-4b-it:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-4b-it:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-4b-it:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-4b-it:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-4b-it:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-4b-it:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-3-4b-it:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:free:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:free:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:free:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:free:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:free:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:free:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:free:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:free:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:free:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:free:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:free:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:free:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:free:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-26b-a4b-it:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:free:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:free:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:free:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:free:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:free:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:free:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:free:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:free:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:free:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:free:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:free:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:free:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:free:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:google/gemma-4-31b-it:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-70b-instruct:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-70b-instruct:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-70b-instruct:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-70b-instruct:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-70b-instruct:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-70b-instruct:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-70b-instruct:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-70b-instruct:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-70b-instruct:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-70b-instruct:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-70b-instruct:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-70b-instruct:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-70b-instruct:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-8b-instruct:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-8b-instruct:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-8b-instruct:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-8b-instruct:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-8b-instruct:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-8b-instruct:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-8b-instruct:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-8b-instruct:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-8b-instruct:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-8b-instruct:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-8b-instruct:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-8b-instruct:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.1-8b-instruct:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.2-3b-instruct:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.2-3b-instruct:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.2-3b-instruct:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.2-3b-instruct:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.2-3b-instruct:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.2-3b-instruct:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.2-3b-instruct:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.2-3b-instruct:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.2-3b-instruct:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.2-3b-instruct:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.2-3b-instruct:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.2-3b-instruct:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.2-3b-instruct:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.3-70b-instruct:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.3-70b-instruct:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.3-70b-instruct:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.3-70b-instruct:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.3-70b-instruct:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.3-70b-instruct:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.3-70b-instruct:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.3-70b-instruct:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.3-70b-instruct:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.3-70b-instruct:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.3-70b-instruct:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.3-70b-instruct:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-3.3-70b-instruct:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-guard-4-12b:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-guard-4-12b:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-guard-4-12b:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-guard-4-12b:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-guard-4-12b:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-guard-4-12b:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-guard-4-12b:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-guard-4-12b:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-guard-4-12b:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-guard-4-12b:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-guard-4-12b:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-guard-4-12b:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:meta-llama/llama-guard-4-12b:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:microsoft/phi-4:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:microsoft/phi-4:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:microsoft/phi-4:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:microsoft/phi-4:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:microsoft/phi-4:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:microsoft/phi-4:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:microsoft/phi-4:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:microsoft/phi-4:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:microsoft/phi-4:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:microsoft/phi-4:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:microsoft/phi-4:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:microsoft/phi-4:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:microsoft/phi-4:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.5:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.5:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.5:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.5:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.5:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.5:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.5:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.5:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.5:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.5:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.5:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.5:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.5:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.6:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.6:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.6:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.6:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.6:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.6:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.6:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.6:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.6:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.6:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.6:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.6:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.6:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:batch:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:batch:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:batch:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:batch:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:batch:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:batch:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:batch:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:batch:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:batch:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:batch:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:batch:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:batch:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k2.7-code:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k3:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k3:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k3:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k3:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k3:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k3:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k3:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k3:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k3:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k3:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k3:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:moonshotai/kimi-k3:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-120b:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-120b:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-120b:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-120b:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-120b:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-120b:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-120b:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-120b:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-120b:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-120b:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-120b:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-120b:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-120b:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:free:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:free:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:free:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:free:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:free:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:free:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:free:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:free:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:free:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:free:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:free:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:free:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:free:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:openai/gpt-oss-20b:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:free:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:free:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:free:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:free:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:free:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:free:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:free:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:free:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:free:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:free:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:free:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:free:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:free:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:poolside/laguna-s-2.1:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen2.5-vl-72b-instruct:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen2.5-vl-72b-instruct:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen2.5-vl-72b-instruct:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen2.5-vl-72b-instruct:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen2.5-vl-72b-instruct:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen2.5-vl-72b-instruct:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen2.5-vl-72b-instruct:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen2.5-vl-72b-instruct:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen2.5-vl-72b-instruct:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen2.5-vl-72b-instruct:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen2.5-vl-72b-instruct:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen2.5-vl-72b-instruct:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-14b:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-14b:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-14b:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-14b:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-14b:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-14b:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-14b:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-14b:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-14b:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-14b:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-14b:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-14b:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-14b:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-235b-a22b:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-235b-a22b:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-235b-a22b:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-235b-a22b:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-235b-a22b:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-235b-a22b:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-235b-a22b:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-235b-a22b:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-235b-a22b:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-235b-a22b:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-235b-a22b:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-235b-a22b:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-235b-a22b:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b-instruct-2507:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b-instruct-2507:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b-instruct-2507:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b-instruct-2507:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b-instruct-2507:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b-instruct-2507:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b-instruct-2507:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b-instruct-2507:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b-instruct-2507:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b-instruct-2507:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b-instruct-2507:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b-instruct-2507:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b-instruct-2507:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-30b-a3b:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-32b:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-32b:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-32b:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-32b:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-32b:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-32b:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-32b:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-32b:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-32b:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-32b:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-32b:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-32b:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-32b:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-8b:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-8b:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-8b:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-8b:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-8b:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-8b:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-8b:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-8b:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-8b:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-8b:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-8b:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-8b:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-8b:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-30b-a3b-instruct:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-30b-a3b-instruct:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-30b-a3b-instruct:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-30b-a3b-instruct:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-30b-a3b-instruct:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-30b-a3b-instruct:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-30b-a3b-instruct:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-30b-a3b-instruct:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-30b-a3b-instruct:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-30b-a3b-instruct:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-30b-a3b-instruct:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-30b-a3b-instruct:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-30b-a3b-instruct:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-next:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-next:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-next:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-next:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-next:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-next:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-next:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-next:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-next:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-next:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-next:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-next:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-coder-next:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-next-80b-a3b-instruct:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-next-80b-a3b-instruct:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-next-80b-a3b-instruct:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-next-80b-a3b-instruct:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-next-80b-a3b-instruct:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-next-80b-a3b-instruct:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-next-80b-a3b-instruct:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-next-80b-a3b-instruct:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-next-80b-a3b-instruct:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-next-80b-a3b-instruct:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-next-80b-a3b-instruct:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-next-80b-a3b-instruct:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-next-80b-a3b-instruct:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-235b-a22b-instruct:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-235b-a22b-instruct:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-235b-a22b-instruct:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-235b-a22b-instruct:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-235b-a22b-instruct:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-235b-a22b-instruct:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-235b-a22b-instruct:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-235b-a22b-instruct:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-235b-a22b-instruct:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-235b-a22b-instruct:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-235b-a22b-instruct:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-235b-a22b-instruct:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-235b-a22b-instruct:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-30b-a3b-instruct:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-30b-a3b-instruct:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-30b-a3b-instruct:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-30b-a3b-instruct:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-30b-a3b-instruct:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-30b-a3b-instruct:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-30b-a3b-instruct:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-30b-a3b-instruct:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-30b-a3b-instruct:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-30b-a3b-instruct:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-30b-a3b-instruct:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-30b-a3b-instruct:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-30b-a3b-instruct:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-32b-instruct:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-32b-instruct:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-32b-instruct:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-32b-instruct:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-32b-instruct:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-32b-instruct:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-32b-instruct:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-32b-instruct:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-32b-instruct:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-32b-instruct:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-32b-instruct:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-32b-instruct:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-32b-instruct:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-8b-instruct:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-8b-instruct:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-8b-instruct:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-8b-instruct:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-8b-instruct:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-8b-instruct:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-8b-instruct:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-8b-instruct:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-8b-instruct:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-8b-instruct:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-8b-instruct:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-8b-instruct:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3-vl-8b-instruct:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-122b-a10b:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-122b-a10b:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-122b-a10b:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-122b-a10b:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-122b-a10b:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-122b-a10b:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-122b-a10b:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-122b-a10b:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-122b-a10b:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-122b-a10b:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-122b-a10b:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-122b-a10b:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-122b-a10b:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-27b:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-27b:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-27b:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-27b:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-27b:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-27b:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-27b:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-27b:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-27b:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-27b:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-27b:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-27b:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-27b:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-35b-a3b:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-35b-a3b:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-35b-a3b:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-35b-a3b:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-35b-a3b:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-35b-a3b:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-35b-a3b:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-35b-a3b:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-35b-a3b:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-35b-a3b:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-35b-a3b:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-35b-a3b:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-35b-a3b:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-397b-a17b:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-397b-a17b:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-397b-a17b:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-397b-a17b:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-397b-a17b:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-397b-a17b:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-397b-a17b:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-397b-a17b:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-397b-a17b:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-397b-a17b:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-397b-a17b:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-397b-a17b:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-397b-a17b:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-9b:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-9b:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-9b:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-9b:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-9b:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-9b:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-9b:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-9b:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-9b:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-9b:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-9b:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-9b:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.5-9b:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-27b:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-27b:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-27b:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-27b:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-27b:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-27b:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-27b:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-27b:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-27b:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-27b:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-27b:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-27b:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-27b:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-35b-a3b:availability.status:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-35b-a3b:capabilities.audioInput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-35b-a3b:capabilities.audioOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-35b-a3b:capabilities.embeddings:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-35b-a3b:capabilities.reasoning:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-35b-a3b:capabilities.streaming:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-35b-a3b:capabilities.structuredOutput:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-35b-a3b:capabilities.tools:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-35b-a3b:capabilities.vision:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-35b-a3b:limits.contextWindow:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-35b-a3b:limits.maxOutputTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-35b-a3b:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z",
+      "openrouter:qwen/qwen3.6-35b-a3b:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z"
+    ],
+    "removed": [
       "openrouter:google/gemma-3-12b-it:availability.status:2026-08-13T16:44:12.351Z",
       "openrouter:google/gemma-3-12b-it:capabilities.audioInput:2026-08-13T16:44:12.351Z",
       "openrouter:google/gemma-3-12b-it:capabilities.audioOutput:2026-08-13T16:44:12.351Z",
@@ -378,13 +1254,75 @@
       "openrouter:qwen/qwen3.6-35b-a3b:pricing.inputPerMillionTokens:2026-08-13T16:44:12.351Z",
       "openrouter:qwen/qwen3.6-35b-a3b:pricing.outputPerMillionTokens:2026-08-13T16:44:12.351Z"
     ],
-    "removed": [],
     "changed": [
-      "huggingface:moonshotai/Kimi-K3:popularity.likes:2026-07-27T16:29:18.000Z"
+      "huggingface:Qwen/Qwen3-14B:popularity.downloads:2025-07-26T03:49:23.000Z",
+      "huggingface:Qwen/Qwen3-30B-A3B-Instruct-2507:popularity.downloads:2025-09-17T06:56:43.000Z",
+      "huggingface:Qwen/Qwen3-30B-A3B-Instruct-2507:popularity.likes:2025-09-17T06:56:43.000Z",
+      "huggingface:Qwen/Qwen3-30B-A3B:popularity.downloads:2025-07-26T03:45:17.000Z",
+      "huggingface:Qwen/Qwen3-30B-A3B:popularity.likes:2025-07-26T03:45:17.000Z",
+      "huggingface:Qwen/Qwen3-32B:popularity.downloads:2025-07-26T03:45:22.000Z",
+      "huggingface:Qwen/Qwen3-8B:popularity.downloads:2025-07-26T03:49:13.000Z",
+      "huggingface:Qwen/Qwen3-8B:popularity.likes:2025-07-26T03:49:13.000Z",
+      "huggingface:Qwen/Qwen3-Coder-30B-A3B-Instruct:popularity.downloads:2025-12-03T08:05:17.000Z",
+      "huggingface:Qwen/Qwen3-Coder-30B-A3B-Instruct:popularity.likes:2025-12-03T08:05:17.000Z",
+      "huggingface:Qwen/Qwen3-VL-235B-A22B-Instruct:popularity.downloads:2025-11-26T13:18:18.000Z",
+      "huggingface:Qwen/Qwen3-VL-235B-A22B-Instruct:popularity.likes:2025-11-26T13:18:18.000Z",
+      "huggingface:Qwen/Qwen3-VL-32B-Instruct:popularity.downloads:2025-10-21T18:26:34.000Z",
+      "huggingface:Qwen/Qwen3-VL-32B-Instruct:popularity.likes:2025-10-21T18:26:34.000Z",
+      "huggingface:Qwen/Qwen3-VL-8B-Instruct:popularity.downloads:2025-10-15T16:16:59.000Z",
+      "huggingface:Qwen/Qwen3-VL-8B-Instruct:popularity.likes:2025-10-15T16:16:59.000Z",
+      "huggingface:Qwen/Qwen3.5-122B-A10B:popularity.downloads:2026-04-24T03:55:23.000Z",
+      "huggingface:Qwen/Qwen3.5-122B-A10B:popularity.likes:2026-04-24T03:55:23.000Z",
+      "huggingface:Qwen/Qwen3.5-27B:popularity.downloads:2026-04-24T02:54:49.000Z",
+      "huggingface:Qwen/Qwen3.5-27B:popularity.likes:2026-04-24T02:54:49.000Z",
+      "huggingface:Qwen/Qwen3.5-35B-A3B:popularity.downloads:2026-04-24T02:38:38.000Z",
+      "huggingface:Qwen/Qwen3.5-35B-A3B:popularity.likes:2026-04-24T02:38:38.000Z",
+      "huggingface:Qwen/Qwen3.5-9B:popularity.downloads:2026-03-02T00:51:43.000Z",
+      "huggingface:Qwen/Qwen3.5-9B:popularity.likes:2026-03-02T00:51:43.000Z",
+      "huggingface:Qwen/Qwen3.6-27B:popularity.downloads:2026-04-24T02:39:16.000Z",
+      "huggingface:Qwen/Qwen3.6-27B:popularity.likes:2026-04-24T02:39:16.000Z",
+      "huggingface:Qwen/Qwen3.6-35B-A3B:popularity.downloads:2026-04-24T02:53:42.000Z",
+      "huggingface:Qwen/Qwen3.6-35B-A3B:popularity.likes:2026-04-24T02:53:42.000Z",
+      "huggingface:google/gemma-3-12b-it:popularity.downloads:2025-03-21T20:28:56.000Z",
+      "huggingface:google/gemma-3-12b-it:popularity.likes:2025-03-21T20:28:56.000Z",
+      "huggingface:google/gemma-3-4b-it:popularity.downloads:2025-03-21T20:20:53.000Z",
+      "huggingface:google/gemma-3-4b-it:popularity.likes:2025-03-21T20:20:53.000Z",
+      "huggingface:google/gemma-4-26B-A4B-it:popularity.downloads:2026-07-20T16:42:12.000Z",
+      "huggingface:google/gemma-4-26B-A4B-it:popularity.likes:2026-07-20T16:42:12.000Z",
+      "huggingface:google/gemma-4-31B-it:popularity.downloads:2026-07-20T16:42:18.000Z",
+      "huggingface:google/gemma-4-31B-it:popularity.likes:2026-07-20T16:42:18.000Z",
+      "huggingface:meta-llama/Llama-3.1-8B-Instruct:popularity.downloads:2024-09-25T17:00:57.000Z",
+      "huggingface:meta-llama/Llama-3.1-8B-Instruct:popularity.likes:2024-09-25T17:00:57.000Z",
+      "huggingface:meta-llama/Llama-3.2-3B-Instruct:popularity.downloads:2024-10-24T15:07:29.000Z",
+      "huggingface:meta-llama/Llama-3.2-3B-Instruct:popularity.likes:2024-10-24T15:07:29.000Z",
+      "huggingface:moonshotai/Kimi-K2.5:popularity.downloads:2026-04-30T03:56:40.000Z",
+      "huggingface:moonshotai/Kimi-K3:popularity.downloads:2026-07-27T16:29:18.000Z",
+      "huggingface:moonshotai/Kimi-K3:popularity.likes:2026-07-27T16:29:18.000Z",
+      "huggingface:openai/gpt-oss-120b:popularity.downloads:2025-08-26T17:25:03.000Z",
+      "huggingface:openai/gpt-oss-120b:popularity.likes:2025-08-26T17:25:03.000Z",
+      "huggingface:openai/gpt-oss-20b:popularity.downloads:2025-08-26T17:25:47.000Z",
+      "huggingface:openai/gpt-oss-20b:popularity.likes:2025-08-26T17:25:47.000Z"
     ]
   },
   "conflicts": {
     "added": [
+      "google/gemma-4-26b-a4b-it::limits.maxOutputTokens::[{\"value\":262144,\"evidenceIds\":[\"openrouter:google/gemma-4-26b-a4b-it:limits.maxOutputTokens:2026-08-16T03:22:13.564Z\"]},{\"value\":32768,\"evidenceIds\":[\"openrouter:google/gemma-4-26b-a4b-it:free:limits.maxOutputTokens:2026-08-16T03:22:13.564Z\"]}]",
+      "google/gemma-4-26b-a4b-it::pricing.inputPerMillionTokens::[{\"value\":0,\"evidenceIds\":[\"openrouter:google/gemma-4-26b-a4b-it:free:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z\"]},{\"value\":0.12,\"evidenceIds\":[\"openrouter:google/gemma-4-26b-a4b-it:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z\"]}]",
+      "google/gemma-4-26b-a4b-it::pricing.outputPerMillionTokens::[{\"value\":0,\"evidenceIds\":[\"openrouter:google/gemma-4-26b-a4b-it:free:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z\"]},{\"value\":0.39999999999999997,\"evidenceIds\":[\"openrouter:google/gemma-4-26b-a4b-it:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z\"]}]",
+      "google/gemma-4-31b-it::limits.maxOutputTokens::[{\"value\":262144,\"evidenceIds\":[\"openrouter:google/gemma-4-31b-it:limits.maxOutputTokens:2026-08-16T03:22:13.564Z\"]},{\"value\":32768,\"evidenceIds\":[\"openrouter:google/gemma-4-31b-it:free:limits.maxOutputTokens:2026-08-16T03:22:13.564Z\"]}]",
+      "google/gemma-4-31b-it::pricing.inputPerMillionTokens::[{\"value\":0,\"evidenceIds\":[\"openrouter:google/gemma-4-31b-it:free:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z\"]},{\"value\":0.09999999999999999,\"evidenceIds\":[\"openrouter:google/gemma-4-31b-it:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z\"]}]",
+      "google/gemma-4-31b-it::pricing.outputPerMillionTokens::[{\"value\":0,\"evidenceIds\":[\"openrouter:google/gemma-4-31b-it:free:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z\"]},{\"value\":0.33999999999999997,\"evidenceIds\":[\"openrouter:google/gemma-4-31b-it:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z\"]}]",
+      "moonshotai/kimi-k2.7-code::pricing.inputPerMillionTokens::[{\"value\":0.475,\"evidenceIds\":[\"openrouter:moonshotai/kimi-k2.7-code:batch:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z\"]},{\"value\":0.71,\"evidenceIds\":[\"openrouter:moonshotai/kimi-k2.7-code:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z\"]}]",
+      "moonshotai/kimi-k2.7-code::pricing.outputPerMillionTokens::[{\"value\":2,\"evidenceIds\":[\"openrouter:moonshotai/kimi-k2.7-code:batch:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z\"]},{\"value\":3.5,\"evidenceIds\":[\"openrouter:moonshotai/kimi-k2.7-code:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z\"]}]",
+      "openai/gpt-oss-20b::limits.maxOutputTokens::[{\"value\":131072,\"evidenceIds\":[\"openrouter:openai/gpt-oss-20b:limits.maxOutputTokens:2026-08-16T03:22:13.564Z\"]},{\"value\":32768,\"evidenceIds\":[\"openrouter:openai/gpt-oss-20b:free:limits.maxOutputTokens:2026-08-16T03:22:13.564Z\"]}]",
+      "openai/gpt-oss-20b::pricing.inputPerMillionTokens::[{\"value\":0,\"evidenceIds\":[\"openrouter:openai/gpt-oss-20b:free:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z\"]},{\"value\":0.03,\"evidenceIds\":[\"openrouter:openai/gpt-oss-20b:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z\"]}]",
+      "openai/gpt-oss-20b::pricing.outputPerMillionTokens::[{\"value\":0,\"evidenceIds\":[\"openrouter:openai/gpt-oss-20b:free:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z\"]},{\"value\":0.13,\"evidenceIds\":[\"openrouter:openai/gpt-oss-20b:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z\"]}]",
+      "poolside/laguna-s-2.1::limits.contextWindow::[{\"value\":1048576,\"evidenceIds\":[\"openrouter:poolside/laguna-s-2.1:limits.contextWindow:2026-08-16T03:22:13.564Z\"]},{\"value\":262144,\"evidenceIds\":[\"openrouter:poolside/laguna-s-2.1:free:limits.contextWindow:2026-08-16T03:22:13.564Z\"]}]",
+      "poolside/laguna-s-2.1::limits.maxOutputTokens::[{\"value\":131072,\"evidenceIds\":[\"openrouter:poolside/laguna-s-2.1:limits.maxOutputTokens:2026-08-16T03:22:13.564Z\"]},{\"value\":32768,\"evidenceIds\":[\"openrouter:poolside/laguna-s-2.1:free:limits.maxOutputTokens:2026-08-16T03:22:13.564Z\"]}]",
+      "poolside/laguna-s-2.1::pricing.inputPerMillionTokens::[{\"value\":0,\"evidenceIds\":[\"openrouter:poolside/laguna-s-2.1:free:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z\"]},{\"value\":0.09,\"evidenceIds\":[\"openrouter:poolside/laguna-s-2.1:pricing.inputPerMillionTokens:2026-08-16T03:22:13.564Z\"]}]",
+      "poolside/laguna-s-2.1::pricing.outputPerMillionTokens::[{\"value\":0,\"evidenceIds\":[\"openrouter:poolside/laguna-s-2.1:free:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z\"]},{\"value\":0.18,\"evidenceIds\":[\"openrouter:poolside/laguna-s-2.1:pricing.outputPerMillionTokens:2026-08-16T03:22:13.564Z\"]}]"
+    ],
+    "resolved": [
       "google/gemma-4-26b-a4b-it::limits.maxOutputTokens::[{\"value\":262144,\"evidenceIds\":[\"openrouter:google/gemma-4-26b-a4b-it:limits.maxOutputTokens:2026-08-13T16:44:12.351Z\"]},{\"value\":32768,\"evidenceIds\":[\"openrouter:google/gemma-4-26b-a4b-it:free:limits.maxOutputTokens:2026-08-13T16:44:12.351Z\"]}]",
       "google/gemma-4-26b-a4b-it::pricing.inputPerMillionTokens::[{\"value\":0,\"evidenceIds\":[\"openrouter:google/gemma-4-26b-a4b-it:free:pricing.inputPerMillionTokens:2026-08-13T16:44:12.351Z\"]},{\"value\":0.12,\"evidenceIds\":[\"openrouter:google/gemma-4-26b-a4b-it:pricing.inputPerMillionTokens:2026-08-13T16:44:12.351Z\"]}]",
       "google/gemma-4-26b-a4b-it::pricing.outputPerMillionTokens::[{\"value\":0,\"evidenceIds\":[\"openrouter:google/gemma-4-26b-a4b-it:free:pricing.outputPerMillionTokens:2026-08-13T16:44:12.351Z\"]},{\"value\":0.39999999999999997,\"evidenceIds\":[\"openrouter:google/gemma-4-26b-a4b-it:pricing.outputPerMillionTokens:2026-08-13T16:44:12.351Z\"]}]",
@@ -394,30 +1332,1905 @@
       "openai/gpt-oss-20b::limits.maxOutputTokens::[{\"value\":131072,\"evidenceIds\":[\"openrouter:openai/gpt-oss-20b:limits.maxOutputTokens:2026-08-13T16:44:12.351Z\"]},{\"value\":32768,\"evidenceIds\":[\"openrouter:openai/gpt-oss-20b:free:limits.maxOutputTokens:2026-08-13T16:44:12.351Z\"]}]",
       "openai/gpt-oss-20b::pricing.inputPerMillionTokens::[{\"value\":0,\"evidenceIds\":[\"openrouter:openai/gpt-oss-20b:free:pricing.inputPerMillionTokens:2026-08-13T16:44:12.351Z\"]},{\"value\":0.03,\"evidenceIds\":[\"openrouter:openai/gpt-oss-20b:pricing.inputPerMillionTokens:2026-08-13T16:44:12.351Z\"]}]",
       "openai/gpt-oss-20b::pricing.outputPerMillionTokens::[{\"value\":0,\"evidenceIds\":[\"openrouter:openai/gpt-oss-20b:free:pricing.outputPerMillionTokens:2026-08-13T16:44:12.351Z\"]},{\"value\":0.13,\"evidenceIds\":[\"openrouter:openai/gpt-oss-20b:pricing.outputPerMillionTokens:2026-08-13T16:44:12.351Z\"]}]"
-    ],
-    "resolved": [
-      "google/gemma-4-26b-a4b-it::limits.maxOutputTokens::[{\"value\":262144,\"evidenceIds\":[\"openrouter:google/gemma-4-26b-a4b-it:limits.maxOutputTokens:2026-08-13T16:34:07.460Z\"]},{\"value\":32768,\"evidenceIds\":[\"openrouter:google/gemma-4-26b-a4b-it:free:limits.maxOutputTokens:2026-08-13T16:34:07.460Z\"]}]",
-      "google/gemma-4-26b-a4b-it::pricing.inputPerMillionTokens::[{\"value\":0,\"evidenceIds\":[\"openrouter:google/gemma-4-26b-a4b-it:free:pricing.inputPerMillionTokens:2026-08-13T16:34:07.460Z\"]},{\"value\":0.12,\"evidenceIds\":[\"openrouter:google/gemma-4-26b-a4b-it:pricing.inputPerMillionTokens:2026-08-13T16:34:07.460Z\"]}]",
-      "google/gemma-4-26b-a4b-it::pricing.outputPerMillionTokens::[{\"value\":0,\"evidenceIds\":[\"openrouter:google/gemma-4-26b-a4b-it:free:pricing.outputPerMillionTokens:2026-08-13T16:34:07.460Z\"]},{\"value\":0.39999999999999997,\"evidenceIds\":[\"openrouter:google/gemma-4-26b-a4b-it:pricing.outputPerMillionTokens:2026-08-13T16:34:07.460Z\"]}]",
-      "google/gemma-4-31b-it::limits.maxOutputTokens::[{\"value\":262144,\"evidenceIds\":[\"openrouter:google/gemma-4-31b-it:limits.maxOutputTokens:2026-08-13T16:34:07.460Z\"]},{\"value\":32768,\"evidenceIds\":[\"openrouter:google/gemma-4-31b-it:free:limits.maxOutputTokens:2026-08-13T16:34:07.460Z\"]}]",
-      "google/gemma-4-31b-it::pricing.inputPerMillionTokens::[{\"value\":0,\"evidenceIds\":[\"openrouter:google/gemma-4-31b-it:free:pricing.inputPerMillionTokens:2026-08-13T16:34:07.460Z\"]},{\"value\":0.09999999999999999,\"evidenceIds\":[\"openrouter:google/gemma-4-31b-it:pricing.inputPerMillionTokens:2026-08-13T16:34:07.460Z\"]}]",
-      "google/gemma-4-31b-it::pricing.outputPerMillionTokens::[{\"value\":0,\"evidenceIds\":[\"openrouter:google/gemma-4-31b-it:free:pricing.outputPerMillionTokens:2026-08-13T16:34:07.460Z\"]},{\"value\":0.33999999999999997,\"evidenceIds\":[\"openrouter:google/gemma-4-31b-it:pricing.outputPerMillionTokens:2026-08-13T16:34:07.460Z\"]}]",
-      "openai/gpt-oss-20b::limits.maxOutputTokens::[{\"value\":131072,\"evidenceIds\":[\"openrouter:openai/gpt-oss-20b:limits.maxOutputTokens:2026-08-13T16:34:07.460Z\"]},{\"value\":32768,\"evidenceIds\":[\"openrouter:openai/gpt-oss-20b:free:limits.maxOutputTokens:2026-08-13T16:34:07.460Z\"]}]",
-      "openai/gpt-oss-20b::pricing.inputPerMillionTokens::[{\"value\":0,\"evidenceIds\":[\"openrouter:openai/gpt-oss-20b:free:pricing.inputPerMillionTokens:2026-08-13T16:34:07.460Z\"]},{\"value\":0.03,\"evidenceIds\":[\"openrouter:openai/gpt-oss-20b:pricing.inputPerMillionTokens:2026-08-13T16:34:07.460Z\"]}]",
-      "openai/gpt-oss-20b::pricing.outputPerMillionTokens::[{\"value\":0,\"evidenceIds\":[\"openrouter:openai/gpt-oss-20b:free:pricing.outputPerMillionTokens:2026-08-13T16:34:07.460Z\"]},{\"value\":0.13,\"evidenceIds\":[\"openrouter:openai/gpt-oss-20b:pricing.outputPerMillionTokens:2026-08-13T16:34:07.460Z\"]}]"
     ]
   },
   "facts": [
     {
-      "modelId": "moonshotai/kimi-k3",
-      "fact": "popularity.likes",
-      "previous": 10610,
-      "current": 10611
+      "modelId": "~deepseek/deepseek-v4-flash-latest",
+      "fact": "limits.maxOutputTokens",
+      "current": 262144
     },
     {
-      "modelId": "z-ai/glm-5.2",
+      "modelId": "~deepseek/deepseek-v4-flash-latest",
+      "fact": "pricing.inputPerMillionTokens",
+      "previous": 0.079996,
+      "current": 0.0675
+    },
+    {
+      "modelId": "~deepseek/deepseek-v4-flash-latest",
+      "fact": "pricing.outputPerMillionTokens",
+      "previous": 0.252,
+      "current": 0.135
+    },
+    {
+      "modelId": "~google/gemini-flash-latest",
+      "fact": "pricing.inputPerMillionTokens",
+      "previous": 1.5,
+      "current": 0.375
+    },
+    {
+      "modelId": "~google/gemini-flash-latest",
+      "fact": "pricing.outputPerMillionTokens",
+      "previous": 7.5,
+      "current": 1.875
+    },
+    {
+      "modelId": "deepseek/deepseek-v4-flash-0731",
       "fact": "limits.maxOutputTokens",
-      "current": 131072
+      "previous": 384000,
+      "current": 393216
+    },
+    {
+      "modelId": "deepseek/deepseek-v4-flash-0731",
+      "fact": "pricing.inputPerMillionTokens",
+      "previous": 0.08,
+      "current": 0.14
+    },
+    {
+      "modelId": "deepseek/deepseek-v4-flash-0731",
+      "fact": "pricing.outputPerMillionTokens",
+      "previous": 0.18,
+      "current": 0.28
+    },
+    {
+      "modelId": "deepseek/deepseek-v4-flash",
+      "fact": "limits.maxOutputTokens",
+      "previous": 393216,
+      "current": 384000
+    },
+    {
+      "modelId": "deepseek/deepseek-v4-flash",
+      "fact": "pricing.inputPerMillionTokens",
+      "previous": 0.14,
+      "current": 0.06426
+    },
+    {
+      "modelId": "deepseek/deepseek-v4-flash",
+      "fact": "pricing.outputPerMillionTokens",
+      "previous": 0.28,
+      "current": 0.12852
+    },
+    {
+      "modelId": "google/gemini-3.1-flash-lite-image",
+      "fact": "limits.maxOutputTokens",
+      "previous": 65536,
+      "current": 66000
+    },
+    {
+      "modelId": "google/gemini-3.6-flash",
+      "fact": "pricing.inputPerMillionTokens",
+      "previous": 0.75,
+      "current": 0.375
+    },
+    {
+      "modelId": "google/gemini-3.6-flash",
+      "fact": "pricing.outputPerMillionTokens",
+      "previous": 3.75,
+      "current": 1.875
+    },
+    {
+      "modelId": "google/gemma-3-12b-it",
+      "fact": "popularity.downloads",
+      "previous": 1227364,
+      "current": 1231848
+    },
+    {
+      "modelId": "google/gemma-3-12b-it",
+      "fact": "popularity.likes",
+      "previous": 805,
+      "current": 806
+    },
+    {
+      "modelId": "google/gemma-3-27b-it",
+      "fact": "availability.huggingFaceInference",
+      "current": "available"
+    },
+    {
+      "modelId": "google/gemma-3-27b-it",
+      "fact": "identity.huggingFaceId",
+      "current": "google/gemma-3-27b-it"
+    },
+    {
+      "modelId": "google/gemma-3-27b-it",
+      "fact": "library",
+      "current": "transformers"
+    },
+    {
+      "modelId": "google/gemma-3-27b-it",
+      "fact": "license",
+      "current": "gemma"
+    },
+    {
+      "modelId": "google/gemma-3-27b-it",
+      "fact": "lineage.baseModels",
+      "current": [
+        "google/gemma-3-27b-pt"
+      ]
+    },
+    {
+      "modelId": "google/gemma-3-27b-it",
+      "fact": "openWeights.available",
+      "current": true
+    },
+    {
+      "modelId": "google/gemma-3-27b-it",
+      "fact": "pipeline",
+      "current": "image-text-to-text"
+    },
+    {
+      "modelId": "google/gemma-3-27b-it",
+      "fact": "popularity.downloads",
+      "current": 767801
+    },
+    {
+      "modelId": "google/gemma-3-27b-it",
+      "fact": "popularity.likes",
+      "current": 2007
+    },
+    {
+      "modelId": "google/gemma-3-27b-it",
+      "fact": "routes.deepinfra",
+      "current": {
+        "providerModelId": "google/gemma-3-27b-it",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "google/gemma-3-27b-it",
+      "fact": "routes.featherless-ai",
+      "current": {
+        "providerModelId": "google/gemma-3-27b-it",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "google/gemma-3-27b-it",
+      "fact": "tags",
+      "current": [
+        "transformers",
+        "safetensors",
+        "gemma3",
+        "image-text-to-text",
+        "conversational",
+        "arxiv:1905.07830",
+        "arxiv:1905.10044",
+        "arxiv:1911.11641",
+        "arxiv:1904.09728",
+        "arxiv:1705.03551",
+        "arxiv:1911.01547",
+        "arxiv:1907.10641",
+        "arxiv:1903.00161",
+        "arxiv:2009.03300",
+        "arxiv:2304.06364",
+        "arxiv:2103.03874",
+        "arxiv:2110.14168",
+        "arxiv:2311.12022",
+        "arxiv:2108.07732",
+        "arxiv:2107.03374",
+        "arxiv:2210.03057",
+        "arxiv:2106.03193",
+        "arxiv:1910.11856",
+        "arxiv:2502.12404",
+        "arxiv:2502.21228",
+        "arxiv:2404.16816",
+        "arxiv:2104.12756",
+        "arxiv:2311.16502",
+        "arxiv:2203.10244",
+        "arxiv:2404.12390",
+        "arxiv:1810.12440",
+        "arxiv:1908.02660",
+        "arxiv:2312.11805",
+        "base_model:google/gemma-3-27b-pt",
+        "base_model:finetune:google/gemma-3-27b-pt",
+        "license:gemma",
+        "eval-results",
+        "text-generation-inference",
+        "endpoints_compatible",
+        "deploy:sagemaker",
+        "region:us"
+      ]
+    },
+    {
+      "modelId": "google/gemma-3-4b-it",
+      "fact": "popularity.downloads",
+      "previous": 1333742,
+      "current": 1328205
+    },
+    {
+      "modelId": "google/gemma-3-4b-it",
+      "fact": "popularity.likes",
+      "previous": 1453,
+      "current": 1455
+    },
+    {
+      "modelId": "google/gemma-4-26b-a4b-it",
+      "fact": "popularity.downloads",
+      "previous": 10074016,
+      "current": 10168554
+    },
+    {
+      "modelId": "google/gemma-4-26b-a4b-it",
+      "fact": "popularity.likes",
+      "previous": 1385,
+      "current": 1394
+    },
+    {
+      "modelId": "google/gemma-4-31b-it",
+      "fact": "popularity.downloads",
+      "previous": 9915701,
+      "current": 9965914
+    },
+    {
+      "modelId": "google/gemma-4-31b-it",
+      "fact": "popularity.likes",
+      "previous": 3537,
+      "current": 3569
+    },
+    {
+      "modelId": "liquid/lfm-2.5-2.6b",
+      "fact": "limits.maxOutputTokens",
+      "previous": 32768,
+      "current": 8192
+    },
+    {
+      "modelId": "meta-llama/llama-3.1-70b-instruct",
+      "fact": "availability.huggingFaceInference",
+      "current": "available"
+    },
+    {
+      "modelId": "meta-llama/llama-3.1-70b-instruct",
+      "fact": "identity.huggingFaceId",
+      "current": "meta-llama/Llama-3.1-70B-Instruct"
+    },
+    {
+      "modelId": "meta-llama/llama-3.1-70b-instruct",
+      "fact": "languages",
+      "current": [
+        "en",
+        "de",
+        "fr",
+        "it",
+        "pt",
+        "hi",
+        "es",
+        "th"
+      ]
+    },
+    {
+      "modelId": "meta-llama/llama-3.1-70b-instruct",
+      "fact": "library",
+      "current": "transformers"
+    },
+    {
+      "modelId": "meta-llama/llama-3.1-70b-instruct",
+      "fact": "license",
+      "current": "llama3.1"
+    },
+    {
+      "modelId": "meta-llama/llama-3.1-70b-instruct",
+      "fact": "lineage.baseModels",
+      "current": [
+        "meta-llama/Meta-Llama-3.1-70B"
+      ]
+    },
+    {
+      "modelId": "meta-llama/llama-3.1-70b-instruct",
+      "fact": "openWeights.available",
+      "current": true
+    },
+    {
+      "modelId": "meta-llama/llama-3.1-70b-instruct",
+      "fact": "pipeline",
+      "current": "text-generation"
+    },
+    {
+      "modelId": "meta-llama/llama-3.1-70b-instruct",
+      "fact": "popularity.downloads",
+      "current": 797885
+    },
+    {
+      "modelId": "meta-llama/llama-3.1-70b-instruct",
+      "fact": "popularity.likes",
+      "current": 947
+    },
+    {
+      "modelId": "meta-llama/llama-3.1-70b-instruct",
+      "fact": "routes.featherless-ai",
+      "current": {
+        "providerModelId": "meta-llama/Llama-3.1-70B-Instruct",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "meta-llama/llama-3.1-70b-instruct",
+      "fact": "tags",
+      "current": [
+        "transformers",
+        "safetensors",
+        "llama",
+        "text-generation",
+        "facebook",
+        "meta",
+        "pytorch",
+        "llama-3",
+        "conversational",
+        "en",
+        "de",
+        "fr",
+        "it",
+        "pt",
+        "hi",
+        "es",
+        "th",
+        "arxiv:2204.05149",
+        "base_model:meta-llama/Llama-3.1-70B",
+        "base_model:finetune:meta-llama/Llama-3.1-70B",
+        "license:llama3.1",
+        "eval-results",
+        "text-generation-inference",
+        "endpoints_compatible",
+        "deploy:sagemaker",
+        "region:us"
+      ]
+    },
+    {
+      "modelId": "meta-llama/llama-3.1-8b-instruct",
+      "fact": "popularity.downloads",
+      "previous": 7553851,
+      "current": 7614661
+    },
+    {
+      "modelId": "meta-llama/llama-3.1-8b-instruct",
+      "fact": "popularity.likes",
+      "previous": 6594,
+      "current": 6611
+    },
+    {
+      "modelId": "meta-llama/llama-3.2-3b-instruct",
+      "fact": "popularity.downloads",
+      "previous": 1176985,
+      "current": 1149962
+    },
+    {
+      "modelId": "meta-llama/llama-3.2-3b-instruct",
+      "fact": "popularity.likes",
+      "previous": 2417,
+      "current": 2427
+    },
+    {
+      "modelId": "meta-llama/llama-3.3-70b-instruct",
+      "fact": "availability.huggingFaceInference",
+      "current": "available"
+    },
+    {
+      "modelId": "meta-llama/llama-3.3-70b-instruct",
+      "fact": "identity.huggingFaceId",
+      "current": "meta-llama/Llama-3.3-70B-Instruct"
+    },
+    {
+      "modelId": "meta-llama/llama-3.3-70b-instruct",
+      "fact": "languages",
+      "current": [
+        "en",
+        "fr",
+        "it",
+        "pt",
+        "hi",
+        "es",
+        "th",
+        "de"
+      ]
+    },
+    {
+      "modelId": "meta-llama/llama-3.3-70b-instruct",
+      "fact": "library",
+      "current": "transformers"
+    },
+    {
+      "modelId": "meta-llama/llama-3.3-70b-instruct",
+      "fact": "license",
+      "current": "llama3.3"
+    },
+    {
+      "modelId": "meta-llama/llama-3.3-70b-instruct",
+      "fact": "lineage.baseModels",
+      "current": [
+        "meta-llama/Llama-3.1-70B"
+      ]
+    },
+    {
+      "modelId": "meta-llama/llama-3.3-70b-instruct",
+      "fact": "openWeights.available",
+      "current": true
+    },
+    {
+      "modelId": "meta-llama/llama-3.3-70b-instruct",
+      "fact": "pipeline",
+      "current": "text-generation"
+    },
+    {
+      "modelId": "meta-llama/llama-3.3-70b-instruct",
+      "fact": "popularity.downloads",
+      "current": 320776
+    },
+    {
+      "modelId": "meta-llama/llama-3.3-70b-instruct",
+      "fact": "popularity.likes",
+      "current": 2952
+    },
+    {
+      "modelId": "meta-llama/llama-3.3-70b-instruct",
+      "fact": "routes.featherless-ai",
+      "current": {
+        "providerModelId": "meta-llama/Llama-3.3-70B-Instruct",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "meta-llama/llama-3.3-70b-instruct",
+      "fact": "routes.groq",
+      "current": {
+        "providerModelId": "llama-3.3-70b-versatile",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "meta-llama/llama-3.3-70b-instruct",
+      "fact": "routes.novita",
+      "current": {
+        "providerModelId": "meta-llama/llama-3.3-70b-instruct",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "meta-llama/llama-3.3-70b-instruct",
+      "fact": "routes.ovhcloud",
+      "current": {
+        "providerModelId": "Meta-Llama-3_3-70B-Instruct",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "meta-llama/llama-3.3-70b-instruct",
+      "fact": "routes.scaleway",
+      "current": {
+        "providerModelId": "llama-3.3-70b-instruct",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "meta-llama/llama-3.3-70b-instruct",
+      "fact": "routes.together",
+      "current": {
+        "providerModelId": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "meta-llama/llama-3.3-70b-instruct",
+      "fact": "tags",
+      "current": [
+        "transformers",
+        "safetensors",
+        "llama",
+        "text-generation",
+        "facebook",
+        "meta",
+        "pytorch",
+        "llama-3",
+        "conversational",
+        "en",
+        "fr",
+        "it",
+        "pt",
+        "hi",
+        "es",
+        "th",
+        "de",
+        "arxiv:2204.05149",
+        "base_model:meta-llama/Llama-3.1-70B",
+        "base_model:finetune:meta-llama/Llama-3.1-70B",
+        "license:llama3.3",
+        "eval-results",
+        "text-generation-inference",
+        "endpoints_compatible",
+        "region:us"
+      ]
+    },
+    {
+      "modelId": "meta-llama/llama-4-maverick",
+      "fact": "limits.maxOutputTokens",
+      "current": 16384
+    },
+    {
+      "modelId": "meta-llama/llama-4-maverick",
+      "fact": "pricing.outputPerMillionTokens",
+      "previous": 0.696,
+      "current": 0.7999999999999999
+    },
+    {
+      "modelId": "meta-llama/llama-guard-4-12b",
+      "fact": "availability.huggingFaceInference",
+      "current": "available"
+    },
+    {
+      "modelId": "meta-llama/llama-guard-4-12b",
+      "fact": "identity.huggingFaceId",
+      "current": "meta-llama/Llama-Guard-4-12B"
+    },
+    {
+      "modelId": "meta-llama/llama-guard-4-12b",
+      "fact": "languages",
+      "current": [
+        "en"
+      ]
+    },
+    {
+      "modelId": "meta-llama/llama-guard-4-12b",
+      "fact": "library",
+      "current": "transformers"
+    },
+    {
+      "modelId": "meta-llama/llama-guard-4-12b",
+      "fact": "license",
+      "current": "other"
+    },
+    {
+      "modelId": "meta-llama/llama-guard-4-12b",
+      "fact": "openWeights.available",
+      "current": true
+    },
+    {
+      "modelId": "meta-llama/llama-guard-4-12b",
+      "fact": "pipeline",
+      "current": "image-text-to-text"
+    },
+    {
+      "modelId": "meta-llama/llama-guard-4-12b",
+      "fact": "popularity.downloads",
+      "current": 196296
+    },
+    {
+      "modelId": "meta-llama/llama-guard-4-12b",
+      "fact": "popularity.likes",
+      "current": 119
+    },
+    {
+      "modelId": "meta-llama/llama-guard-4-12b",
+      "fact": "routes.deepinfra",
+      "current": {
+        "providerModelId": "meta-llama/Llama-Guard-4-12B",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "meta-llama/llama-guard-4-12b",
+      "fact": "routes.together",
+      "current": {
+        "providerModelId": "meta-llama/Llama-Guard-4-12B",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "meta-llama/llama-guard-4-12b",
+      "fact": "tags",
+      "current": [
+        "transformers",
+        "safetensors",
+        "llama4",
+        "image-text-to-text",
+        "facebook",
+        "meta",
+        "pytorch",
+        "llama",
+        "safety",
+        "conversational",
+        "en",
+        "arxiv:2503.05731",
+        "arxiv:2407.21783",
+        "license:other",
+        "text-generation-inference",
+        "endpoints_compatible",
+        "region:us"
+      ]
+    },
+    {
+      "modelId": "microsoft/phi-4",
+      "fact": "availability.huggingFaceInference",
+      "current": "available"
+    },
+    {
+      "modelId": "microsoft/phi-4",
+      "fact": "identity.huggingFaceId",
+      "current": "microsoft/phi-4"
+    },
+    {
+      "modelId": "microsoft/phi-4",
+      "fact": "languages",
+      "current": [
+        "en"
+      ]
+    },
+    {
+      "modelId": "microsoft/phi-4",
+      "fact": "library",
+      "current": "transformers"
+    },
+    {
+      "modelId": "microsoft/phi-4",
+      "fact": "license",
+      "current": "mit"
+    },
+    {
+      "modelId": "microsoft/phi-4",
+      "fact": "openWeights.available",
+      "current": true
+    },
+    {
+      "modelId": "microsoft/phi-4",
+      "fact": "pipeline",
+      "current": "text-generation"
+    },
+    {
+      "modelId": "microsoft/phi-4",
+      "fact": "popularity.downloads",
+      "current": 690115
+    },
+    {
+      "modelId": "microsoft/phi-4",
+      "fact": "popularity.likes",
+      "current": 2290
+    },
+    {
+      "modelId": "microsoft/phi-4",
+      "fact": "routes.deepinfra",
+      "current": {
+        "providerModelId": "microsoft/phi-4",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "microsoft/phi-4",
+      "fact": "routes.featherless-ai",
+      "current": {
+        "providerModelId": "microsoft/phi-4",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "microsoft/phi-4",
+      "fact": "tags",
+      "current": [
+        "transformers",
+        "safetensors",
+        "phi3",
+        "text-generation",
+        "phi",
+        "nlp",
+        "math",
+        "code",
+        "chat",
+        "conversational",
+        "en",
+        "arxiv:2412.08905",
+        "license:mit",
+        "eval-results",
+        "text-generation-inference",
+        "endpoints_compatible",
+        "deploy:azure",
+        "region:us"
+      ]
+    },
+    {
+      "modelId": "minimax/minimax-m1",
+      "fact": "pricing.inputPerMillionTokens",
+      "previous": 0.55,
+      "current": 0.39999999999999997
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.5",
+      "fact": "popularity.downloads",
+      "previous": 876684,
+      "current": 845956
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.6",
+      "fact": "availability.huggingFaceInference",
+      "current": "available"
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.6",
+      "fact": "identity.huggingFaceId",
+      "current": "moonshotai/Kimi-K2.6"
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.6",
+      "fact": "library",
+      "current": "transformers"
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.6",
+      "fact": "license",
+      "current": "other"
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.6",
+      "fact": "openWeights.available",
+      "current": true
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.6",
+      "fact": "pipeline",
+      "current": "image-text-to-text"
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.6",
+      "fact": "popularity.downloads",
+      "current": 818679
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.6",
+      "fact": "popularity.likes",
+      "current": 1587
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.6",
+      "fact": "pricing.inputPerMillionTokens",
+      "previous": 0.5795,
+      "current": 0.65
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.6",
+      "fact": "pricing.outputPerMillionTokens",
+      "previous": 2.44,
+      "current": 3.41
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.6",
+      "fact": "routes.baseten",
+      "current": {
+        "providerModelId": "moonshotai/Kimi-K2.6",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.6",
+      "fact": "routes.deepinfra",
+      "current": {
+        "providerModelId": "moonshotai/Kimi-K2.6",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.6",
+      "fact": "routes.featherless-ai",
+      "current": {
+        "providerModelId": "moonshotai/Kimi-K2.6",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.6",
+      "fact": "routes.fireworks-ai",
+      "current": {
+        "providerModelId": "accounts/fireworks/models/kimi-k2p6",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.6",
+      "fact": "routes.novita",
+      "current": {
+        "providerModelId": "moonshotai/kimi-k2.6",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.6",
+      "fact": "routes.together",
+      "current": {
+        "providerModelId": "moonshotai/Kimi-K2.6",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.6",
+      "fact": "tags",
+      "current": [
+        "transformers",
+        "safetensors",
+        "kimi_k25",
+        "feature-extraction",
+        "compressed-tensors",
+        "image-text-to-text",
+        "conversational",
+        "custom_code",
+        "arxiv:2602.02276",
+        "license:other",
+        "eval-results",
+        "region:us"
+      ]
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.7-code",
+      "fact": "availability.huggingFaceInference",
+      "current": "available"
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.7-code",
+      "fact": "identity.huggingFaceId",
+      "current": "moonshotai/Kimi-K2.7-Code"
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.7-code",
+      "fact": "library",
+      "current": "transformers"
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.7-code",
+      "fact": "license",
+      "current": "other"
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.7-code",
+      "fact": "openWeights.available",
+      "current": true
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.7-code",
+      "fact": "pipeline",
+      "current": "image-text-to-text"
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.7-code",
+      "fact": "popularity.downloads",
+      "current": 609241
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.7-code",
+      "fact": "popularity.likes",
+      "current": 1360
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.7-code",
+      "fact": "routes.baseten",
+      "current": {
+        "providerModelId": "moonshotai/Kimi-K2.7-Code",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.7-code",
+      "fact": "routes.deepinfra",
+      "current": {
+        "providerModelId": "moonshotai/Kimi-K2.7-Code",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.7-code",
+      "fact": "routes.featherless-ai",
+      "current": {
+        "providerModelId": "moonshotai/Kimi-K2.7-Code",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.7-code",
+      "fact": "routes.fireworks-ai",
+      "current": {
+        "providerModelId": "accounts/fireworks/models/kimi-k2p7-code",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.7-code",
+      "fact": "routes.novita",
+      "current": {
+        "providerModelId": "moonshotai/kimi-k2.7-code",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.7-code",
+      "fact": "routes.together",
+      "current": {
+        "providerModelId": "moonshotai/Kimi-K2.7-Code",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "moonshotai/kimi-k2.7-code",
+      "fact": "tags",
+      "current": [
+        "transformers",
+        "safetensors",
+        "kimi_k25",
+        "feature-extraction",
+        "compressed-tensors",
+        "image-text-to-text",
+        "conversational",
+        "custom_code",
+        "license:other",
+        "eval-results",
+        "region:us"
+      ]
+    },
+    {
+      "modelId": "moonshotai/kimi-k3",
+      "fact": "popularity.downloads",
+      "previous": 1871575,
+      "current": 2100680
+    },
+    {
+      "modelId": "moonshotai/kimi-k3",
+      "fact": "popularity.likes",
+      "previous": 10611,
+      "current": 10730
+    },
+    {
+      "modelId": "openai/gpt-oss-120b",
+      "fact": "popularity.downloads",
+      "previous": 4215190,
+      "current": 4444318
+    },
+    {
+      "modelId": "openai/gpt-oss-120b",
+      "fact": "popularity.likes",
+      "previous": 5102,
+      "current": 5105
+    },
+    {
+      "modelId": "openai/gpt-oss-20b",
+      "fact": "popularity.downloads",
+      "previous": 8104829,
+      "current": 8117114
+    },
+    {
+      "modelId": "openai/gpt-oss-20b",
+      "fact": "popularity.likes",
+      "previous": 4910,
+      "current": 4919
+    },
+    {
+      "modelId": "poolside/laguna-s-2.1",
+      "fact": "availability.huggingFaceInference",
+      "current": "available"
+    },
+    {
+      "modelId": "poolside/laguna-s-2.1",
+      "fact": "identity.huggingFaceId",
+      "current": "poolside/Laguna-S-2.1"
+    },
+    {
+      "modelId": "poolside/laguna-s-2.1",
+      "fact": "library",
+      "current": "transformers"
+    },
+    {
+      "modelId": "poolside/laguna-s-2.1",
+      "fact": "license",
+      "current": "openmdw-1.1"
+    },
+    {
+      "modelId": "poolside/laguna-s-2.1",
+      "fact": "openWeights.available",
+      "current": true
+    },
+    {
+      "modelId": "poolside/laguna-s-2.1",
+      "fact": "pipeline",
+      "current": "text-generation"
+    },
+    {
+      "modelId": "poolside/laguna-s-2.1",
+      "fact": "popularity.downloads",
+      "current": 119909
+    },
+    {
+      "modelId": "poolside/laguna-s-2.1",
+      "fact": "popularity.likes",
+      "current": 969
+    },
+    {
+      "modelId": "poolside/laguna-s-2.1",
+      "fact": "routes.featherless-ai",
+      "current": {
+        "providerModelId": "poolside/Laguna-S-2.1",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "poolside/laguna-s-2.1",
+      "fact": "tags",
+      "current": [
+        "transformers",
+        "safetensors",
+        "laguna",
+        "text-generation",
+        "laguna-s-2.1",
+        "vllm",
+        "conversational",
+        "custom_code",
+        "license:openmdw-1.1",
+        "eval-results",
+        "region:us"
+      ]
+    },
+    {
+      "modelId": "qwen/qwen-plus-2025-07-28:thinking",
+      "fact": "pricing.inputPerMillionTokens",
+      "previous": 0.39999999999999997,
+      "current": 0.26
+    },
+    {
+      "modelId": "qwen/qwen-plus-2025-07-28:thinking",
+      "fact": "pricing.outputPerMillionTokens",
+      "previous": 1.2,
+      "current": 0.78
+    },
+    {
+      "modelId": "qwen/qwen2.5-vl-72b-instruct",
+      "fact": "availability.huggingFaceInference",
+      "current": "available"
+    },
+    {
+      "modelId": "qwen/qwen2.5-vl-72b-instruct",
+      "fact": "identity.huggingFaceId",
+      "current": "Qwen/Qwen2.5-VL-72B-Instruct"
+    },
+    {
+      "modelId": "qwen/qwen2.5-vl-72b-instruct",
+      "fact": "languages",
+      "current": [
+        "en"
+      ]
+    },
+    {
+      "modelId": "qwen/qwen2.5-vl-72b-instruct",
+      "fact": "library",
+      "current": "transformers"
+    },
+    {
+      "modelId": "qwen/qwen2.5-vl-72b-instruct",
+      "fact": "license",
+      "current": "other"
+    },
+    {
+      "modelId": "qwen/qwen2.5-vl-72b-instruct",
+      "fact": "openWeights.available",
+      "current": true
+    },
+    {
+      "modelId": "qwen/qwen2.5-vl-72b-instruct",
+      "fact": "pipeline",
+      "current": "image-text-to-text"
+    },
+    {
+      "modelId": "qwen/qwen2.5-vl-72b-instruct",
+      "fact": "popularity.downloads",
+      "current": 532421
+    },
+    {
+      "modelId": "qwen/qwen2.5-vl-72b-instruct",
+      "fact": "popularity.likes",
+      "current": 648
+    },
+    {
+      "modelId": "qwen/qwen2.5-vl-72b-instruct",
+      "fact": "routes.featherless-ai",
+      "current": {
+        "providerModelId": "Qwen/Qwen2.5-VL-72B-Instruct",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "qwen/qwen2.5-vl-72b-instruct",
+      "fact": "routes.ovhcloud",
+      "current": {
+        "providerModelId": "Qwen2.5-VL-72B-Instruct",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "qwen/qwen2.5-vl-72b-instruct",
+      "fact": "tags",
+      "current": [
+        "transformers",
+        "safetensors",
+        "qwen2_5_vl",
+        "image-text-to-text",
+        "multimodal",
+        "conversational",
+        "en",
+        "arxiv:2309.00071",
+        "arxiv:2409.12191",
+        "arxiv:2308.12966",
+        "license:other",
+        "eval-results",
+        "text-generation-inference",
+        "endpoints_compatible",
+        "deploy:azure",
+        "region:us"
+      ]
+    },
+    {
+      "modelId": "qwen/qwen3-14b",
+      "fact": "popularity.downloads",
+      "previous": 2184103,
+      "current": 2294710
+    },
+    {
+      "modelId": "qwen/qwen3-235b-a22b",
+      "fact": "availability.huggingFaceInference",
+      "current": "available"
+    },
+    {
+      "modelId": "qwen/qwen3-235b-a22b",
+      "fact": "identity.huggingFaceId",
+      "current": "Qwen/Qwen3-235B-A22B"
+    },
+    {
+      "modelId": "qwen/qwen3-235b-a22b",
+      "fact": "library",
+      "current": "transformers"
+    },
+    {
+      "modelId": "qwen/qwen3-235b-a22b",
+      "fact": "license",
+      "current": "apache-2.0"
+    },
+    {
+      "modelId": "qwen/qwen3-235b-a22b",
+      "fact": "openWeights.available",
+      "current": true
+    },
+    {
+      "modelId": "qwen/qwen3-235b-a22b",
+      "fact": "pipeline",
+      "current": "text-generation"
+    },
+    {
+      "modelId": "qwen/qwen3-235b-a22b",
+      "fact": "popularity.downloads",
+      "current": 525827
+    },
+    {
+      "modelId": "qwen/qwen3-235b-a22b",
+      "fact": "popularity.likes",
+      "current": 1108
+    },
+    {
+      "modelId": "qwen/qwen3-235b-a22b",
+      "fact": "routes.featherless-ai",
+      "current": {
+        "providerModelId": "Qwen/Qwen3-235B-A22B",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "qwen/qwen3-235b-a22b",
+      "fact": "routes.novita",
+      "current": {
+        "providerModelId": "qwen/qwen3-235b-a22b-fp8",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "qwen/qwen3-235b-a22b",
+      "fact": "routes.nscale",
+      "current": {
+        "providerModelId": "Qwen/Qwen3-235B-A22B",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "qwen/qwen3-235b-a22b",
+      "fact": "tags",
+      "current": [
+        "transformers",
+        "safetensors",
+        "qwen3_moe",
+        "text-generation",
+        "conversational",
+        "arxiv:2309.00071",
+        "arxiv:2505.09388",
+        "license:apache-2.0",
+        "eval-results",
+        "endpoints_compatible",
+        "region:us"
+      ]
+    },
+    {
+      "modelId": "qwen/qwen3-30b-a3b-instruct-2507",
+      "fact": "popularity.downloads",
+      "previous": 1879134,
+      "current": 1944107
+    },
+    {
+      "modelId": "qwen/qwen3-30b-a3b-instruct-2507",
+      "fact": "popularity.likes",
+      "previous": 826,
+      "current": 827
+    },
+    {
+      "modelId": "qwen/qwen3-30b-a3b",
+      "fact": "limits.maxOutputTokens",
+      "previous": 16384,
+      "current": 8192
+    },
+    {
+      "modelId": "qwen/qwen3-30b-a3b",
+      "fact": "popularity.downloads",
+      "previous": 2582402,
+      "current": 2676099
+    },
+    {
+      "modelId": "qwen/qwen3-30b-a3b",
+      "fact": "popularity.likes",
+      "previous": 919,
+      "current": 921
+    },
+    {
+      "modelId": "qwen/qwen3-30b-a3b",
+      "fact": "pricing.inputPerMillionTokens",
+      "previous": 0.12,
+      "current": 0.13
+    },
+    {
+      "modelId": "qwen/qwen3-30b-a3b",
+      "fact": "pricing.outputPerMillionTokens",
+      "previous": 0.5,
+      "current": 0.52
+    },
+    {
+      "modelId": "qwen/qwen3-32b",
+      "fact": "popularity.downloads",
+      "previous": 7751649,
+      "current": 7940971
+    },
+    {
+      "modelId": "qwen/qwen3-8b",
+      "fact": "popularity.downloads",
+      "previous": 16086018,
+      "current": 16415367
+    },
+    {
+      "modelId": "qwen/qwen3-8b",
+      "fact": "popularity.likes",
+      "previous": 1294,
+      "current": 1297
+    },
+    {
+      "modelId": "qwen/qwen3-coder-30b-a3b-instruct",
+      "fact": "popularity.downloads",
+      "previous": 1198501,
+      "current": 1221946
+    },
+    {
+      "modelId": "qwen/qwen3-coder-30b-a3b-instruct",
+      "fact": "popularity.likes",
+      "previous": 1199,
+      "current": 1203
+    },
+    {
+      "modelId": "qwen/qwen3-coder-next",
+      "fact": "availability.huggingFaceInference",
+      "current": "available"
+    },
+    {
+      "modelId": "qwen/qwen3-coder-next",
+      "fact": "identity.huggingFaceId",
+      "current": "Qwen/Qwen3-Coder-Next"
+    },
+    {
+      "modelId": "qwen/qwen3-coder-next",
+      "fact": "library",
+      "current": "transformers"
+    },
+    {
+      "modelId": "qwen/qwen3-coder-next",
+      "fact": "license",
+      "current": "apache-2.0"
+    },
+    {
+      "modelId": "qwen/qwen3-coder-next",
+      "fact": "openWeights.available",
+      "current": true
+    },
+    {
+      "modelId": "qwen/qwen3-coder-next",
+      "fact": "pipeline",
+      "current": "text-generation"
+    },
+    {
+      "modelId": "qwen/qwen3-coder-next",
+      "fact": "popularity.downloads",
+      "current": 530639
+    },
+    {
+      "modelId": "qwen/qwen3-coder-next",
+      "fact": "popularity.likes",
+      "current": 1595
+    },
+    {
+      "modelId": "qwen/qwen3-coder-next",
+      "fact": "routes.featherless-ai",
+      "current": {
+        "providerModelId": "Qwen/Qwen3-Coder-Next",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "qwen/qwen3-coder-next",
+      "fact": "routes.novita",
+      "current": {
+        "providerModelId": "qwen/qwen3-coder-next",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "qwen/qwen3-coder-next",
+      "fact": "tags",
+      "current": [
+        "transformers",
+        "safetensors",
+        "qwen3_next",
+        "text-generation",
+        "conversational",
+        "license:apache-2.0",
+        "eval-results",
+        "endpoints_compatible",
+        "deploy:sagemaker",
+        "deploy:azure",
+        "region:us"
+      ]
+    },
+    {
+      "modelId": "qwen/qwen3-next-80b-a3b-instruct",
+      "fact": "availability.huggingFaceInference",
+      "current": "available"
+    },
+    {
+      "modelId": "qwen/qwen3-next-80b-a3b-instruct",
+      "fact": "identity.huggingFaceId",
+      "current": "Qwen/Qwen3-Next-80B-A3B-Instruct"
+    },
+    {
+      "modelId": "qwen/qwen3-next-80b-a3b-instruct",
+      "fact": "library",
+      "current": "transformers"
+    },
+    {
+      "modelId": "qwen/qwen3-next-80b-a3b-instruct",
+      "fact": "license",
+      "current": "apache-2.0"
+    },
+    {
+      "modelId": "qwen/qwen3-next-80b-a3b-instruct",
+      "fact": "openWeights.available",
+      "current": true
+    },
+    {
+      "modelId": "qwen/qwen3-next-80b-a3b-instruct",
+      "fact": "pipeline",
+      "current": "text-generation"
+    },
+    {
+      "modelId": "qwen/qwen3-next-80b-a3b-instruct",
+      "fact": "popularity.downloads",
+      "current": 278391
+    },
+    {
+      "modelId": "qwen/qwen3-next-80b-a3b-instruct",
+      "fact": "popularity.likes",
+      "current": 1043
+    },
+    {
+      "modelId": "qwen/qwen3-next-80b-a3b-instruct",
+      "fact": "routes.deepinfra",
+      "current": {
+        "providerModelId": "Qwen/Qwen3-Next-80B-A3B-Instruct",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "qwen/qwen3-next-80b-a3b-instruct",
+      "fact": "routes.featherless-ai",
+      "current": {
+        "providerModelId": "Qwen/Qwen3-Next-80B-A3B-Instruct",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "qwen/qwen3-next-80b-a3b-instruct",
+      "fact": "routes.novita",
+      "current": {
+        "providerModelId": "qwen/qwen3-next-80b-a3b-instruct",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "qwen/qwen3-next-80b-a3b-instruct",
+      "fact": "tags",
+      "current": [
+        "transformers",
+        "safetensors",
+        "qwen3_next",
+        "text-generation",
+        "conversational",
+        "arxiv:2309.00071",
+        "arxiv:2404.06654",
+        "arxiv:2505.09388",
+        "arxiv:2501.15383",
+        "license:apache-2.0",
+        "eval-results",
+        "endpoints_compatible",
+        "deploy:sagemaker",
+        "deploy:azure",
+        "region:us"
+      ]
+    },
+    {
+      "modelId": "qwen/qwen3-vl-235b-a22b-instruct",
+      "fact": "popularity.downloads",
+      "previous": 1619634,
+      "current": 1641575
+    },
+    {
+      "modelId": "qwen/qwen3-vl-235b-a22b-instruct",
+      "fact": "popularity.likes",
+      "previous": 414,
+      "current": 415
+    },
+    {
+      "modelId": "qwen/qwen3-vl-30b-a3b-instruct",
+      "fact": "availability.huggingFaceInference",
+      "current": "available"
+    },
+    {
+      "modelId": "qwen/qwen3-vl-30b-a3b-instruct",
+      "fact": "identity.huggingFaceId",
+      "current": "Qwen/Qwen3-VL-30B-A3B-Instruct"
+    },
+    {
+      "modelId": "qwen/qwen3-vl-30b-a3b-instruct",
+      "fact": "library",
+      "current": "transformers"
+    },
+    {
+      "modelId": "qwen/qwen3-vl-30b-a3b-instruct",
+      "fact": "license",
+      "current": "apache-2.0"
+    },
+    {
+      "modelId": "qwen/qwen3-vl-30b-a3b-instruct",
+      "fact": "limits.maxOutputTokens",
+      "previous": 16384,
+      "current": 32768
+    },
+    {
+      "modelId": "qwen/qwen3-vl-30b-a3b-instruct",
+      "fact": "openWeights.available",
+      "current": true
+    },
+    {
+      "modelId": "qwen/qwen3-vl-30b-a3b-instruct",
+      "fact": "pipeline",
+      "current": "image-text-to-text"
+    },
+    {
+      "modelId": "qwen/qwen3-vl-30b-a3b-instruct",
+      "fact": "popularity.downloads",
+      "current": 400573
+    },
+    {
+      "modelId": "qwen/qwen3-vl-30b-a3b-instruct",
+      "fact": "popularity.likes",
+      "current": 591
+    },
+    {
+      "modelId": "qwen/qwen3-vl-30b-a3b-instruct",
+      "fact": "pricing.inputPerMillionTokens",
+      "previous": 0.15,
+      "current": 0.13
+    },
+    {
+      "modelId": "qwen/qwen3-vl-30b-a3b-instruct",
+      "fact": "pricing.outputPerMillionTokens",
+      "previous": 0.6,
+      "current": 0.52
+    },
+    {
+      "modelId": "qwen/qwen3-vl-30b-a3b-instruct",
+      "fact": "routes.deepinfra",
+      "current": {
+        "providerModelId": "Qwen/Qwen3-VL-30B-A3B-Instruct",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "qwen/qwen3-vl-30b-a3b-instruct",
+      "fact": "routes.featherless-ai",
+      "current": {
+        "providerModelId": "Qwen/Qwen3-VL-30B-A3B-Instruct",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "qwen/qwen3-vl-30b-a3b-instruct",
+      "fact": "routes.novita",
+      "current": {
+        "providerModelId": "qwen/qwen3-vl-30b-a3b-instruct",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "qwen/qwen3-vl-30b-a3b-instruct",
+      "fact": "tags",
+      "current": [
+        "transformers",
+        "safetensors",
+        "qwen3_vl_moe",
+        "image-text-to-text",
+        "conversational",
+        "arxiv:2505.09388",
+        "arxiv:2502.13923",
+        "arxiv:2409.12191",
+        "arxiv:2308.12966",
+        "license:apache-2.0",
+        "endpoints_compatible",
+        "deploy:azure",
+        "region:us"
+      ]
+    },
+    {
+      "modelId": "qwen/qwen3-vl-32b-instruct",
+      "fact": "popularity.downloads",
+      "previous": 2734925,
+      "current": 2552423
+    },
+    {
+      "modelId": "qwen/qwen3-vl-32b-instruct",
+      "fact": "popularity.likes",
+      "previous": 226,
+      "current": 230
+    },
+    {
+      "modelId": "qwen/qwen3-vl-8b-instruct",
+      "fact": "popularity.downloads",
+      "previous": 4752179,
+      "current": 5033841
+    },
+    {
+      "modelId": "qwen/qwen3-vl-8b-instruct",
+      "fact": "popularity.likes",
+      "previous": 1044,
+      "current": 1047
+    },
+    {
+      "modelId": "qwen/qwen3.5-122b-a10b",
+      "fact": "popularity.downloads",
+      "previous": 2157343,
+      "current": 2220760
+    },
+    {
+      "modelId": "qwen/qwen3.5-122b-a10b",
+      "fact": "popularity.likes",
+      "previous": 605,
+      "current": 606
+    },
+    {
+      "modelId": "qwen/qwen3.5-27b",
+      "fact": "popularity.downloads",
+      "previous": 2667254,
+      "current": 2794943
+    },
+    {
+      "modelId": "qwen/qwen3.5-27b",
+      "fact": "popularity.likes",
+      "previous": 1029,
+      "current": 1028
+    },
+    {
+      "modelId": "qwen/qwen3.5-35b-a3b",
+      "fact": "limits.maxOutputTokens",
+      "previous": 262144,
+      "current": 65536
+    },
+    {
+      "modelId": "qwen/qwen3.5-35b-a3b",
+      "fact": "popularity.downloads",
+      "previous": 2303371,
+      "current": 2408855
+    },
+    {
+      "modelId": "qwen/qwen3.5-35b-a3b",
+      "fact": "popularity.likes",
+      "previous": 1486,
+      "current": 1488
+    },
+    {
+      "modelId": "qwen/qwen3.5-35b-a3b",
+      "fact": "pricing.inputPerMillionTokens",
+      "previous": 0.25,
+      "current": 0.22499999999999998
+    },
+    {
+      "modelId": "qwen/qwen3.5-35b-a3b",
+      "fact": "pricing.outputPerMillionTokens",
+      "previous": 1.25,
+      "current": 1.7999999999999998
+    },
+    {
+      "modelId": "qwen/qwen3.5-397b-a17b",
+      "fact": "availability.huggingFaceInference",
+      "current": "available"
+    },
+    {
+      "modelId": "qwen/qwen3.5-397b-a17b",
+      "fact": "identity.huggingFaceId",
+      "current": "Qwen/Qwen3.5-397B-A17B"
+    },
+    {
+      "modelId": "qwen/qwen3.5-397b-a17b",
+      "fact": "library",
+      "current": "transformers"
+    },
+    {
+      "modelId": "qwen/qwen3.5-397b-a17b",
+      "fact": "license",
+      "current": "apache-2.0"
+    },
+    {
+      "modelId": "qwen/qwen3.5-397b-a17b",
+      "fact": "limits.maxOutputTokens",
+      "previous": 262144,
+      "current": 65536
+    },
+    {
+      "modelId": "qwen/qwen3.5-397b-a17b",
+      "fact": "openWeights.available",
+      "current": true
+    },
+    {
+      "modelId": "qwen/qwen3.5-397b-a17b",
+      "fact": "pipeline",
+      "current": "image-text-to-text"
+    },
+    {
+      "modelId": "qwen/qwen3.5-397b-a17b",
+      "fact": "popularity.downloads",
+      "current": 306650
+    },
+    {
+      "modelId": "qwen/qwen3.5-397b-a17b",
+      "fact": "popularity.likes",
+      "current": 1553
+    },
+    {
+      "modelId": "qwen/qwen3.5-397b-a17b",
+      "fact": "pricing.inputPerMillionTokens",
+      "previous": 0.5,
+      "current": 0.39
+    },
+    {
+      "modelId": "qwen/qwen3.5-397b-a17b",
+      "fact": "pricing.outputPerMillionTokens",
+      "previous": 3.5999999999999996,
+      "current": 2.34
+    },
+    {
+      "modelId": "qwen/qwen3.5-397b-a17b",
+      "fact": "routes.deepinfra",
+      "current": {
+        "providerModelId": "Qwen/Qwen3.5-397B-A17B",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "qwen/qwen3.5-397b-a17b",
+      "fact": "routes.featherless-ai",
+      "current": {
+        "providerModelId": "Qwen/Qwen3.5-397B-A17B",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "qwen/qwen3.5-397b-a17b",
+      "fact": "routes.novita",
+      "current": {
+        "providerModelId": "qwen/qwen3.5-397b-a17b",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "qwen/qwen3.5-397b-a17b",
+      "fact": "routes.ovhcloud",
+      "current": {
+        "providerModelId": "Qwen3.5-397B-A17B",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "qwen/qwen3.5-397b-a17b",
+      "fact": "routes.scaleway",
+      "current": {
+        "providerModelId": "qwen3.5-397b-a17b",
+        "status": "live",
+        "task": "conversational"
+      }
+    },
+    {
+      "modelId": "qwen/qwen3.5-397b-a17b",
+      "fact": "tags",
+      "current": [
+        "transformers",
+        "safetensors",
+        "qwen3_5_moe",
+        "image-text-to-text",
+        "conversational",
+        "license:apache-2.0",
+        "eval-results",
+        "endpoints_compatible",
+        "deploy:azure",
+        "region:us"
+      ]
+    },
+    {
+      "modelId": "qwen/qwen3.5-9b",
+      "fact": "popularity.downloads",
+      "previous": 13583375,
+      "current": 14206979
+    },
+    {
+      "modelId": "qwen/qwen3.5-9b",
+      "fact": "popularity.likes",
+      "previous": 1808,
+      "current": 1823
+    },
+    {
+      "modelId": "qwen/qwen3.6-27b",
+      "fact": "popularity.downloads",
+      "previous": 6830615,
+      "current": 7050183
+    },
+    {
+      "modelId": "qwen/qwen3.6-27b",
+      "fact": "popularity.likes",
+      "previous": 2252,
+      "current": 2264
+    },
+    {
+      "modelId": "qwen/qwen3.6-35b-a3b",
+      "fact": "popularity.downloads",
+      "previous": 5609980,
+      "current": 5873711
+    },
+    {
+      "modelId": "qwen/qwen3.6-35b-a3b",
+      "fact": "popularity.likes",
+      "previous": 2675,
+      "current": 2691
+    },
+    {
+      "modelId": "qwen/qwen3.8-2.4t-a95b",
+      "fact": "limits.contextWindow",
+      "previous": 1000000,
+      "current": 1048576
+    },
+    {
+      "modelId": "tencent/hy3-preview",
+      "fact": "pricing.inputPerMillionTokens",
+      "previous": 0.063,
+      "current": 0.18
+    },
+    {
+      "modelId": "tencent/hy3-preview",
+      "fact": "pricing.outputPerMillionTokens",
+      "previous": 0.21,
+      "current": 0.6
+    },
+    {
+      "modelId": "z-ai/glm-4.6",
+      "fact": "pricing.inputPerMillionTokens",
+      "previous": 0.5,
+      "current": 0.55
+    },
+    {
+      "modelId": "z-ai/glm-4.6",
+      "fact": "pricing.outputPerMillionTokens",
+      "previous": 2,
+      "current": 2.2
+    },
+    {
+      "modelId": "z-ai/glm-5",
+      "fact": "limits.maxOutputTokens",
+      "previous": 131072,
+      "current": 128000
+    },
+    {
+      "modelId": "z-ai/glm-5",
+      "fact": "pricing.inputPerMillionTokens",
+      "previous": 0.95,
+      "current": 0.6
+    },
+    {
+      "modelId": "z-ai/glm-5",
+      "fact": "pricing.outputPerMillionTokens",
+      "previous": 2.5500000000000003,
+      "current": 1.92
+    },
+    {
+      "modelId": "z-ai/glm-5.1",
+      "fact": "limits.maxOutputTokens",
+      "previous": 131072,
+      "current": 128000
+    },
+    {
+      "modelId": "z-ai/glm-5.1",
+      "fact": "pricing.inputPerMillionTokens",
+      "previous": 0.952,
+      "current": 0.966
+    },
+    {
+      "modelId": "z-ai/glm-5.1",
+      "fact": "pricing.outputPerMillionTokens",
+      "previous": 2.992,
+      "current": 3.036
     }
   ]
 }
