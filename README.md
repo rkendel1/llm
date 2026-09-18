@@ -138,3 +138,16 @@ The fresh-install test packs the project, installs the tarball in an empty consu
 ## License
 
 MIT
+## Local + Cloud Ollama
+
+Ollama local execution uses `http://localhost:11434` and requires no credential:
+
+```sh
+ollama pull qwen3-coder
+llm doctor --deep
+llm run "Explain this code"
+```
+
+Use `model: "local"` to require local execution; it does not select Ollama specifically.
+Ollama Cloud routes use `OLLAMA_API_KEY` (or `llm setup`) and are metered separately from
+local inference. Cloud inference is not assumed to be free.

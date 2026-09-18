@@ -75,6 +75,24 @@ export function filterByEligibility(
     }
 
     // Check exclusions (hard constraint)
+    if (policy.allowedProviders && !policy.allowedProviders.includes(model.provider)) {
+      rejectionReasons.push(`provider not allowed: ${model.provider}`);
+    }
+    if (policy.allowedExecutions && model.execution && !policy.allowedExecutions.includes(model.execution)) {
+      rejectionReasons.push(`execution not allowed: ${model.execution}`);
+    }
+    if (policy.allowedExecutions?.includes("local") && !policy.allowedExecutions.includes("cloud") && model.execution === "cloud") {
+      rejectionReasons.push("cloud execution forbidden");
+    }
+    if (policy.allowCloudFallback === false && model.execution === "cloud") {
+      rejectionReasons.push("cloud fallback forbidden");
+    }
+    if (policy.maxCostPerRequest !== undefined) {
+      const inputCost = model.pricing?.inputPerMillion;
+      if (inputCost === undefined || inputCost > policy.maxCostPerRequest) {
+        rejectionReasons.push(`request cost unknown or exceeds limit: $${inputCost ?? "unknown"} > $${policy.maxCostPerRequest}`);
+      }
+    }
     if (policy.exclude?.providers?.includes(model.provider)) {
       rejectionReasons.push(`provider excluded: ${model.provider}`);
     }

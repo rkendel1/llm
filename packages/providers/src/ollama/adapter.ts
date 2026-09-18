@@ -5,28 +5,62 @@ import { createCapabilities } from "../capabilities.js";
 import { ProviderError } from "../types.js";
 import { contentToText } from "../content.js";
 
+export type OllamaExecution =
+  | { kind: "local"; baseUrl: string }
+  | { kind: "cloud"; baseUrl: string };
+
+export interface OllamaAdapterOptions {
+  localBaseUrl?: string;
+  cloudBaseUrl?: string;
+  apiKey?: string;
+}
+
 export class OllamaAdapter implements LLMProvider {
   id = "ollama";
   priority = 100;
-  private client: OllamaClient;
-  private models: Set<string> = new Set();
+  private clients: Record<"local" | "cloud", OllamaClient>;
+  private readonly options: Required<Pick<OllamaAdapterOptions, "localBaseUrl" | "cloudBaseUrl">> & Pick<OllamaAdapterOptions, "apiKey">;
+  private models: Record<"local" | "cloud", Set<string>> = { local: new Set(), cloud: new Set() };
 
-  constructor(apiBase?: string) {
-    this.client = new OllamaClient(apiBase);
+  constructor(options: string | OllamaAdapterOptions = {}) {
+    const normalized = typeof options === "string" ? { localBaseUrl: options } : options;
+    this.options = {
+      localBaseUrl: normalized.localBaseUrl ?? process.env.OLLAMA_HOST ?? "http://localhost:11434",
+      cloudBaseUrl: normalized.cloudBaseUrl ?? "https://ollama.com",
+      apiKey: normalized.apiKey,
+    };
+    this.clients = {
+      local: new OllamaClient(this.options.localBaseUrl),
+      cloud: new OllamaClient(this.options.cloudBaseUrl, this.options.apiKey),
+    };
+  }
+
+  resolveExecution(model?: string): OllamaExecution {
+    const cloud = Boolean(model?.endsWith("-cloud")) || (Boolean(this.options.apiKey) && model === "cloud");
+    return cloud
+      ? { kind: "cloud", baseUrl: this.options.cloudBaseUrl }
+      : { kind: "local", baseUrl: this.options.localBaseUrl };
+  }
+
+  private clientFor(model?: string): OllamaClient {
+    const execution = this.resolveExecution(model);
+    if (execution.kind === "cloud" && !this.options.apiKey) throw new ProviderError("CREDENTIAL_MISSING", "Ollama Cloud requires OLLAMA_API_KEY", "ollama", false);
+    return this.clients[execution.kind];
   }
 
   async supports(request: LLMRequest): Promise<boolean> {
-    if (!this.models.size) {
+    const execution = this.resolveExecution(typeof request.model === "string" ? request.model : undefined);
+    if (!this.models[execution.kind].size) {
       try {
-        const tags = await this.client.getTags();
-        this.models = new Set(tags.models.map((m) => m.name));
+        const tags = await this.clientFor(typeof request.model === "string" ? request.model : undefined).getTags();
+        this.models[execution.kind] = new Set(tags.models.map((m) => m.name));
       } catch {
         return false;
       }
     }
 
     const model = typeof request.model === "string" ? request.model : "llama2";
-    return this.models.has(model);
+    return this.models[execution.kind].has(model);
   }
 
   async generate(request: LLMRequest): Promise<ProviderResponse> {
@@ -37,7 +71,7 @@ export class OllamaAdapter implements LLMProvider {
         content: string;
       }>;
 
-      return await this.client.generate(model, messages);
+      return await this.clientFor(model).generate(model, messages);
     } catch (error) {
       throw new ProviderError(
         "GENERATION_FAILED",
@@ -58,7 +92,7 @@ export class OllamaAdapter implements LLMProvider {
 
       let buffer = "";
 
-      for await (const chunk of this.client.stream(model, messages)) {
+      for await (const chunk of this.clientFor(model).stream(model, messages)) {
         if (chunk.response) {
           buffer += chunk.response;
           yield {
@@ -93,6 +127,6 @@ export class OllamaAdapter implements LLMProvider {
   }
 }
 
-export function createOllamaAdapter(apiBase?: string): OllamaAdapter {
-  return new OllamaAdapter(apiBase);
+export function createOllamaAdapter(options?: string | OllamaAdapterOptions): OllamaAdapter {
+  return new OllamaAdapter(options);
 }

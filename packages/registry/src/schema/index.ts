@@ -63,6 +63,7 @@ export interface AIModelRoute {
   pricing?: AIModelPricing;
   availability?: AIModelAvailability;
   metadata?: Record<string, unknown>;
+  execution?: "local" | "cloud";
 }
 
 export interface AIModelProvenance {
@@ -182,6 +183,7 @@ export interface AIModel {
   facts: AIModelFacts;
   intelligence?: AIModelIntelligence;
   metadata?: Record<string, unknown>;
+  execution?: "local" | "cloud";
 }
 
 export interface RawModelRecord {

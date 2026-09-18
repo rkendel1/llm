@@ -11,7 +11,7 @@ import {
 } from "./types.js";
 import { listProviders, providersWereExplicitlyCleared } from "./providerRegistry.js";
 import { setupProvider } from "./defaultProvider.js";
-import { ensureModelRegistryCurrent, getCanonicalModels, getModelCatalog } from "./modelRegistry.js";
+import { ensureModelRegistryCurrent, getCanonicalModels, getModelCatalog, getCanonicalRegistrySnapshot } from "./modelRegistry.js";
 import { DeterministicRouter, IntelligentRouter, classifyExecutionFailure, createRoutingObservation, type CandidateEvaluation, type RoutingPolicy, withRequestTrace, recordAttempt, updateTraceRoute, setTraceUsage, setTraceCost, getCurrentRequestTrace } from "../packages/router/src/index.js";
 import { runtimeObservationStore } from "../packages/registry/src/observations/index.js";
 import { withTimeoutAndAbort } from "./timeout.js";
@@ -328,6 +328,15 @@ export async function invokeLLM<TStructured = unknown>(
       if (response.model) {
         routing.selectedModel = response.model;
       }
+      const execution = resolvedModel?.execution ?? (provider.id === "ollama" ? (response.model.endsWith("-cloud") ? "cloud" : "local") : undefined);
+      if (execution) routing.execution = execution;
+      const registrySnapshot = getCanonicalRegistrySnapshot();
+      const registryVersion = registrySnapshot?.version;
+      const registryChecksum = registrySnapshot
+        ? createHash("sha256").update(JSON.stringify(registrySnapshot)).digest("hex")
+        : undefined;
+      routing.registryVersion = registryVersion;
+      routing.registryChecksum = registryChecksum;
 
       // Track usage and cost
       if (response.usage) {
@@ -351,6 +360,13 @@ export async function invokeLLM<TStructured = unknown>(
         messages: allMessages,
         structured,
         routing,
+        provenance: {
+          provider: provider.id,
+          modelId: response.model,
+          execution,
+          registryVersion,
+          registryChecksum,
+        },
       };
     } catch (error) {
       trace.outcome = "failure";

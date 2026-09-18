@@ -87,6 +87,7 @@ export class SetupCommand extends Command {
           "anthropic",
           "google",
           "openrouter",
+          "ollama",
           "Finish without adding another key",
         ]);
         if (provider.startsWith("Finish")) break;

@@ -42,6 +42,9 @@ export type LLMRoutingDecision = {
     model: string;
     reason: string;
   }>;
+  execution?: "local" | "cloud";
+  registryVersion?: string;
+  registryChecksum?: string;
 };
 export interface CandidateExplanation { modelId: string; routeId: string; provider: string; compatibility: "compatible" | "uncertain" | "incompatible"; confidence: number; freshness: number; health: { status: "healthy" | "degraded" | "unavailable" | "unknown"; sampleCount: number; successRate?: number; averageLatencyMs?: number }; cost: { known: boolean; inputPerMillionTokens?: number; freeTier: boolean }; score: number; scoreBreakdown: { capability: number; evidence: number; freshness: number; health: number; availability: number; cost: number; policy: number; total: number }; reasons: string[] }
 export interface RoutingExplanation { intent: string; request: { intent: string; requirements: string[] }; selected: CandidateExplanation; candidates: CandidateExplanation[]; fallback: CandidateExplanation[]; reasons: string[]; registry: { version: string; checksum: string }; decision: { fingerprint: string; scoreVersion: string; candidateOrder: string[] }; execution?: { attempts: Array<{ provider: string; model: string; status: string; latencyMs?: number }> } }
@@ -55,6 +58,13 @@ export type LLMResponse<TStructured = unknown> = {
   toolCalls: LLMToolCall[];
   structured?: TStructured;
   routing: LLMRoutingDecision;
+  provenance?: {
+    provider: string;
+    modelId: string;
+    execution?: "local" | "cloud";
+    registryVersion?: string;
+    registryChecksum?: string;
+  };
 };
 
 export type LLMStreamChunk = {

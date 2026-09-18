@@ -27,6 +27,12 @@ export function normalizePolicy(policy?: RoutingPolicy | RoutingMode): RoutingPo
     staleMetadataPenalty: policy.staleMetadataPenalty,
     conflictPenalty: policy.conflictPenalty,
     inferredEvidencePenalty: policy.inferredEvidencePenalty,
+    allowedProviders: policy.allowedProviders,
+    allowedExecutions: policy.allowedExecutions,
+    maxCostPerRequest: policy.maxCostPerRequest,
+    monthlyBudget: policy.monthlyBudget,
+    preferLocal: policy.preferLocal,
+    allowCloudFallback: policy.allowCloudFallback ?? true,
   };
 }
 

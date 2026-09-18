@@ -34,6 +34,12 @@ export interface RoutingPolicy {
   staleMetadataPenalty?: number;
   conflictPenalty?: number;
   inferredEvidencePenalty?: number;
+  allowedProviders?: string[];
+  allowedExecutions?: Array<"local" | "cloud">;
+  maxCostPerRequest?: number;
+  monthlyBudget?: number;
+  preferLocal?: boolean;
+  allowCloudFallback?: boolean;
 }
 
 export interface FallbackOptions {

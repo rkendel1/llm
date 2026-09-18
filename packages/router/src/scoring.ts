@@ -76,7 +76,7 @@ export function scoreCandidate(
   // Local preference score (5 points max)
   if (policy.mode === "local" && candidate.availability?.local) {
     breakdown.localPreference = LOCAL_PREFERENCE_WEIGHT;
-  } else if (candidate.availability?.local) {
+  } else if (candidate.availability?.local && policy.preferLocal !== false) {
     breakdown.localPreference = LOCAL_PREFERENCE_WEIGHT * 0.5; // Small bonus for local availability
   }
 

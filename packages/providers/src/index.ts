@@ -58,6 +58,7 @@ export { OpenRouterAdapter, createOpenRouterAdapter } from "./openrouter/index.j
 // Registries
 export {
   getOllamaModels,
+  getOllamaCloudModels,
   discoverOllamaModels,
   ollamaRegistryAdapter,
 } from "./ollama/registry.js";

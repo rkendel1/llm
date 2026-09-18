@@ -60,5 +60,6 @@ export function normalizeModel(
       lastVerifiedAt: now.toISOString(),
     },
     metadata: model.metadata,
+    execution: model.execution,
   };
 }
