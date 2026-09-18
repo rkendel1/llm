@@ -27,6 +27,7 @@ export async function getOllamaModels(apiBase: string = "http://localhost:11434"
           currency: "USD" as const,
         },
         availability: { local: true, online: false, status: "available" as const },
+        execution: "local" as const,
         lifecycle: {
           status: "stable" as const,
           lastVerifiedAt: new Date().toISOString(),
@@ -36,6 +37,27 @@ export async function getOllamaModels(apiBase: string = "http://localhost:11434"
   } catch {
     return [];
   }
+
+}
+
+export function getOllamaCloudModels(): ModelDefinition[] {
+  const now = new Date().toISOString();
+  return [
+    ["qwen3-coder:480b-cloud", 32768, 0.5, 1.5],
+    ["gpt-oss:120b-cloud", 131072, 0.15, 0.6],
+    ["deepseek-v3.1:671b-cloud", 131072, 0.5, 1.5],
+  ].map(([id, context, inputPerMillion, outputPerMillion]) => ({
+    id: id as string,
+    provider: "ollama",
+    name: id as string,
+    description: "Ollama Cloud model",
+    capabilities: { tools: false, vision: false, audio: false, reasoning: true, structuredOutput: false, embeddings: false },
+    context: { input: context as number },
+    pricing: { inputPerMillion: inputPerMillion as number, outputPerMillion: outputPerMillion as number, currency: "USD" as const },
+    availability: { local: false, online: true },
+    lifecycle: { status: "stable" as const, lastVerifiedAt: now },
+    execution: "cloud" as const,
+  }));
 }
 
 export async function discoverOllamaModels(): Promise<ModelDefinition[]> {
@@ -53,7 +75,7 @@ export const ollamaRegistryAdapter: RegistryProviderAdapter = {
   id: "ollama",
   discover: async (context: ProviderDiscoveryContext) => {
     const models = await discoverOllamaModels();
-    return models.map((model) => ({
+    return [...models, ...getOllamaCloudModels()].map((model) => ({
       ...model,
       lifecycle: { status: "stable" as const },
     }));

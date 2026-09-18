@@ -1,8 +1,8 @@
 import { CredentialStore } from "../packages/secrets/src/index.js";
-export type CredentialProvider = "openai" | "anthropic" | "google" | "openrouter";
+export type CredentialProvider = "openai" | "anthropic" | "google" | "openrouter" | "ollama";
 export interface ResolvedCredential { provider: CredentialProvider; source: "explicit" | "environment" | "vault" | "unavailable"; available: boolean; value?: string }
 export type ExplicitCredentials = Partial<Record<CredentialProvider, string>>;
-const ENV: Record<CredentialProvider, string> = { openai: "OPENAI_API_KEY", anthropic: "ANTHROPIC_API_KEY", google: "GOOGLE_API_KEY", openrouter: "OPENROUTER_API_KEY" };
+const ENV: Record<CredentialProvider, string> = { openai: "OPENAI_API_KEY", anthropic: "ANTHROPIC_API_KEY", google: "GOOGLE_API_KEY", openrouter: "OPENROUTER_API_KEY", ollama: "OLLAMA_API_KEY" };
 const sessionStore = new CredentialStore();
 let explicitSession: ExplicitCredentials = {};
 export async function unlockCredentialSession(password: string): Promise<void> { await sessionStore.unlockVault(password); }

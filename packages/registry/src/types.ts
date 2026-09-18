@@ -68,6 +68,7 @@ export interface ModelDefinition {
   availability?: ModelAvailability;
   lifecycle: ModelLifecycle;
   metadata?: Record<string, unknown>;
+  execution?: "local" | "cloud";
 }
 
 export interface RegistryProviderSnapshot {
@@ -110,6 +111,7 @@ export interface NormalizedProviderModel {
   availability?: Partial<ModelAvailability>;
   lifecycle?: Partial<Omit<ModelLifecycle, "lastVerifiedAt">>;
   metadata?: Record<string, unknown>;
+  execution?: "local" | "cloud";
 }
 
 export interface ProviderDiscoveryContext {

@@ -3,13 +3,21 @@ import type { LLMRequest } from "../../../../src/types.js";
 
 export class OllamaClient {
   private apiBase: string;
+  private apiKey?: string;
 
-  constructor(apiBase: string = "http://localhost:11434") {
-    this.apiBase = apiBase;
+  constructor(apiBase: string = "http://localhost:11434", apiKey?: string) {
+    this.apiBase = apiBase.replace(/\/$/, "");
+    this.apiKey = apiKey;
+  }
+
+  private headers(): Record<string, string> {
+    return this.apiKey
+      ? { "Content-Type": "application/json", Authorization: "Bearer " + this.apiKey }
+      : { "Content-Type": "application/json" };
   }
 
   async getTags(): Promise<{ models: Array<{ name: string }> }> {
-    const response = await fetch(`${this.apiBase}/api/tags`);
+    const response = await fetch(`${this.apiBase}/api/tags`, { headers: this.headers() });
     if (!response.ok) {
       throw new Error(`Failed to get Ollama models: ${response.statusText}`);
     }
@@ -23,7 +31,7 @@ export class OllamaClient {
 
     const response = await fetch(`${this.apiBase}/api/generate`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: this.headers(),
       body: JSON.stringify({
         model,
         prompt,
@@ -53,7 +61,7 @@ export class OllamaClient {
 
     const response = await fetch(`${this.apiBase}/api/generate`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: this.headers(),
       body: JSON.stringify({
         model,
         prompt,

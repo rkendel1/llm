@@ -34,6 +34,7 @@ async function loadProviders() {
 
 export interface ProviderInitConfig {
   ollamaApiBase?: string;
+  ollamaApiKey?: string;
   openaiApiKey?: string;
   anthropicApiKey?: string;
   googleApiKey?: string;
@@ -53,13 +54,13 @@ export async function initializeDefaultProviders(config?: ProviderInitConfig): P
   try {
     const resolved = await resolveCredentials({ openai: config?.openaiApiKey, anthropic: config?.anthropicApiKey, google: config?.googleApiKey, openrouter: config?.openrouterApiKey });
     const credential = (provider: string) => resolved.find((item) => item.provider === provider)?.value;
-    config = { ...config, openaiApiKey: credential("openai"), anthropicApiKey: credential("anthropic"), googleApiKey: credential("google"), openrouterApiKey: credential("openrouter") };
+    config = { ...config, ollamaApiKey: config?.ollamaApiKey ?? credential("ollama"), openaiApiKey: credential("openai"), anthropicApiKey: credential("anthropic"), googleApiKey: credential("google"), openrouterApiKey: credential("openrouter") };
     const providers = await loadProviders();
     const registryAdapters: RegistryProviderAdapter[] = [];
 
     // Try to add Ollama (local first, highest priority)
     try {
-      const adapter = providers.createOllamaAdapter(config?.ollamaApiBase);
+      const adapter = providers.createOllamaAdapter({ localBaseUrl: config?.ollamaApiBase, apiKey: config?.ollamaApiKey });
       registerProvider(adapter);
       registryAdapters.push(providers.ollamaRegistryAdapter);
     } catch (error) {
