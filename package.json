@@ -1,6 +1,6 @@
 {
   "name": "@easy-llm/llm",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "Provider-agnostic LLM runtime, routing, and model registry",
   "files": [
     "dist",
