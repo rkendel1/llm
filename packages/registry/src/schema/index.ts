@@ -183,6 +183,7 @@ export interface AIModel {
   facts: AIModelFacts;
   intelligence?: AIModelIntelligence;
   metadata?: Record<string, unknown>;
+  execution?: "local" | "cloud";
 }
 
 export interface RawModelRecord {
