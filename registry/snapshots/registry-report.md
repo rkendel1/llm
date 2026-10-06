@@ -1,13 +1,13 @@
 ## Registry Update
 
 ### Summary
-Models: 341 → 341
-Routes: 487 → 487
-Evidence: 359 → 722
-Conflicts: 9 → 9
-Unknown capabilities: 1722 → 1722
+Models: 341 → 381
+Routes: 487 → 538
+Evidence: 722 → 778
+Conflicts: 9 → 20
+Unknown capabilities: 1722 → 1880
 Context completeness: 100.0% → 100.0%
-Pricing completeness: 98.5% → 98.5%
+Pricing completeness: 98.5% → 98.2%
 
 ### Quality Gate
 ✅ PASS
