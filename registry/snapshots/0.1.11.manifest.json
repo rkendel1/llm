@@ -1,0 +1,53 @@
+{
+  "version": "0.1.11",
+  "state": "published",
+  "generatedAt": "2026-10-12T02:26:06.589Z",
+  "sources": [
+    {
+      "id": "huggingface",
+      "status": "success",
+      "snapshotId": "huggingface:2026-10-12T02:26:09.007Z",
+      "checksum": "62ebe5c5062b3b75388e2ec077b848e930f2bcdc834268191c22e8e12fb82b8a",
+      "recordCount": 25,
+      "fetchedAt": "2026-10-12T02:26:09.007Z"
+    },
+    {
+      "id": "openrouter",
+      "status": "success",
+      "snapshotId": "openrouter:2026-10-12T02:26:06.589Z",
+      "checksum": "5d70c653a2917d747bc1dacc4de48ddb33f227cc002c618537afd4fc11a79a43",
+      "recordCount": 458,
+      "fetchedAt": "2026-10-12T02:26:06.589Z"
+    }
+  ],
+  "metrics": {
+    "canonicalModels": 372,
+    "routes": 532,
+    "evidence": 777,
+    "conflicts": 21,
+    "unknownCapabilities": 1831,
+    "contextCompleteness": 100,
+    "pricingCompleteness": 98.11827956989248,
+    "supportedCapabilities": {
+      "vision": 221,
+      "tools": 305,
+      "reasoning": 255,
+      "structuredOutput": 329,
+      "audioInput": 31,
+      "audioOutput": 4
+    }
+  },
+  "versions": {
+    "schema": "1",
+    "adapter": "openrouter@1.3.0;huggingface@1",
+    "normalization": "1.1",
+    "reconciliation": "1.0",
+    "qualityPolicy": "1.0"
+  },
+  "checksums": {
+    "sources": "5d70c653a2917d747bc1dacc4de48ddb33f227cc002c618537afd4fc11a79a43",
+    "canonical": "777aba31ca3b7ede8bf6267881d959df53e3455bb084737d074e3961254c9dd9",
+    "evidence": "d697884dd32d853387a7f06207ee74608a272e19bbba7634f261c212ca65601f",
+    "registry": "8cf50b020b3aa7f6ad43666fd8cd2f63efb6f61b2ed5cbe5928fb2a2a6c68da4"
+  }
+}
