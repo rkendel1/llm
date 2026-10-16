@@ -16,7 +16,7 @@ export class AnthropicClient {
   private apiKey: string;
   private apiBase: string;
 
-  constructor(apiKey: string, apiBase: string = "https://api.anthropic.com") {
+  constructor(apiKey: string, apiBase: string = "https://api.anthropic.com/v1") {
     this.apiKey = apiKey;
     this.apiBase = apiBase;
   }
@@ -29,7 +29,7 @@ export class AnthropicClient {
   ): Promise<ProviderResponse> {
     const payload: unknown = {
       model,
-      max_tokens: 1024,
+      max_tokens: 16000,
       messages,
       ...(tools && { tools }),
     };
@@ -98,7 +98,7 @@ export class AnthropicClient {
   }> {
     const payload: unknown = {
       model,
-      max_tokens: 1024,
+      max_tokens: 16000,
       messages,
       stream: true,
       ...(tools && { tools }),

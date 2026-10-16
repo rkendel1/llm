@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.10.3]
+
+### Added
+- LM Studio provider (`lmstudio`): OpenAI-compatible local server, detected on `http://localhost:1234/v1` or `http://localhost:1235/v1`, or set `LMSTUDIO_BASE_URL` / `lmstudioBaseUrl`; shown by `llm doctor` and `llm setup`
+- `createOllamaRegistryAdapter({ baseUrl, apiKey })`
+
+### Fixed
+- Routing no longer selects Ollama Cloud models when no Ollama API key is configured (previously `llm run` failed with "Ollama Cloud requires OLLAMA_API_KEY" even with another provider's key set)
+- Anthropic requests were sent to `https://api.anthropic.com/messages` instead of `/v1/messages`
+- Anthropic default models updated to `claude-opus-5-5`, `claude-sonnet-5-5` and `claude-haiku-5-5` (the Claude 3 IDs were not valid), and `max_tokens` raised to 16000
+- `llm doctor` prompts for the master password so vault-stored keys are reported, and shows "vault locked" instead of "unavailable" when it is not unlocked
+- Ollama is only reported as detected when the endpoint returns a real Ollama tags response
+
 ## [0.10.2]
 
 ### Added

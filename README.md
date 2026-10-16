@@ -70,6 +70,7 @@ await llm.unlock(process.env.LLM_VAULT_PASSWORD!);
 ```
 
 Ollama needs no credential. Its default endpoint is `http://localhost:11434`.
+LM Studio needs no credential either; it is detected on `http://localhost:1234/v1` or `http://localhost:1235/v1`, or set `LMSTUDIO_BASE_URL`.
 
 ## CLI journey
 
@@ -141,7 +142,7 @@ Tool calls come back as proposals; your handlers are never called. A failure nev
 
 ## Providers
 
-Built-in adapters cover OpenAI, Anthropic, Google, OpenRouter, and Ollama. OpenAI and OpenRouter accept native image content through the unified request shape; other adapters preserve a text-compatible representation when native image transport is unavailable.
+Built-in adapters cover OpenAI, Anthropic, Google, OpenRouter, Ollama, and LM Studio. OpenAI and OpenRouter accept native image content through the unified request shape; other adapters preserve a text-compatible representation when native image transport is unavailable.
 
 ## Development
 
@@ -169,4 +170,18 @@ llm run "Explain this code"
 
 Use `model: "local"` to require local execution; it does not select Ollama specifically.
 Ollama Cloud routes use `OLLAMA_API_KEY` (or `llm setup`) and are metered separately from
-local inference. Cloud inference is not assumed to be free.
+local inference. Cloud inference is not assumed to be free. Ollama Cloud models are only routed to
+when an Ollama API key is configured.
+
+## LM Studio
+
+Start the LM Studio server and load a model. It is detected automatically on port 1234 or 1235;
+for any other address set the OpenAI-compatible base URL:
+
+```sh
+export LMSTUDIO_BASE_URL=http://localhost:1235/v1
+llm doctor
+llm run "Explain closures simply."
+```
+
+In code, pass `lmstudioBaseUrl` to `llm.initializeDefaultProviders()`.

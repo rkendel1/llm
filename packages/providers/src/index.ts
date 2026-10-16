@@ -58,6 +58,7 @@ export { OpenAIAdapter, createOpenAIAdapter } from "./openai/index.js";
 export { AnthropicAdapter, createAnthropicAdapter } from "./anthropic/index.js";
 export { GoogleAdapter, createGoogleAdapter } from "./google/index.js";
 export { OpenRouterAdapter, createOpenRouterAdapter } from "./openrouter/index.js";
+export { LMStudioAdapter, createLMStudioAdapter, type LMStudioAdapterOptions } from "./lmstudio/index.js";
 
 // Registries
 export {
@@ -65,7 +66,16 @@ export {
   getOllamaCloudModels,
   discoverOllamaModels,
   ollamaRegistryAdapter,
+  createOllamaRegistryAdapter,
 } from "./ollama/registry.js";
+export {
+  detectLMStudio,
+  listLMStudioModels,
+  createLMStudioRegistryAdapter,
+  configuredLMStudioBaseUrl,
+  normalizeLMStudioBaseUrl,
+  LMSTUDIO_DEFAULT_ENDPOINTS,
+} from "./lmstudio/registry.js";
 export {
   getOpenAIModels,
   DEFAULT_OPENAI_MODELS,

@@ -5,7 +5,7 @@ import { ProviderError } from "../types.js";
 import { errorMeta } from "../errors.js";
 import { contentToText } from "../content.js";
 
-const ANTHROPIC_MODELS = ["claude-3-opus", "claude-3-sonnet", "claude-3-haiku"];
+const ANTHROPIC_MODELS = ["claude-opus-5-5", "claude-sonnet-5-5", "claude-haiku-5-5"];
 
 export class AnthropicAdapter implements LLMProvider {
   id = "anthropic";
@@ -33,7 +33,7 @@ export class AnthropicAdapter implements LLMProvider {
 
   async generate(request: LLMRequest): Promise<ProviderResponse> {
     try {
-      const model = typeof request.model === "string" ? request.model : "claude-3-sonnet";
+      const model = typeof request.model === "string" ? request.model : "claude-opus-5-5";
 
       const messages: AnthropicMessage[] = request.messages
         .filter((m) => m.role !== "system")
@@ -70,7 +70,7 @@ export class AnthropicAdapter implements LLMProvider {
 
   async *stream(request: LLMRequest): AsyncIterable<LLMStreamChunk> {
     try {
-      const model = typeof request.model === "string" ? request.model : "claude-3-sonnet";
+      const model = typeof request.model === "string" ? request.model : "claude-opus-5-5";
 
       const messages: AnthropicMessage[] = request.messages
         .filter((m) => m.role !== "system")

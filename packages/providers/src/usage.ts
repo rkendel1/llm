@@ -127,6 +127,9 @@ export const PROVIDER_PRICING: Record<string, PricingInfo> = {
     inputCostPer1M: 0.5,
     outputCostPer1M: 1.5,
   },
+  "anthropic:claude-opus-5-5": { inputCostPer1M: 4.0, outputCostPer1M: 20.0, cacheReadCostPer1M: 0.2 },
+  "anthropic:claude-sonnet-5-5": { inputCostPer1M: 2.0, outputCostPer1M: 10.0, cacheReadCostPer1M: 0.2 },
+  "anthropic:claude-haiku-5-5": { inputCostPer1M: 0.1, outputCostPer1M: 0.5 },
   // Anthropic Claude 3.5 Sonnet
   "anthropic:claude-3-5-sonnet": {
     inputCostPer1M: 3.0,
