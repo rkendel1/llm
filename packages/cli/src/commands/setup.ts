@@ -79,6 +79,10 @@ export class SetupCommand extends Command {
       console.log(ollama.executable
         ? success(`✓ Ollama detected${ollama.models.length ? ` (${ollama.models.join(", ")})` : " (no models installed)"}`)
         : info("Ollama does not need an API key and was not detected."));
+      const lmstudio = providerReadiness.providers.find((item) => item.provider === "lmstudio")!;
+      console.log(lmstudio.source === "local"
+        ? success(`✓ LM Studio detected at ${lmstudio.endpoint}${lmstudio.models.length ? ` (${lmstudio.models.join(", ")})` : " (no models loaded)"}`)
+        : info("LM Studio does not need an API key and was not detected (set LMSTUDIO_BASE_URL if it is not on port 1234/1235)."));
       let addMore = true;
 
       while (addMore) {
@@ -87,16 +91,17 @@ export class SetupCommand extends Command {
           "anthropic",
           "google",
           "openrouter",
-          "ollama",
+          "ollama (Ollama Cloud key only — local Ollama needs no key)",
           "Finish without adding another key",
         ]);
         if (provider.startsWith("Finish")) break;
+        const providerId = provider.split(" ")[0];
 
-        const value = await promptPassword(`${provider} API key (hidden): `);
+        const value = await promptPassword(`${providerId} API key (hidden): `);
         if (!value) continue;
 
-        await store.setCredential(provider, "api_key", value);
-        console.log(success(`✓ Added ${provider}/api_key`));
+        await store.setCredential(providerId, "api_key", value);
+        console.log(success(`✓ Added ${providerId}/api_key`));
 
         addMore = await promptConfirm("\nAdd another key?");
       }
@@ -107,7 +112,7 @@ export class SetupCommand extends Command {
       console.log(success(`✓ Vault ${initialized ? "initialized" : "updated"} at ~/.llm/credentials.enc`));
       console.log(info("Your credentials are encrypted and ready to use."));
       console.log(success(`✓ Canonical registry ${registry.version} loaded (${registry.models.length} models)`));
-      console.log(`\nNext steps:\n  ${bold("npx --no-install llm providers")}\n  ${bold("npx --no-install llm status")}\n  ${bold("npx --no-install llm models")}\n\nSupported providers: Ollama (local), OpenAI, Anthropic, Google, OpenRouter\n`);
+      console.log(`\nNext steps:\n  ${bold("npx --no-install llm providers")}\n  ${bold("npx --no-install llm status")}\n  ${bold("npx --no-install llm models")}\n\nSupported providers: Ollama (local), LM Studio (local), OpenAI, Anthropic, Google, OpenRouter\n`);
 
       return { success: true, message: "Setup complete" };
     } catch (error) {

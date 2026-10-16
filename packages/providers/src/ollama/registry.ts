@@ -60,10 +60,10 @@ export function getOllamaCloudModels(): ModelDefinition[] {
   }));
 }
 
-export async function discoverOllamaModels(): Promise<ModelDefinition[]> {
-  const endpoints = ["http://localhost:11434", "http://127.0.0.1:11434"];
+export async function discoverOllamaModels(apiBase?: string): Promise<ModelDefinition[]> {
+  const endpoints = apiBase ? [apiBase.replace(/\/$/, "")] : [process.env.OLLAMA_HOST ?? "http://localhost:11434", "http://127.0.0.1:11434"];
 
-  for (const endpoint of endpoints) {
+  for (const endpoint of [...new Set(endpoints)]) {
     const models = await getOllamaModels(endpoint);
     if (models.length > 0) return models;
   }
@@ -71,13 +71,27 @@ export async function discoverOllamaModels(): Promise<ModelDefinition[]> {
   return [] as any;
 }
 
+export interface OllamaRegistryOptions {
+  baseUrl?: string;
+  apiKey?: string;
+}
+
+/** Ollama Cloud models are only advertised when an Ollama API key is configured. */
+export function createOllamaRegistryAdapter(options: OllamaRegistryOptions = {}): RegistryProviderAdapter {
+  return {
+    id: "ollama",
+    discover: async (context: ProviderDiscoveryContext) => {
+      const models = await discoverOllamaModels(options.baseUrl);
+      const apiKey = options.apiKey ?? process.env.OLLAMA_API_KEY;
+      return [...models, ...(apiKey ? getOllamaCloudModels() : [])].map((model) => ({
+        ...model,
+        lifecycle: { status: "stable" as const },
+      }));
+    },
+  };
+}
+
 export const ollamaRegistryAdapter: RegistryProviderAdapter = {
   id: "ollama",
-  discover: async (context: ProviderDiscoveryContext) => {
-    const models = await discoverOllamaModels();
-    return [...models, ...getOllamaCloudModels()].map((model) => ({
-      ...model,
-      lifecycle: { status: "stable" as const },
-    }));
-  },
+  discover: (context: ProviderDiscoveryContext) => createOllamaRegistryAdapter().discover(context),
 };

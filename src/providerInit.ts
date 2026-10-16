@@ -11,7 +11,10 @@ async function loadProviders() {
     createAnthropicAdapter,
     createGoogleAdapter,
     createOpenRouterAdapter,
-    ollamaRegistryAdapter,
+    createLMStudioAdapter,
+    detectLMStudio,
+    createLMStudioRegistryAdapter,
+    createOllamaRegistryAdapter,
     openaiRegistryAdapter,
     anthropicRegistryAdapter,
     googleRegistryAdapter,
@@ -24,7 +27,10 @@ async function loadProviders() {
     createAnthropicAdapter,
     createGoogleAdapter,
     createOpenRouterAdapter,
-    ollamaRegistryAdapter,
+    createLMStudioAdapter,
+    detectLMStudio,
+    createLMStudioRegistryAdapter,
+    createOllamaRegistryAdapter,
     openaiRegistryAdapter,
     anthropicRegistryAdapter,
     googleRegistryAdapter,
@@ -35,6 +41,8 @@ async function loadProviders() {
 export interface ProviderInitConfig {
   ollamaApiBase?: string;
   ollamaApiKey?: string;
+  /** LM Studio OpenAI-compatible base URL, e.g. http://localhost:1235/v1 (defaults to LMSTUDIO_BASE_URL, then ports 1234/1235). */
+  lmstudioBaseUrl?: string;
   openaiApiKey?: string;
   anthropicApiKey?: string;
   googleApiKey?: string;
@@ -45,7 +53,8 @@ export interface ProviderInitConfig {
  * Initialize default providers based on available configuration
  * This function attempts to load providers in order of preference:
  * 1. Ollama (local) - highest priority
- * 2. OpenAI - if API key is available
+ * 2. LM Studio (local) - if a server is reachable
+ * 3. OpenAI - if API key is available
  * 3. Anthropic - if API key is available
  * 4. Google - if API key is available
  * 5. OpenRouter - if API key is available
@@ -62,9 +71,20 @@ export async function initializeDefaultProviders(config?: ProviderInitConfig): P
     try {
       const adapter = providers.createOllamaAdapter({ localBaseUrl: config?.ollamaApiBase, apiKey: config?.ollamaApiKey });
       registerProvider(adapter);
-      registryAdapters.push(providers.ollamaRegistryAdapter);
+      registryAdapters.push(providers.createOllamaRegistryAdapter({ baseUrl: config?.ollamaApiBase, apiKey: config?.ollamaApiKey }));
     } catch (error) {
       // Ollama is optional - silently fail
+    }
+
+    // Add LM Studio when a local server is reachable
+    try {
+      const lmstudio = await providers.detectLMStudio(config?.lmstudioBaseUrl);
+      if (lmstudio) {
+        registerProvider(providers.createLMStudioAdapter({ baseUrl: lmstudio.baseUrl, models: lmstudio.models }));
+        registryAdapters.push(providers.createLMStudioRegistryAdapter(lmstudio.baseUrl));
+      }
+    } catch (error) {
+      // LM Studio is optional - silently fail
     }
 
     // Try to add OpenAI
