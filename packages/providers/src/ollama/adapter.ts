@@ -18,6 +18,9 @@ export interface OllamaAdapterOptions {
 export class OllamaAdapter implements LLMProvider {
   id = "ollama";
   priority = 100;
+  // Audited single-attempt traits (docs/single-attempt-audit.md): raw fetch, no SDK, no retries;
+  // `done` is yielded only when the server sends `done: true`; tools are not sent.
+  attemptTraits = { transportRetries: "none", abortSignal: true, doneIsTerminalProof: true, streamsToolCalls: false } as const;
   private clients: Record<"local" | "cloud", OllamaClient>;
   private readonly options: Required<Pick<OllamaAdapterOptions, "localBaseUrl" | "cloudBaseUrl">> & Pick<OllamaAdapterOptions, "apiKey">;
   private models: Record<"local" | "cloud", Set<string>> = { local: new Set(), cloud: new Set() };
@@ -71,7 +74,7 @@ export class OllamaAdapter implements LLMProvider {
         content: string;
       }>;
 
-      return await this.clientFor(model).generate(model, messages);
+      return await this.clientFor(model).generate(model, messages, request.signal);
     } catch (error) {
       throw new ProviderError(
         "GENERATION_FAILED",
@@ -92,7 +95,7 @@ export class OllamaAdapter implements LLMProvider {
 
       let buffer = "";
 
-      for await (const chunk of this.clientFor(model).stream(model, messages)) {
+      for await (const chunk of this.clientFor(model).stream(model, messages, request.signal)) {
         if (chunk.response) {
           buffer += chunk.response;
           yield {

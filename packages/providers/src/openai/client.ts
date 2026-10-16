@@ -37,6 +37,7 @@ export class OpenAIClient {
     model: string,
     messages: OpenAIMessage[],
     tools?: OpenAITool[],
+    signal?: AbortSignal,
   ): Promise<ProviderResponse> {
     const payload: unknown = {
       model,
@@ -47,6 +48,7 @@ export class OpenAIClient {
 
     const response = await fetch(`${this.apiBase}/chat/completions`, {
       method: "POST",
+      ...(signal && { signal }),
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + this.apiKey,
@@ -61,6 +63,7 @@ export class OpenAIClient {
 
     const data = (await response.json()) as {
       choices?: Array<{
+        finish_reason?: string | null;
         message?: {
           content?: string;
           tool_calls?: Array<{ id: string; function?: { name: string; arguments: string } }>;
@@ -94,6 +97,7 @@ export class OpenAIClient {
         totalTokens: data.usage?.total_tokens,
       },
       toolCalls,
+      ...(typeof choice?.finish_reason === "string" && { finishReason: choice.finish_reason }),
     };
   }
 
@@ -101,6 +105,7 @@ export class OpenAIClient {
     model: string,
     messages: OpenAIMessage[],
     tools?: OpenAITool[],
+    signal?: AbortSignal,
   ): AsyncGenerator<{ delta?: { content?: string }; choices?: Array<{ delta?: { tool_calls?: unknown } }> }> {
     const payload: unknown = {
       model,
@@ -112,6 +117,7 @@ export class OpenAIClient {
 
     const response = await fetch(`${this.apiBase}/chat/completions`, {
       method: "POST",
+      ...(signal && { signal }),
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + this.apiKey,

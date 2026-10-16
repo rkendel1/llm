@@ -22,7 +22,7 @@ export class GoogleClient {
     this.apiBase = apiBase;
   }
 
-  async generate(model: string, messages: GoogleMessage[], tools?: GoogleTool[]): Promise<ProviderResponse> {
+  async generate(model: string, messages: GoogleMessage[], tools?: GoogleTool[], signal?: AbortSignal): Promise<ProviderResponse> {
     const payload: unknown = {
       contents: messages,
       generationConfig: {
@@ -34,6 +34,7 @@ export class GoogleClient {
 
     const response = await fetch(`${this.apiBase}/${model}:generateContent?key=${this.apiKey}`, {
       method: "POST",
+      ...(signal && { signal }),
       headers: {
         "Content-Type": "application/json",
       },
@@ -48,6 +49,7 @@ export class GoogleClient {
     const data = (await response.json()) as {
       candidates?: Array<{
         content?: { parts?: Array<{ text?: string; function_call?: { name: string; args: unknown } }> };
+        finishReason?: string;
       }>;
       usageMetadata?: { promptTokenCount?: number; candidatesTokenCount?: number; totalTokenCount?: number };
     };
@@ -78,6 +80,7 @@ export class GoogleClient {
         totalTokens: data.usageMetadata?.totalTokenCount,
       },
       toolCalls,
+      ...(typeof data.candidates?.[0]?.finishReason === "string" && { finishReason: data.candidates[0].finishReason }),
     };
   }
 
@@ -85,6 +88,7 @@ export class GoogleClient {
     model: string,
     messages: GoogleMessage[],
     tools?: GoogleTool[],
+    signal?: AbortSignal,
   ): AsyncGenerator<{
     candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
   }> {
@@ -99,6 +103,7 @@ export class GoogleClient {
 
     const response = await fetch(`${this.apiBase}/${model}:streamGenerateContent?key=${this.apiKey}`, {
       method: "POST",
+      ...(signal && { signal }),
       headers: {
         "Content-Type": "application/json",
       },

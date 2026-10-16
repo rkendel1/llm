@@ -24,13 +24,14 @@ export class OllamaClient {
     return response.json() as Promise<{ models: Array<{ name: string }> }>;
   }
 
-  async generate(model: string, messages: Array<{ role: string; content: string }>): Promise<ProviderResponse> {
+  async generate(model: string, messages: Array<{ role: string; content: string }>, signal?: AbortSignal): Promise<ProviderResponse> {
     const prompt = messages
       .map((m) => `${m.role}: ${m.content}`)
       .join("\n");
 
     const response = await fetch(`${this.apiBase}/api/generate`, {
       method: "POST",
+      ...(signal && { signal }),
       headers: this.headers(),
       body: JSON.stringify({
         model,
@@ -43,17 +44,19 @@ export class OllamaClient {
       throw new Error(`Ollama generation failed: ${response.statusText}`);
     }
 
-    const data = (await response.json()) as { response?: string };
+    const data = (await response.json()) as { response?: string; done_reason?: string };
     return {
       text: data.response || "",
       model,
       toolCalls: [],
+      ...(typeof data.done_reason === "string" && { finishReason: data.done_reason }),
     };
   }
 
   async *stream(
     model: string,
     messages: Array<{ role: string; content: string }>,
+    signal?: AbortSignal,
   ): AsyncGenerator<{ response: string; done: boolean }> {
     const prompt = messages
       .map((m) => `${m.role}: ${m.content}`)
@@ -61,6 +64,7 @@ export class OllamaClient {
 
     const response = await fetch(`${this.apiBase}/api/generate`, {
       method: "POST",
+      ...(signal && { signal }),
       headers: this.headers(),
       body: JSON.stringify({
         model,

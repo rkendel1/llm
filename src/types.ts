@@ -71,6 +71,10 @@ export type LLMStreamChunk = {
   type: "text" | "tool_call" | "done";
   text?: string;
   toolCall?: LLMToolCall;
+  /** Only meaningful on `done`: final usage, if the provider reported it. */
+  usage?: LLMUsage;
+  /** Only meaningful on `done`: the provider's own finish reason, passed through verbatim. */
+  finishReason?: string;
 };
 
 export type ToolContext = {
@@ -109,11 +113,30 @@ export type ProviderResponse = {
   model: string;
   usage?: LLMUsage;
   toolCalls?: LLMToolCall[];
+  /** The provider's own finish reason, passed through verbatim and never inferred. */
+  finishReason?: string;
+};
+
+/**
+ * What a provider implementation guarantees about a single `generate`/`stream` call.
+ * Everything is optional and defaults to the conservative reading, so a provider that
+ * declares nothing is reported as "unknown" by the single-attempt API.
+ */
+export type ProviderAttemptTraits = {
+  /** Transport retries performed inside one call. `none` means the call issues one request. */
+  transportRetries?: "none" | "unknown";
+  /** `request.signal` is forwarded to the transport, so aborting cancels the in-flight request. */
+  abortSignal?: boolean;
+  /** A streamed `done` chunk is yielded only after the provider's own terminal marker was seen. */
+  doneIsTerminalProof?: boolean;
+  /** Streamed `tool_call` chunks carry the provider's final id, name and arguments. */
+  streamsToolCalls?: boolean;
 };
 
 export type LLMProvider = {
   id: string;
   priority?: number;
+  attemptTraits?: ProviderAttemptTraits;
   supports: (request: LLMRequest) => Promise<boolean> | boolean;
   generate: (
     request: LLMRequest,

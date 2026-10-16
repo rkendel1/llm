@@ -9,6 +9,9 @@ const OPENAI_MODELS = ["gpt-4-turbo", "gpt-4", "gpt-4-32k", "gpt-3.5-turbo"];
 export class OpenAIAdapter implements LLMProvider {
   id = "openai";
   priority = 50;
+  // Audited single-attempt traits (docs/single-attempt-audit.md): raw fetch, no SDK, no retries;
+  // the stream yields `done` at end of input even when `[DONE]` was never seen; streamed tool calls are placeholders.
+  attemptTraits = { transportRetries: "none", abortSignal: true, doneIsTerminalProof: false, streamsToolCalls: false } as const;
   private client: OpenAIClient;
   private availableModels: string[] = OPENAI_MODELS;
 
@@ -54,7 +57,7 @@ export class OpenAIAdapter implements LLMProvider {
         }));
       }
 
-      return await this.client.generate(model, messages, tools);
+      return await this.client.generate(model, messages, tools, request.signal);
     } catch (error) {
       const isRetryable = error instanceof Error && (error.message.includes("429") || error.message.includes("timeout"));
       throw new ProviderError(
@@ -95,7 +98,7 @@ export class OpenAIAdapter implements LLMProvider {
 
       let buffer = "";
 
-      for await (const chunk of this.client.stream(model, messages, tools)) {
+      for await (const chunk of this.client.stream(model, messages, tools, request.signal)) {
         const choice = chunk.choices?.[0];
         const delta = choice?.delta as any; if (delta?.content) {
           buffer += delta.content;

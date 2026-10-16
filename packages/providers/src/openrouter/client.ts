@@ -30,6 +30,7 @@ export class OpenRouterClient {
     model: string,
     messages: OpenRouterMessage[],
     tools?: OpenRouterTool[],
+    signal?: AbortSignal,
   ): Promise<ProviderResponse> {
     const payload: unknown = {
       model,
@@ -40,6 +41,7 @@ export class OpenRouterClient {
 
     const response = await fetch(`${this.apiBase}/chat/completions`, {
       method: "POST",
+      ...(signal && { signal }),
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + this.apiKey,
@@ -60,6 +62,7 @@ export class OpenRouterClient {
 
     const data = (await response.json()) as {
       choices?: Array<{
+        finish_reason?: string | null;
         message?: {
           content?: string;
           tool_calls?: Array<{
@@ -100,6 +103,7 @@ export class OpenRouterClient {
         totalTokens: data.usage?.total_tokens,
       },
       toolCalls,
+      ...(typeof choice?.finish_reason === "string" && { finishReason: choice.finish_reason }),
     };
   }
 
@@ -107,6 +111,7 @@ export class OpenRouterClient {
     model: string,
     messages: OpenRouterMessage[],
     tools?: OpenRouterTool[],
+    signal?: AbortSignal,
   ): AsyncGenerator<{
     choices?: Array<{ delta?: { content?: string; tool_calls?: unknown } }>;
   }> {
@@ -120,6 +125,7 @@ export class OpenRouterClient {
 
     const response = await fetch(`${this.apiBase}/chat/completions`, {
       method: "POST",
+      ...(signal && { signal }),
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + this.apiKey,

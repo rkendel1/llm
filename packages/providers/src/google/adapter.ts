@@ -14,6 +14,9 @@ const GOOGLE_MODELS = [
 export class GoogleAdapter implements LLMProvider {
   id = "google";
   priority = 30;
+  // Audited single-attempt traits (docs/single-attempt-audit.md): raw fetch, no SDK, no retries;
+  // the stream yields `done` at end of input unconditionally; streamed function calls are dropped.
+  attemptTraits = { transportRetries: "none", abortSignal: true, doneIsTerminalProof: false, streamsToolCalls: false } as const;
   private client: GoogleClient;
   private availableModels: string[] = GOOGLE_MODELS;
 
@@ -63,7 +66,7 @@ export class GoogleAdapter implements LLMProvider {
         ];
       }
 
-      return await this.client.generate(model, messages, tools);
+      return await this.client.generate(model, messages, tools, request.signal);
     } catch (error) {
       const isRetryable =
         error instanceof Error &&
@@ -105,7 +108,7 @@ export class GoogleAdapter implements LLMProvider {
         ];
       }
 
-      for await (const chunk of this.client.stream(model, messages, tools)) {
+      for await (const chunk of this.client.stream(model, messages, tools, request.signal)) {
         const parts = chunk.candidates?.[0]?.content?.parts;
         if (parts) {
           for (const part of parts) {
