@@ -1,3 +1,4 @@
+import { httpFailure } from "../errors.js";
 import type { ProviderResponse, LLMToolCall } from "../types.js";
 
 export type AnthropicMessage = {
@@ -46,7 +47,7 @@ export class AnthropicClient {
 
     if (!response.ok) {
       const errorData = (await response.json().catch(() => ({}))) as { error?: { message?: string } };
-      throw new Error(`Anthropic API error: ${errorData.error?.message || response.statusText}`);
+      throw httpFailure(response, `Anthropic API error: ${errorData.error?.message || response.statusText}`);
     }
 
     const data = (await response.json()) as {
@@ -115,7 +116,7 @@ export class AnthropicClient {
     });
 
     if (!response.ok) {
-      throw new Error(`Anthropic streaming failed: ${response.statusText}`);
+      throw httpFailure(response, `Anthropic streaming failed: ${response.statusText}`);
     }
 
     const reader = response.body?.getReader();

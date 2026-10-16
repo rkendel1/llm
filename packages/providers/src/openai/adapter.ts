@@ -1,7 +1,8 @@
-import type { LLMProvider, LLMRequest, ProviderResponse, LLMStreamChunk } from "../../../../src/types.js";
+import type { LLMProvider, LLMRequest, LLMUsage, ProviderResponse, LLMStreamChunk } from "../../../../src/types.js";
 import { OpenAIClient, type OpenAIMessage, type OpenAITool } from "./client.js";
 import { createCapabilities } from "../capabilities.js";
 import { ProviderError } from "../types.js";
+import { errorMeta } from "../errors.js";
 import { contentToOpenAI } from "../content.js";
 
 const OPENAI_MODELS = ["gpt-4-turbo", "gpt-4", "gpt-4-32k", "gpt-3.5-turbo"];
@@ -65,6 +66,7 @@ export class OpenAIAdapter implements LLMProvider {
         `OpenAI generation failed: ${error instanceof Error ? error.message : String(error)}`,
         "openai",
         isRetryable,
+        errorMeta(error),
       );
     }
   }
@@ -96,10 +98,22 @@ export class OpenAIAdapter implements LLMProvider {
         }));
       }
 
+      // Passed through verbatim from the provider's own chunks; never inferred.
+      let finishReason: string | undefined;
+      let usage: LLMUsage | undefined;
+
       let buffer = "";
 
       for await (const chunk of this.client.stream(model, messages, tools, request.signal)) {
         const choice = chunk.choices?.[0];
+        if (typeof choice?.finish_reason === "string") finishReason = choice.finish_reason;
+        if (chunk.usage) {
+          usage = {
+            inputTokens: chunk.usage.prompt_tokens,
+            outputTokens: chunk.usage.completion_tokens,
+            totalTokens: chunk.usage.total_tokens,
+          };
+        }
         const delta = choice?.delta as any; if (delta?.content) {
           buffer += delta.content;
           yield {
@@ -122,6 +136,8 @@ export class OpenAIAdapter implements LLMProvider {
 
       yield {
         type: "done",
+        ...(finishReason !== undefined && { finishReason }),
+        ...(usage !== undefined && { usage }),
       };
     } catch (error) {
       const isRetryable = error instanceof Error && (error.message.includes("429") || error.message.includes("timeout"));
@@ -130,6 +146,7 @@ export class OpenAIAdapter implements LLMProvider {
         `OpenAI streaming failed: ${error instanceof Error ? error.message : String(error)}`,
         "openai",
         isRetryable,
+        errorMeta(error),
       );
     }
   }

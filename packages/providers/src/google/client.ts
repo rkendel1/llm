@@ -1,3 +1,4 @@
+import { httpFailure } from "../errors.js";
 import type { ProviderResponse, LLMToolCall } from "../types.js";
 
 export type GoogleMessage = {
@@ -43,7 +44,7 @@ export class GoogleClient {
 
     if (!response.ok) {
       const errorData = (await response.json().catch(() => ({}))) as { error?: { message?: string } };
-      throw new Error(`Google API error: ${errorData.error?.message || response.statusText}`);
+      throw httpFailure(response, `Google API error: ${errorData.error?.message || response.statusText}`);
     }
 
     const data = (await response.json()) as {
@@ -111,7 +112,7 @@ export class GoogleClient {
     });
 
     if (!response.ok) {
-      throw new Error(`Google streaming failed: ${response.statusText}`);
+      throw httpFailure(response, `Google streaming failed: ${response.statusText}`);
     }
 
     const reader = response.body?.getReader();

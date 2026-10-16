@@ -15,6 +15,7 @@
  * certainty, failure origin and outcomes. The types here are observations and are
  * translated by the host adapter; they are not a second contract.
  */
+import { errorMeta } from "../packages/providers/src/errors.js";
 import { ProviderError } from "../packages/providers/src/types.js";
 import { listProviders } from "./providerRegistry.js";
 import type {
@@ -124,6 +125,10 @@ export type SingleAttemptFailure = {
   /** From `ProviderError`, informational only. This API never retries. */
   providerCode?: string;
   providerRetryable?: boolean;
+  /** HTTP status of the provider's response, only when the provider layer actually received one. Never inferred from message text. */
+  status?: number;
+  /** The provider's `Retry-After`, in milliseconds, only when it sent a valid one. */
+  retryAfterMs?: number;
   /** Output received before the failure (streaming only). */
   partial?: { text: string; toolCalls: SingleAttemptToolCall[] };
   issues: SingleAttemptIssue[];
@@ -225,10 +230,21 @@ function settle<T>(pending: Promise<T>, guard: Guard): Promise<Settled<T>> {
   ]);
 }
 
-function describeError(error: unknown): { message: string; code?: string; retryable?: boolean } {
-  if (error instanceof ProviderError) return { message: error.message, code: error.code, retryable: error.retryable };
-  if (error instanceof Error) return { message: error.message };
+function describeError(error: unknown): { message: string; code?: string; retryable?: boolean; status?: number; retryAfterMs?: number } {
+  const meta = errorMeta(error);
+  if (error instanceof ProviderError) return { message: error.message, code: error.code, retryable: error.retryable, ...meta };
+  if (error instanceof Error) return { message: error.message, ...meta };
   return { message: String(error) };
+}
+
+/** The failure fields a described provider error contributes. Only facts the provider layer supplied. */
+function providerFields(described: ReturnType<typeof describeError>): Partial<SingleAttemptFailure> {
+  return {
+    providerCode: described.code,
+    providerRetryable: described.retryable,
+    ...(described.status !== undefined && { status: described.status }),
+    ...(described.retryAfterMs !== undefined && { retryAfterMs: described.retryAfterMs }),
+  };
 }
 
 function diagnostics(provider: LLMProvider | undefined, providerId: string, model: string, invoked: boolean, blocked: number): SingleAttemptDiagnostics {
@@ -378,7 +394,7 @@ export async function generateOnce(provider: LLMProvider | string, request: Sing
     }
     if (settled.tag === "error") {
       const described = describeError(settled.error);
-      return fail(attemptOf(true), "provider_error", described.message, "invoked", { providerCode: described.code, providerRetryable: described.retryable });
+      return fail(attemptOf(true), "provider_error", described.message, "invoked", providerFields(described));
     }
 
     const response = settled.value as unknown;
@@ -475,7 +491,7 @@ export async function* streamOnce(provider: LLMProvider | string, request: Singl
       iterator = target.stream({ ...providerRequest, signal: guard.signal })[Symbol.asyncIterator]();
     } catch (error) {
       const described = describeError(error);
-      yield failed("provider_error", described.message, { providerCode: described.code, providerRetryable: described.retryable });
+      yield failed("provider_error", described.message, providerFields(described));
       return;
     }
 
@@ -491,7 +507,7 @@ export async function* streamOnce(provider: LLMProvider | string, request: Singl
       }
       if (next.tag === "error") {
         const described = describeError(next.error);
-        yield failed("provider_error", described.message, { providerCode: described.code, providerRetryable: described.retryable });
+        yield failed("provider_error", described.message, providerFields(described));
         return;
       }
       if (next.value.done) {

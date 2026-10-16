@@ -1,7 +1,8 @@
-import type { LLMProvider, LLMRequest, ProviderResponse, LLMStreamChunk } from "../../../../src/types.js";
+import type { LLMProvider, LLMRequest, LLMUsage, ProviderResponse, LLMStreamChunk } from "../../../../src/types.js";
 import { OpenRouterClient, type OpenRouterMessage, type OpenRouterTool } from "./client.js";
 import { createCapabilities } from "../capabilities.js";
 import { ProviderError } from "../types.js";
+import { errorMeta } from "../errors.js";
 import { contentToOpenAI } from "../content.js";
 
 export class OpenRouterAdapter implements LLMProvider {
@@ -64,6 +65,7 @@ export class OpenRouterAdapter implements LLMProvider {
         }`,
         "openrouter",
         isRetryable,
+        errorMeta(error),
       );
     }
   }
@@ -96,8 +98,20 @@ export class OpenRouterAdapter implements LLMProvider {
         }));
       }
 
+      // Passed through verbatim from the provider's own chunks; never inferred.
+      let finishReason: string | undefined;
+      let usage: LLMUsage | undefined;
+
       for await (const chunk of this.client.stream(model, messages, tools, request.signal)) {
         const choice = chunk.choices?.[0];
+        if (typeof choice?.finish_reason === "string") finishReason = choice.finish_reason;
+        if (chunk.usage) {
+          usage = {
+            inputTokens: chunk.usage.prompt_tokens,
+            outputTokens: chunk.usage.completion_tokens,
+            totalTokens: chunk.usage.total_tokens,
+          };
+        }
         if (choice?.delta?.content) {
           yield {
             type: "text",
@@ -119,6 +133,8 @@ export class OpenRouterAdapter implements LLMProvider {
 
       yield {
         type: "done",
+        ...(finishReason !== undefined && { finishReason }),
+        ...(usage !== undefined && { usage }),
       };
     } catch (error) {
       const isRetryable =
@@ -131,6 +147,7 @@ export class OpenRouterAdapter implements LLMProvider {
         }`,
         "openrouter",
         isRetryable,
+        errorMeta(error),
       );
     }
   }

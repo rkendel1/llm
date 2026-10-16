@@ -1,3 +1,4 @@
+import { httpFailure } from "../errors.js";
 import type { ProviderResponse, LLMToolCall } from "../types.js";
 
 export type OpenAIMessage = {
@@ -58,7 +59,7 @@ export class OpenAIClient {
 
     if (!response.ok) {
       const errorData = (await response.json().catch(() => ({}))) as { error?: { message?: string } };
-      throw new Error(`OpenAI API error: ${errorData.error?.message || response.statusText}`);
+      throw httpFailure(response, `OpenAI API error: ${errorData.error?.message || response.statusText}`);
     }
 
     const data = (await response.json()) as {
@@ -106,7 +107,11 @@ export class OpenAIClient {
     messages: OpenAIMessage[],
     tools?: OpenAITool[],
     signal?: AbortSignal,
-  ): AsyncGenerator<{ delta?: { content?: string }; choices?: Array<{ delta?: { tool_calls?: unknown } }> }> {
+  ): AsyncGenerator<{
+    delta?: { content?: string };
+    choices?: Array<{ delta?: { tool_calls?: unknown }; finish_reason?: string | null }>;
+    usage?: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number } | null;
+  }> {
     const payload: unknown = {
       model,
       messages,
@@ -126,7 +131,7 @@ export class OpenAIClient {
     });
 
     if (!response.ok) {
-      throw new Error(`OpenAI streaming failed: ${response.statusText}`);
+      throw httpFailure(response, `OpenAI streaming failed: ${response.statusText}`);
     }
 
     const reader = response.body?.getReader();

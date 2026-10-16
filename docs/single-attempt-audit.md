@@ -47,7 +47,7 @@ All five built-in adapters (`openai`, `openrouter`, `anthropic`, `google`, `olla
 
 - Bypassing the router does give one provider call per operation, because the adapters do not retry. This is audited and tested for the built-in adapters. A custom `LLMProvider` may retry internally; Easy-LLM cannot see that, so it reports `transportRetries: "unknown"` unless the provider declares `attemptTraits`.
 - Cancellation now reaches the transport for the built-in adapters (`abortSignal: true`). For a provider that does not declare it, a timeout still returns on time, but the provider call may keep running, and the result says `abortForwarded: false`.
-- Because status is lost, `provider_error` cannot be split into rate limit, unauthenticated and unavailable by anything except message text. That is a gap, not something the new API guesses.
+- With a received response, `provider_error` carries `status` and `retryAfterMs`. Without one (a network failure, a custom provider), it carries neither, and the consumer must not guess from message text.
 - Because OpenAI-style and Google streams synthesize `done`, a streamed result carries `terminal: "unverified"` for them.
 - Streaming with tools is refused for every built-in adapter, because none emits faithful streamed tool calls. Use `generateOnce` with tools.
 
@@ -56,6 +56,8 @@ All five built-in adapters (`openai`, `openrouter`, `anthropic`, `google`, `olla
 - `ProviderResponse.finishReason?: string`, populated verbatim from the provider when present.
 - `LLMStreamChunk.usage?` and `.finishReason?` on `done` chunks (no built-in adapter populates them yet).
 - `LLMProvider.attemptTraits?` declaring audited behavior.
+- `ProviderError.status` and `.retryAfterMs`, set from the response (`Retry-After` read as whole seconds or an IMF-fixdate only).
+- OpenAI and OpenRouter streams pass the provider's `finish_reason` and any `usage` chunk to the `done` chunk.
 - Clients forward an optional `AbortSignal` to `fetch`; adapters pass `request.signal`. With no signal, the `fetch` call is unchanged.
 
 The routed API's selection, fallback, retry and tool-round behavior is untouched, and its tests pass unchanged.

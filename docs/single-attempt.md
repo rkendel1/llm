@@ -105,15 +105,15 @@ const provider: LLMProvider = {
 
 These are properties of the existing provider types and adapters. They are reported, not worked around.
 
-1. **No HTTP status or retry-after.** Errors reach this layer as message text. Rate limit, authentication and outage cannot be told apart reliably.
+1. **HTTP status and retry-after are kept only when a response was received.** The built-in adapters now carry the status and a valid `Retry-After` (`failure.status`, `failure.retryAfterMs`). A network failure has neither, and a custom provider that throws a plain error has neither. Nothing is inferred from message text, so a consumer must not either.
 2. **No tool schemas.** Only tool names are sent, with empty parameter schemas.
 3. **No assistant tool-call history.** `LLMMessage` cannot carry the tool calls of a previous assistant turn, so a multi-turn tool conversation cannot be replayed faithfully.
 4. **Raw tool-argument text is lost.** OpenAI-style adapters parse arguments and throw on malformed JSON, which fails the whole call as `provider_error`.
-5. **Streaming has no usage or finish reason from the built-in adapters**, and streamed tool calls are unavailable.
+5. **Streams carry a finish reason and usage only for the OpenAI-style adapters (OpenAI, OpenRouter), and only if the provider sent them.** Anthropic, Google and Ollama streams report neither, and streamed tool calls are unavailable from every built-in adapter.
 6. **No generation options** (max tokens, reasoning effort, response format, cache hints, tool choice) are transported.
 7. **No provider-executed tool records.**
 
-Proposed smallest changes (each additive, none made here): an optional `status` and `retryAfterMs` on `ProviderError`; `toolCalls?: LLMToolCall[]` on assistant messages; optional `toolDefinitions` carrying JSON schemas on `LLMRequest`; populating `usage` and `finishReason` on `done` chunks and real streamed tool-call accumulation in the adapters.
+Proposed smallest changes (each additive, not yet made): `toolCalls?: LLMToolCall[]` on assistant messages; optional `toolDefinitions` carrying JSON schemas on `LLMRequest`; populating `usage` and `finishReason` on `done` chunks and real streamed tool-call accumulation in the adapters.
 
 ## Compatibility
 

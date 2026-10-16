@@ -1,3 +1,4 @@
+import { httpFailure } from "../errors.js";
 import type { ProviderResponse, LLMToolCall } from "../types.js";
 
 export type OpenRouterMessage = {
@@ -55,7 +56,7 @@ export class OpenRouterClient {
       const errorData = (await response.json().catch(() => ({}))) as {
         error?: { message?: string };
       };
-      throw new Error(
+      throw httpFailure(response, 
         `OpenRouter API error: ${errorData.error?.message || response.statusText}`,
       );
     }
@@ -113,7 +114,8 @@ export class OpenRouterClient {
     tools?: OpenRouterTool[],
     signal?: AbortSignal,
   ): AsyncGenerator<{
-    choices?: Array<{ delta?: { content?: string; tool_calls?: unknown } }>;
+    choices?: Array<{ delta?: { content?: string; tool_calls?: unknown }; finish_reason?: string | null }>;
+    usage?: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number } | null;
   }> {
     const payload: unknown = {
       model,
@@ -136,7 +138,7 @@ export class OpenRouterClient {
     });
 
     if (!response.ok) {
-      throw new Error(`OpenRouter streaming failed: ${response.statusText}`);
+      throw httpFailure(response, `OpenRouter streaming failed: ${response.statusText}`);
     }
 
     const reader = response.body?.getReader();

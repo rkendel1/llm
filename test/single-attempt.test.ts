@@ -582,6 +582,6 @@ describe("routing separation", () => {
     const { readFile } = await import("node:fs/promises");
     const source = await readFile(new URL("../src/singleAttempt.ts", import.meta.url), "utf8");
     const imports = [...source.matchAll(/from\s+"([^"]+)"/g)].map((match) => match[1]);
-    expect(imports.sort()).toEqual(["../packages/providers/src/types.js", "./providerRegistry.js", "./types.js"].sort());
+    expect(imports.sort()).toEqual(["../packages/providers/src/errors.js", "../packages/providers/src/types.js", "./providerRegistry.js", "./types.js"].sort());
   });
 });
