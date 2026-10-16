@@ -1,5 +1,5 @@
 // Infrastructure exports
-export { ProviderError, type ProviderCapabilities, type ProviderConfig } from "./types.js";
+export { ProviderError, type ProviderCapabilities, type ProviderConfig, type ProviderErrorMeta } from "./types.js";
 export {
   createCapabilities,
   hasCapability,
@@ -11,6 +11,10 @@ export {
   isRetryableError,
   getErrorStatusCode,
   formatErrorMessage,
+  HttpStatusError,
+  httpFailure,
+  parseRetryAfter,
+  errorMeta,
 } from "./errors.js";
 export {
   normalizeMessages,

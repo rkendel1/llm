@@ -1,4 +1,4 @@
-import type { ProviderError } from "./types.js";
+import type { ProviderError, ProviderErrorMeta } from "./types.js";
 
 export async function withRetry<T>(
   fn: () => Promise<T>,
@@ -66,4 +66,51 @@ export function formatErrorMessage(error: unknown, provider: string): string {
     return `${provider} error: ${error.message}`;
   }
   return `${provider} error: ${String(error)}`;
+}
+
+/** An HTTP failure that keeps the status and `Retry-After` the provider actually sent. */
+export class HttpStatusError extends Error {
+  constructor(
+    message: string,
+    public status?: number,
+    public retryAfterMs?: number,
+  ) {
+    super(message);
+    this.name = "HttpStatusError";
+  }
+}
+
+/**
+ * Parses a `Retry-After` value: whole seconds or an IMF-fixdate HTTP date
+ * (`Thu, 01 Jan 2026 00:00:30 GMT`). Returns milliseconds, or undefined when the value is
+ * absent or in any other form. It never guesses: `Date.parse` accepts many legacy strings
+ * (`"-5"`, `"1.5"`) that are not dates, so only the standard format is read.
+ */
+export function parseRetryAfter(value: string | null | undefined, now: number = Date.now()): number | undefined {
+  if (value === null || value === undefined) return undefined;
+  const text = value.trim();
+  if (/^\d+$/.test(text)) {
+    const seconds = Number(text);
+    return Number.isSafeInteger(seconds * 1000) ? seconds * 1000 : undefined;
+  }
+  if (!/^[A-Z][a-z]{2}, \d{2} [A-Z][a-z]{2} \d{4} \d{2}:\d{2}:\d{2} GMT$/.test(text)) return undefined;
+  const at = Date.parse(text);
+  return Number.isNaN(at) ? undefined : Math.max(0, at - now);
+}
+
+/** Builds the error for a non-OK response, keeping its message text and adding status metadata. */
+export function httpFailure(response: { status?: number; headers?: { get?: (name: string) => string | null } }, message: string): HttpStatusError {
+  const status = typeof response.status === "number" ? response.status : undefined;
+  const retryAfterMs = parseRetryAfter(response.headers?.get?.("retry-after"));
+  return new HttpStatusError(message, status, retryAfterMs);
+}
+
+/** Reads the status and retry metadata an error carries, if any. */
+export function errorMeta(error: unknown): ProviderErrorMeta {
+  if (typeof error !== "object" || error === null) return {};
+  const { status, retryAfterMs } = error as { status?: unknown; retryAfterMs?: unknown };
+  return {
+    ...(typeof status === "number" && { status }),
+    ...(typeof retryAfterMs === "number" && { retryAfterMs }),
+  };
 }

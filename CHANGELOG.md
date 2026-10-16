@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- `ProviderError.status` and `.retryAfterMs`: the HTTP status and `Retry-After` of a failed provider response, also on `generateOnce`/`streamOnce` failures as `status` and `retryAfterMs`; never inferred from message text
+- OpenAI and OpenRouter streams now report the provider's finish reason (and usage, when sent) on the final chunk
+- A `prepare` script, so the package can be installed from a git ref
 - `generateOnce` and `streamOnce`: explicit single-attempt provider invocation with typed results, honest delivery observations and no routing, fallback, retry or tool execution (see `docs/single-attempt.md`)
 - Optional `ProviderResponse.finishReason`, `usage`/`finishReason` on stream `done` chunks, and `LLMProvider.attemptTraits`
 - GitHub Actions CI/CD workflows for automated testing and publishing

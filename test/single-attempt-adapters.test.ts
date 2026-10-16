@@ -175,3 +175,110 @@ describe("published surface", () => {
     );
   });
 });
+
+// ---------------------------------------------------------------------------
+// Provider error metadata: only what the provider actually sent
+
+import { parseRetryAfter, ProviderError } from "../packages/providers/src/index.js";
+
+const respond = (status: number, headers: Record<string, string> = {}, message = "failed") =>
+  new Response(JSON.stringify({ error: { message } }), { status, headers: { "Content-Type": "application/json", ...headers } });
+
+describe.each(adapters)("provider error metadata: $name", ({ make }) => {
+  it("keeps the HTTP status and a numeric Retry-After", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => respond(429, { "Retry-After": "7" })));
+    const result = await generateOnce(make(), { messages, model: "m" });
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.failure.kind).toBe("provider_error");
+    expect(result.failure.status).toBe(429);
+    expect(result.failure.retryAfterMs).toBe(7000);
+    expect(result.failure.delivery).toBe("invoked");
+  });
+
+  it("omits retryAfterMs when the provider sent none or an unusable value", async () => {
+    const unusable: Array<Record<string, string>> = [{}, { "Retry-After": "soon" }, { "Retry-After": "" }, { "Retry-After": "-5" }];
+    for (const headers of unusable) {
+      vi.stubGlobal("fetch", vi.fn(async () => respond(503, headers)));
+      const result = await generateOnce(make(), { messages, model: "m" });
+      expect(result.ok === false && result.failure.status).toBe(503);
+      expect(result.ok === false && "retryAfterMs" in result.failure).toBe(false);
+    }
+  });
+
+  it("never infers a status from message text", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => respond(500, {}, "rate limit exceeded 429 unauthorized 401")));
+    const result = await generateOnce(make(), { messages, model: "m" });
+    expect(result.ok === false && result.failure.status).toBe(500);
+
+    vi.stubGlobal("fetch", vi.fn(async () => { throw new TypeError("HTTP 429 fetch failed"); }));
+    const network = await generateOnce(make(), { messages, model: "m" });
+    expect(network.ok).toBe(false);
+    expect(network.ok === false && "status" in network.failure).toBe(false);
+  });
+
+  it("keeps the status when opening a stream fails", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => respond(401, {}, "bad key")));
+    const events: SingleAttemptStreamEvent[] = [];
+    for await (const event of streamOnce(make(), { messages, model: "m" })) events.push(event);
+    const last = events[events.length - 1];
+    expect(last.type).toBe("failed");
+    expect(last.type === "failed" && last.failure.status).toBe(401);
+    expect(last.type === "failed" && last.failure.delivery).toBe("invoked");
+  });
+});
+
+describe("Retry-After parsing", () => {
+  it("accepts whole seconds and HTTP dates, and nothing else", () => {
+    expect(parseRetryAfter("0")).toBe(0);
+    expect(parseRetryAfter("120")).toBe(120_000);
+    expect(parseRetryAfter(" 5 ")).toBe(5000);
+    const now = Date.parse("2026-01-01T00:00:00Z");
+    expect(parseRetryAfter("Thu, 01 Jan 2026 00:00:30 GMT", now)).toBe(30_000);
+    expect(parseRetryAfter("Wed, 31 Dec 2025 23:00:00 GMT", now)).toBe(0);
+    for (const bad of [undefined, null, "", "abc", "-5", "1.5", "99999999999999999999"]) {
+      expect(parseRetryAfter(bad as string | null | undefined, now)).toBeUndefined();
+    }
+  });
+
+  it("leaves the ProviderError constructor compatible", () => {
+    const plain = new ProviderError("CODE", "message", "p");
+    expect(plain.status).toBeUndefined();
+    expect(plain.retryAfterMs).toBeUndefined();
+    expect(new ProviderError("CODE", "message", "p", true, { status: 502, retryAfterMs: 10 })).toMatchObject({ status: 502, retryAfterMs: 10, retryable: true });
+  });
+});
+
+describe("OpenAI-style streams pass the provider's finish reason through", () => {
+  const streams = [
+    { name: "openai", make: () => createOpenAIAdapter("k", "https://openai.test/v1") },
+    { name: "openrouter", make: () => createOpenRouterAdapter("k", "https://openrouter.test/api/v1") },
+  ];
+
+  it.each(streams)("$name: done carries finish_reason and usage, and the terminal stays unverified", async ({ make }) => {
+    const lines = [
+      'data: {"choices":[{"delta":{"content":"hel"}}]}',
+      'data: {"choices":[{"delta":{"content":"lo"},"finish_reason":"stop"}]}',
+      'data: {"choices":[],"usage":{"prompt_tokens":5,"completion_tokens":2,"total_tokens":7}}',
+      "data: [DONE]",
+    ];
+    vi.stubGlobal("fetch", vi.fn(async () => sse(lines)));
+    const events: SingleAttemptStreamEvent[] = [];
+    for await (const event of streamOnce(make(), { messages, model: "m" })) events.push(event);
+    const done = events[events.length - 1];
+    expect(done.type).toBe("done");
+    if (done.type !== "done") return;
+    expect(done.text).toBe("hello");
+    expect(done.finishReason).toBe("stop");
+    expect(done.usage).toEqual({ inputTokens: 5, outputTokens: 2, totalTokens: 7 });
+    expect(done.terminal).toBe("unverified");
+  });
+
+  it.each(streams)("$name: a stream with no finish_reason reports none", async ({ make }) => {
+    vi.stubGlobal("fetch", vi.fn(async () => sse(['data: {"choices":[{"delta":{"content":"x"}}]}'])));
+    const events: SingleAttemptStreamEvent[] = [];
+    for await (const event of streamOnce(make(), { messages, model: "m" })) events.push(event);
+    const done = events[events.length - 1];
+    expect(done.type === "done" && "finishReason" in done).toBe(false);
+  });
+});

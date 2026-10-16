@@ -1,3 +1,4 @@
+import { httpFailure } from "../errors.js";
 import type { ProviderResponse } from "../types.js";
 import type { LLMRequest } from "../../../../src/types.js";
 
@@ -41,7 +42,7 @@ export class OllamaClient {
     });
 
     if (!response.ok) {
-      throw new Error(`Ollama generation failed: ${response.statusText}`);
+      throw httpFailure(response, `Ollama generation failed: ${response.statusText}`);
     }
 
     const data = (await response.json()) as { response?: string; done_reason?: string };
@@ -74,7 +75,7 @@ export class OllamaClient {
     });
 
     if (!response.ok) {
-      throw new Error(`Ollama streaming failed: ${response.statusText}`);
+      throw httpFailure(response, `Ollama streaming failed: ${response.statusText}`);
     }
 
     const reader = response.body?.getReader();

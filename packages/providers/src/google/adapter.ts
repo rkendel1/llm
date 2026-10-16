@@ -2,6 +2,7 @@ import type { LLMProvider, LLMRequest, ProviderResponse, LLMStreamChunk } from "
 import { GoogleClient, type GoogleMessage, type GoogleTool } from "./client.js";
 import { createCapabilities } from "../capabilities.js";
 import { ProviderError } from "../types.js";
+import { errorMeta } from "../errors.js";
 import { contentToText } from "../content.js";
 
 const GOOGLE_MODELS = [
@@ -76,6 +77,7 @@ export class GoogleAdapter implements LLMProvider {
         `Google generation failed: ${error instanceof Error ? error.message : String(error)}`,
         "google",
         isRetryable,
+        errorMeta(error),
       );
     }
   }
@@ -134,6 +136,7 @@ export class GoogleAdapter implements LLMProvider {
         `Google streaming failed: ${error instanceof Error ? error.message : String(error)}`,
         "google",
         isRetryable,
+        errorMeta(error),
       );
     }
   }

@@ -66,6 +66,7 @@
     "registry:release-report": "node dist/packages/registry-ingest/src/registry-ops.js report",
     "registry:publish-candidate": "node dist/packages/registry-ingest/src/registry-ops.js publish",
     "registry:manifests": "node dist/packages/registry-ingest/src/registry-ops.js manifests",
+    "prepare": "npm run build",
     "prepack": "npm run build"
   },
   "repository": {

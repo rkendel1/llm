@@ -2,6 +2,7 @@ import type { LLMProvider, LLMRequest, ProviderResponse, LLMStreamChunk } from "
 import { AnthropicClient, type AnthropicMessage, type AnthropicTool } from "./client.js";
 import { createCapabilities } from "../capabilities.js";
 import { ProviderError } from "../types.js";
+import { errorMeta } from "../errors.js";
 import { contentToText } from "../content.js";
 
 const ANTHROPIC_MODELS = ["claude-3-opus", "claude-3-sonnet", "claude-3-haiku"];
@@ -62,6 +63,7 @@ export class AnthropicAdapter implements LLMProvider {
         `Anthropic generation failed: ${error instanceof Error ? error.message : String(error)}`,
         "anthropic",
         isRetryable,
+        errorMeta(error),
       );
     }
   }
@@ -109,6 +111,7 @@ export class AnthropicAdapter implements LLMProvider {
         `Anthropic streaming failed: ${error instanceof Error ? error.message : String(error)}`,
         "anthropic",
         isRetryable,
+        errorMeta(error),
       );
     }
   }

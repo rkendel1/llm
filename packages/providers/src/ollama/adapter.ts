@@ -3,6 +3,7 @@ import { OllamaClient } from "./client.js";
 import { formatMessagesForProvider } from "../normalization.js";
 import { createCapabilities } from "../capabilities.js";
 import { ProviderError } from "../types.js";
+import { errorMeta } from "../errors.js";
 import { contentToText } from "../content.js";
 
 export type OllamaExecution =
@@ -81,6 +82,7 @@ export class OllamaAdapter implements LLMProvider {
         `Ollama generation failed: ${error instanceof Error ? error.message : String(error)}`,
         "ollama",
         true,
+        errorMeta(error),
       );
     }
   }
@@ -116,6 +118,7 @@ export class OllamaAdapter implements LLMProvider {
         `Ollama streaming failed: ${error instanceof Error ? error.message : String(error)}`,
         "ollama",
         true,
+        errorMeta(error),
       );
     }
   }
