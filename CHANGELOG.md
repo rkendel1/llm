@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- `generateOnce` and `streamOnce`: explicit single-attempt provider invocation with typed results, honest delivery observations and no routing, fallback, retry or tool execution (see `docs/single-attempt.md`)
+- Optional `ProviderResponse.finishReason`, `usage`/`finishReason` on stream `done` chunks, and `LLMProvider.attemptTraits`
 - GitHub Actions CI/CD workflows for automated testing and publishing
 - `.npmignore` for clean npm package distribution
 - `CONTRIBUTING.md` guide for developers
@@ -17,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `prepack` script to ensure build before publishing
 
 ### Changed
+- Built-in provider clients forward `request.signal` to `fetch`, so an abort or timeout now cancels the HTTP request instead of only abandoning it
 - Improved package.json configuration for distribution
 
 ### Fixed

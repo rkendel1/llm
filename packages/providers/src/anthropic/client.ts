@@ -24,6 +24,7 @@ export class AnthropicClient {
     model: string,
     messages: AnthropicMessage[],
     tools?: AnthropicTool[],
+    signal?: AbortSignal,
   ): Promise<ProviderResponse> {
     const payload: unknown = {
       model,
@@ -34,6 +35,7 @@ export class AnthropicClient {
 
     const response = await fetch(`${this.apiBase}/messages`, {
       method: "POST",
+      ...(signal && { signal }),
       headers: {
         "Content-Type": "application/json",
         "x-api-key": this.apiKey,
@@ -50,6 +52,7 @@ export class AnthropicClient {
     const data = (await response.json()) as {
       content?: Array<{ type: string; text?: string; name?: string; input?: unknown; id?: string }>;
       usage?: { input_tokens?: number; output_tokens?: number };
+      stop_reason?: string | null;
     };
 
     const toolCalls: LLMToolCall[] = [];
@@ -77,6 +80,7 @@ export class AnthropicClient {
         outputTokens: data.usage?.output_tokens,
       },
       toolCalls,
+      ...(typeof data.stop_reason === "string" && { finishReason: data.stop_reason }),
     };
   }
 
@@ -84,6 +88,7 @@ export class AnthropicClient {
     model: string,
     messages: AnthropicMessage[],
     tools?: AnthropicTool[],
+    signal?: AbortSignal,
   ): AsyncGenerator<{
     type?: string;
     delta?: { type?: string; text?: string };
@@ -100,6 +105,7 @@ export class AnthropicClient {
 
     const response = await fetch(`${this.apiBase}/messages`, {
       method: "POST",
+      ...(signal && { signal }),
       headers: {
         "Content-Type": "application/json",
         "x-api-key": this.apiKey,

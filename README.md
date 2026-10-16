@@ -120,6 +120,25 @@ for await (const chunk of llm.stream("Write a haiku")) {
 }
 ```
 
+## Single-attempt inference
+
+`llm()` routes, retries and falls back. Runtimes that own the inference lifecycle themselves can call one explicitly chosen provider at most once with `generateOnce` and `streamOnce`. There is no routing, fallback, retry, tool execution or tool loop, and results are typed values rather than exceptions.
+
+```ts
+import { generateOnce } from "@easy-llm/llm";
+
+const result = await generateOnce("openai", {
+  model: "gpt-4-turbo",
+  messages: [{ role: "user", content: "Hello" }],
+  timeoutMs: 30_000,
+});
+
+if (result.ok) console.log(result.text, result.finishReason);
+else console.error(result.failure.kind, result.failure.delivery); // "not_invoked" | "invoked" | "output_observed"
+```
+
+Tool calls come back as proposals; your handlers are never called. A failure never claims the request was unsent unless the provider was not invoked. See [docs/single-attempt.md](docs/single-attempt.md), the [audit](docs/single-attempt-audit.md) and the [FX mapping](docs/fx-capability-mapping.md).
+
 ## Providers
 
 Built-in adapters cover OpenAI, Anthropic, Google, OpenRouter, and Ollama. OpenAI and OpenRouter accept native image content through the unified request shape; other adapters preserve a text-compatible representation when native image transport is unavailable.

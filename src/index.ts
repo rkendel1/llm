@@ -13,6 +13,8 @@ import type { LLMInput, LLMCallOptions, LLMResponse, LLMStreamChunk, LLMProvider
 import type { RegistryProviderAdapter, RegistrySnapshot } from "../packages/registry/src/index.js";
 import { lockCredentialSession, unlockCredentialSession } from "./credentials.js";
 import { readiness } from "./readiness.js";
+export { generateOnce, streamOnce } from "./singleAttempt.js";
+export type * from "./singleAttempt.js";
 export { readiness, type LLMReadiness, type ProviderReadiness, type ReadinessOptions } from "./readiness.js";
 
 // Re-export provider infrastructure

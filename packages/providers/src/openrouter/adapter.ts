@@ -7,6 +7,9 @@ import { contentToOpenAI } from "../content.js";
 export class OpenRouterAdapter implements LLMProvider {
   id = "openrouter";
   priority = 20;
+  // Audited single-attempt traits (docs/single-attempt-audit.md): raw fetch, no SDK, no retries;
+  // the stream yields `done` at end of input even when `[DONE]` was never seen; streamed tool calls are placeholders.
+  attemptTraits = { transportRetries: "none", abortSignal: true, doneIsTerminalProof: false, streamsToolCalls: false } as const;
   private client: OpenRouterClient;
 
   constructor(apiKey: string, apiBase?: string) {
@@ -49,7 +52,7 @@ export class OpenRouterAdapter implements LLMProvider {
         }));
       }
 
-      return await this.client.generate(model, messages, tools);
+      return await this.client.generate(model, messages, tools, request.signal);
     } catch (error) {
       const isRetryable =
         error instanceof Error &&
@@ -93,7 +96,7 @@ export class OpenRouterAdapter implements LLMProvider {
         }));
       }
 
-      for await (const chunk of this.client.stream(model, messages, tools)) {
+      for await (const chunk of this.client.stream(model, messages, tools, request.signal)) {
         const choice = chunk.choices?.[0];
         if (choice?.delta?.content) {
           yield {

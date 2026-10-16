@@ -50,4 +50,5 @@ export type ProviderResponse = {
     totalTokens?: number;
   };
   toolCalls?: LLMToolCall[];
+  finishReason?: string;
 };

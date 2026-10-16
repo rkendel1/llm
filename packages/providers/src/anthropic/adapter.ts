@@ -9,6 +9,9 @@ const ANTHROPIC_MODELS = ["claude-3-opus", "claude-3-sonnet", "claude-3-haiku"];
 export class AnthropicAdapter implements LLMProvider {
   id = "anthropic";
   priority = 40;
+  // Audited single-attempt traits (docs/single-attempt-audit.md): raw fetch, no SDK, no retries;
+  // `done` is yielded only on `message_stop`; streamed tool_use blocks are dropped.
+  attemptTraits = { transportRetries: "none", abortSignal: true, doneIsTerminalProof: true, streamsToolCalls: false } as const;
   private client: AnthropicClient;
   private availableModels: string[] = ANTHROPIC_MODELS;
 
@@ -51,7 +54,7 @@ export class AnthropicAdapter implements LLMProvider {
         }));
       }
 
-      return await this.client.generate(model, messages, tools);
+      return await this.client.generate(model, messages, tools, request.signal);
     } catch (error) {
       const isRetryable = error instanceof Error && (error.message.includes("429") || error.message.includes("timeout"));
       throw new ProviderError(
@@ -87,7 +90,7 @@ export class AnthropicAdapter implements LLMProvider {
         }));
       }
 
-      for await (const chunk of this.client.stream(model, messages, tools)) {
+      for await (const chunk of this.client.stream(model, messages, tools, request.signal)) {
         if (chunk.delta?.type === "text_delta" && chunk.delta?.text) {
           yield {
             type: "text",
