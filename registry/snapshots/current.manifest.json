@@ -1,39 +1,39 @@
 {
-  "version": "0.1.12",
+  "version": "0.1.13",
   "state": "published",
-  "generatedAt": "2026-10-21T02:10:59.898Z",
+  "generatedAt": "2026-11-05T02:06:59.804Z",
   "sources": [
     {
       "id": "huggingface",
       "status": "success",
-      "snapshotId": "huggingface:2026-10-21T02:11:01.746Z",
-      "checksum": "e9aa3f90389ba3865e5fe6c598e12b7639bd14bad3385583d3856b9d1d16bbff",
+      "snapshotId": "huggingface:2026-11-05T02:07:02.043Z",
+      "checksum": "6d8f91335e049544ce282162f443c5cd72474d8278f1b376ac0ea5ef39f08ee0",
       "recordCount": 25,
-      "fetchedAt": "2026-10-21T02:11:01.746Z"
+      "fetchedAt": "2026-11-05T02:07:02.043Z"
     },
     {
       "id": "openrouter",
       "status": "success",
-      "snapshotId": "openrouter:2026-10-21T02:10:59.898Z",
-      "checksum": "031fddd47ef4dd2fe24765039b70078afa1844cb67764b04d49d77da7974c5c2",
-      "recordCount": 468,
-      "fetchedAt": "2026-10-21T02:10:59.898Z"
+      "snapshotId": "openrouter:2026-11-05T02:06:59.804Z",
+      "checksum": "d2b8aed70d3c77428303ba21b8704348987eaf77c361f0d5556d23d7d0be4aa7",
+      "recordCount": 454,
+      "fetchedAt": "2026-11-05T02:06:59.804Z"
     }
   ],
   "metrics": {
-    "canonicalModels": 381,
-    "routes": 546,
-    "evidence": 781,
-    "conflicts": 22,
-    "unknownCapabilities": 1862,
+    "canonicalModels": 377,
+    "routes": 524,
+    "evidence": 731,
+    "conflicts": 11,
+    "unknownCapabilities": 1827,
     "contextCompleteness": 100,
-    "pricingCompleteness": 98.16272965879264,
+    "pricingCompleteness": 98.14323607427056,
     "supportedCapabilities": {
-      "vision": 232,
+      "vision": 237,
       "tools": 313,
       "reasoning": 264,
-      "structuredOutput": 339,
-      "audioInput": 34,
+      "structuredOutput": 336,
+      "audioInput": 35,
       "audioOutput": 4
     }
   },
@@ -45,9 +45,9 @@
     "qualityPolicy": "1.0"
   },
   "checksums": {
-    "sources": "031fddd47ef4dd2fe24765039b70078afa1844cb67764b04d49d77da7974c5c2",
-    "canonical": "9827ad8e0c409dd14f0908bedac8fc3b49bd202a528195b30179517ab2f07ec6",
-    "evidence": "b268fa8a37b30323d1b3b0a70cb419cd396b1fff1d5748b03c4a0e55673cac7d",
-    "registry": "dad8f8363215e9af1b21c60a411af87505387ee658321700e806f008da4c25bc"
+    "sources": "d2b8aed70d3c77428303ba21b8704348987eaf77c361f0d5556d23d7d0be4aa7",
+    "canonical": "e91d53e227337821ef2612471ebf25081054a5cc46e79b96c8a83a1f3f599777",
+    "evidence": "da80565a9450ad74fbd41e9581992a0b4db1311224b65ce725e0a94eaf9b5829",
+    "registry": "a18c908eee90d2fda6a54816e52c3c3c84cde76321a8ad613ff9866ed91f1e04"
   }
 }
