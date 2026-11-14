@@ -4,23 +4,6 @@
   "warnings": [],
   "metrics": {
     "previous": {
-      "canonicalModels": 377,
-      "routes": 542,
-      "evidence": 781,
-      "conflicts": 22,
-      "unknownCapabilities": 1848,
-      "contextCompleteness": 100,
-      "pricingCompleteness": 98.14323607427056,
-      "supportedCapabilities": {
-        "vision": 228,
-        "tools": 307,
-        "reasoning": 259,
-        "structuredOutput": 336,
-        "audioInput": 34,
-        "audioOutput": 4
-      }
-    },
-    "candidate": {
       "canonicalModels": 381,
       "routes": 546,
       "evidence": 781,
@@ -34,6 +17,23 @@
         "reasoning": 264,
         "structuredOutput": 339,
         "audioInput": 34,
+        "audioOutput": 4
+      }
+    },
+    "candidate": {
+      "canonicalModels": 379,
+      "routes": 542,
+      "evidence": 770,
+      "conflicts": 19,
+      "unknownCapabilities": 1821,
+      "contextCompleteness": 100,
+      "pricingCompleteness": 97.8891820580475,
+      "supportedCapabilities": {
+        "vision": 243,
+        "tools": 318,
+        "reasoning": 269,
+        "structuredOutput": 339,
+        "audioInput": 38,
         "audioOutput": 4
       }
     }
